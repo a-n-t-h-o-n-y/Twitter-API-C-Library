@@ -1,0 +1,14 @@
+*.txt
+!CMakeLists.txt
+bin/*
+doc/*
+notes/
+!doc/Doxyfile
+build/*
+*.json
+certs/
+*.vim
+*.a
+*.so
+main.cpp
+tags
