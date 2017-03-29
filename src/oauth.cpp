@@ -3,6 +3,7 @@
 #include "app.hpp"
 #include "request.hpp"
 #include "detail/encode.hpp"
+#include "detail/network.hpp"
 
 #include <algorithm>
 #include <ctime>
@@ -11,6 +12,8 @@
 #include <string>
 #include <sstream>
 #include <vector>
+
+#include <iostream>  // temp
 
 #include <openssl/hmac.h>
 #include <openssl/rand.h>
@@ -144,10 +147,47 @@ void integrate_oauth(Request& original, const std::string& oauth_header) {
     original.authorization = oauth_header;
 }
 
+
 }  // namespace
 
 namespace tal {
 namespace detail {
+
+// Get bearer token from server
+void acquire_bearer_token(const App& app) {
+    std::string token_credentials =
+        detail::url_encode(app.key()) + ':' + detail::url_encode(app.secret());
+    std::vector<unsigned char> token_base64(std::begin(token_credentials),
+                                            std::end(token_credentials));
+    token_credentials = detail::base64_encode(token_base64);
+    Request bearer_request;
+    bearer_request.HTTP_method = "POST";
+    bearer_request.URI = "/oauth2/token";
+    bearer_request.authorization = "Basic " + token_credentials;
+    bearer_request.content_type += ";charset=UTF8";
+    bearer_request.add_message("grant_type", "client_credentials");
+    bearer_request.add_query("include_entities", "true");
+    bearer_request.add_header("Accept-Encoding", "gzip");
+
+    Response response = detail::send_HTTP(bearer_request);
+    // Makes sure the response was OK.
+    detail::digest(response);
+    // std::cout << bearer_request;
+    std::cout << response;
+
+    // Parse response for bearer token and save it in bearer_token_
+
+    // std::string token_type = response.message_body.substr(
+    //     response.message_body.find("token_type") + 12, 6);
+    // if (token_type != "bearer") {
+    //     throw std::runtime_error(
+    //         "Wrong token type when attempting to aquire bearer token.");
+    // }
+    // std::size_t token_beg = response.message_body.find("access_token") + 15;
+    // std::size_t token_end = response.message_body.find("\"}");
+    // this->bearer_token_ =
+    //     response.message_body.substr(token_beg, token_end - token_beg);
+}
 
 void authorize(Request& request, const App& app, const Account& account) {
     const std::string consumer_key = app.key();
@@ -183,7 +223,7 @@ void authorize(Request& request, const App& app, const Account& account) {
 /// Add App OAuth 1.0a header to HTTP request.
 void authorize(Request& request, App& app) {
     if (app.bearer_token().empty()) {
-        app.acquire_bearer_token();
+        acquire_bearer_token(app);
     }
     std::string oauth{"Bearer " + app.bearer_token()};
     integrate_oauth(request, oauth);

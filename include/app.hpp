@@ -33,15 +33,13 @@ class App {
     void set_secret(const std::string& secret) { consumer_secret_ = secret; }
 
     /// Get bearer token from server
-    void acquire_bearer_token();
+    // void acquire_bearer_token();
 
     /// Return bearer token.
     std::string bearer_token() const { return bearer_token_; }
 
     // Twitter Functions
     void update_status(const std::string& message);
-
-    void contact_google();
 
    private:
     std::string consumer_key_;

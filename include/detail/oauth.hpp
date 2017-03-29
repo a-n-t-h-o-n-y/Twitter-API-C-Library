@@ -19,6 +19,9 @@ void authorize(Request& request,
 /// Add App OAuth 1.0a header to HTTP request.
 void authorize(Request& request, App& app);
 
+/// Get bearer token from server
+void acquire_bearer_token(const App& app);
+
 }  // namespace detail
 }  // namespace tal
 

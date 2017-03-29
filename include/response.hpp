@@ -6,12 +6,16 @@
 #include <utility>
 #include <ostream>
 
+#include <boost/asio.hpp>
+#include <boost/asio/ssl.hpp>
+
 namespace tal {
 
 class Response {
    public:
     Response() = default;
-    explicit Response(const std::string& http_response);
+    explicit Response(
+        boost::asio::ssl::stream<boost::asio::ip::tcp::socket>& ssl_socket);
 
     /// Return response as string.
     explicit operator std::string() const;

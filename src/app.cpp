@@ -53,50 +53,50 @@ void App::update_status(const std::string& message) {
     std::cout << "Tweet sent: " << message;
 }
 
-void App::acquire_bearer_token() {
-    std::string token_credentials = detail::url_encode(this->key()) + ':' +
-                                    detail::url_encode(this->secret());
-    std::vector<unsigned char> token_base64(std::begin(token_credentials),
-                                            std::end(token_credentials));
-    token_credentials = detail::base64_encode(token_base64);
-    Request bearer_request;
-    bearer_request.HTTP_method = "POST";
-    bearer_request.URI = "/oauth2/token";
-    bearer_request.authorization = "Basic " + token_credentials;
-    bearer_request.content_type += ";charset=UTF8";
-    bearer_request.add_message("grant_type", "client_credentials");
-    bearer_request.add_query("include_entities", "true");
-    bearer_request.add_header("Accept-Encoding", "gzip");
+// void App::acquire_bearer_token() {
+//     std::string token_credentials = detail::url_encode(this->key()) + ':' +
+//                                     detail::url_encode(this->secret());
+//     std::vector<unsigned char> token_base64(std::begin(token_credentials),
+//                                             std::end(token_credentials));
+//     token_credentials = detail::base64_encode(token_base64);
+//     Request bearer_request;
+//     bearer_request.HTTP_method = "POST";
+//     bearer_request.URI = "/oauth2/token";
+//     bearer_request.authorization = "Basic " + token_credentials;
+//     bearer_request.content_type += ";charset=UTF8";
+//     bearer_request.add_message("grant_type", "client_credentials");
+//     bearer_request.add_query("include_entities", "true");
+//     bearer_request.add_header("Accept-Encoding", "gzip");
 
-    Response response = detail::send_HTTP(bearer_request);
-    // Makes sure the response was OK.
-    detail::digest(response);
-    // std::cout << bearer_request;
-    std::cout << response;
+//     Response response = detail::send_HTTP(bearer_request);
+//     // Makes sure the response was OK.
+//     detail::digest(response);
+//     // std::cout << bearer_request;
+//     std::cout << response;
 
+//     // Parse response for bearer token and save it in bearer_token_
 
-    // Parse response for bearer token and save it in bearer_token_
+//     // std::string token_type = response.message_body.substr(
+//     //     response.message_body.find("token_type") + 12, 6);
+//     // if (token_type != "bearer") {
+//     //     throw std::runtime_error(
+//     //         "Wrong token type when attempting to aquire bearer token.");
+//     // }
+//     // std::size_t token_beg = response.message_body.find("access_token") +
+//     15;
+//     // std::size_t token_end = response.message_body.find("\"}");
+//     // this->bearer_token_ =
+//     //     response.message_body.substr(token_beg, token_end - token_beg);
+// }
 
-    // std::string token_type = response.message_body.substr(
-    //     response.message_body.find("token_type") + 12, 6);
-    // if (token_type != "bearer") {
-    //     throw std::runtime_error(
-    //         "Wrong token type when attempting to aquire bearer token.");
-    // }
-    // std::size_t token_beg = response.message_body.find("access_token") + 15;
-    // std::size_t token_end = response.message_body.find("\"}");
-    // this->bearer_token_ =
-    //     response.message_body.substr(token_beg, token_end - token_beg);
-}
+// void App::contact_google() {
+//     Request request;
+//     request.host = "www.google.com";
+//     request.URI = "/";
+//     request.HTTP_method = "GET";
 
-void App::contact_google() {
-    Request request;
-    request.host = "www.google.com";
-    request.URI = "/";
-    request.HTTP_method = "GET";
-
-    Response response = detail::send_HTTP(request);
-    std::cout << response.message_body;
-}
+//     Response response = detail::send_HTTP(request);
+//     std::cout << response.message_body;
+// }
 
 }  // namespace tal
