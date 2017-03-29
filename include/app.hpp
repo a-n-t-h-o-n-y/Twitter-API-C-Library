@@ -6,6 +6,7 @@
 
 #include "account.hpp"
 #include "response.hpp"
+#include "stream.hpp"
 
 namespace tal {
 class Account;
@@ -17,7 +18,7 @@ class App {
     App(const std::string& key, const std::string& secret)
         : consumer_key_{key}, consumer_secret_{secret} {};
 
-    void add_account(const Account& account);
+    void set_account(const Account& account);
 
     /// Returns consumer key.
     std::string key() const { return consumer_key_; }
@@ -46,10 +47,13 @@ class App {
     std::string consumer_key_;
     std::string consumer_secret_;
     std::string bearer_token_;
+    User_stream user_stream_(this);
+    Public_stream filtered_stream_(this, "/1.1/statuses/filter.json", "POST");
+    Public_stream sample_stream_(this, "/1.1/statuses/sample.json", "GET");
 
     // Every request through this app will send to these accounts, is there a
     // use case for multiple accounts?
-    std::vector<Account> accounts_;
+    Account account_;
 
     // These two functions are used by each public method above.
     // Sends the request off to the account with the proper oauth header created

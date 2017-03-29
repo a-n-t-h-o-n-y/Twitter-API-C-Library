@@ -140,11 +140,8 @@ std::string gen_signature(const Request& request,
 }
 
 // Inserts the constructed oauth header into the original request
-Request integrate_oauth(const Request& original,
-                        const std::string& oauth_header) {
-    Request authorized = original;
-    authorized.authorization = oauth_header;
-    return authorized;
+void integrate_oauth(Request& original, const std::string& oauth_header) {
+    original.authorization = oauth_header;
 }
 
 }  // namespace
@@ -152,9 +149,7 @@ Request integrate_oauth(const Request& original,
 namespace tal {
 namespace detail {
 
-Request authorize(const Request& request,
-                  const App& app,
-                  const Account& account) {
+void authorize(Request& request, const App& app, const Account& account) {
     const std::string consumer_key = app.key();
     const std::string consumer_secret = app.secret();
     const std::string token = account.token();
@@ -182,16 +177,16 @@ Request authorize(const Request& request,
     oauth << url_encode("oauth_version") << "=\"" << url_encode(version)
           << '\"';
 
-    return integrate_oauth(request, oauth.str());
+    integrate_oauth(request, oauth.str());
 }
 
 /// Add App OAuth 1.0a header to HTTP request.
-Request authorize(const Request& request, App& app) {
+void authorize(Request& request, App& app) {
     if (app.bearer_token().empty()) {
         app.acquire_bearer_token();
     }
     std::string oauth{"Bearer " + app.bearer_token()};
-    return integrate_oauth(request, oauth);
+    integrate_oauth(request, oauth);
 }
 
 }  // namespace detail

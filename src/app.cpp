@@ -37,8 +37,8 @@ Response App::send(const Request& request) {
     return response;  // combine this with above detail::send once cout gone.
 }
 
-void App::add_account(const Account& account) {
-    accounts_.push_back(account);
+void App::set_account(const Account& account) {
+    account_ = account;
 }
 
 void App::update_status(const std::string& message) {
@@ -49,9 +49,7 @@ void App::update_status(const std::string& message) {
 
     us_request.add_message("status", message);
 
-    for (const Account& a : accounts_) {
-        detail::digest(this->send(us_request, a));
-    }
+    detail::digest(this->send(us_request, account_));
     std::cout << "Tweet sent: " << message;
 }
 

@@ -12,12 +12,12 @@ class Account;
 namespace detail {
 
 /// Add App and Account OAuth 1.0a header to HTTP request.
-Request authorize(const Request& request,
+void authorize(Request& request,
                   const App& app,
                   const Account& account);
 
 /// Add App OAuth 1.0a header to HTTP request.
-Request authorize(const Request& request, App& app);
+void authorize(Request& request, App& app);
 
 }  // namespace detail
 }  // namespace tal

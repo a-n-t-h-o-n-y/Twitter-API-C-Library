@@ -16,38 +16,39 @@
 namespace tal {
 namespace detail {
 
-Response send_HTTP(const Request& request) {
+std::unique_ptr<ssl_socket> make_connection(const Request& r) {
     boost::asio::ssl::context ssl_context(boost::asio::ssl::context::sslv23);
     ssl_context.set_verify_mode(boost::asio::ssl::verify_peer);
     ssl_context.set_default_verify_paths();  // change this to certs download
 
     boost::asio::io_service ios;  // put this in static class method
 
-    boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket(
-        ios, ssl_context);
-    auto& lowest_layer_socket = ssl_socket.lowest_layer();
+    auto socket_ptr = std::make_unique<ssl_socket>(ios, ssl_context);
+    auto& lowest_layer_socket = socket_ptr->lowest_layer();
 
     boost::asio::ip::tcp::resolver resolver(ios);
-    boost::asio::ip::tcp::resolver::query query(request.host,
-                                                request.HTTP_protocol);
+    boost::asio::ip::tcp::resolver::query query(r.host, r.HTTP_protocol);
     auto endpoint_iterator = resolver.resolve(query);
 
     // Make connection, perform tls handshake.
     boost::asio::connect(lowest_layer_socket, endpoint_iterator);
-    ssl_socket.handshake(
-        boost::asio::ssl::stream<boost::asio::ip::tcp::socket>::client);
+    ssl_socket.handshake(ssl_socket::client);
+    return std::move(socket_ptr);
+}
 
+Response send_HTTP(const Request& request) {
+    auto socket_ptr = make_connection(request);
     // Send request
     boost::asio::streambuf request_buffer;
     std::ostream request_stream(&request_buffer);
     request_stream << request;
-    boost::asio::write(ssl_socket, request_buffer);
+    boost::asio::write(*socket_ptr, request_buffer);
 
     // Get Status Line Response
     Response response;
     boost::asio::streambuf response_buffer;
     boost::system::error_code ec;
-    boost::asio::read_until(ssl_socket, response_buffer, "/r/n", ec);
+    boost::asio::read_until(*socket_ptr, response_buffer, "/r/n", ec);
     std::istream response_stream(&response_buffer);
 
     std::string http_version;
@@ -67,7 +68,7 @@ Response send_HTTP(const Request& request) {
         return response;
     }
     // Get Response Headers
-    boost::asio::read_until(ssl_socket, response_buffer, "\r\n\r\n", ec);
+    boost::asio::read_until(*socket_ptr, response_buffer, "\r\n\r\n", ec);
     std::string header;
     while (std::getline(response_stream, header) && header != "\r") {
         std::stringstream headers_stream(header);
@@ -90,7 +91,7 @@ Response send_HTTP(const Request& request) {
         ss << &response_buffer;
         response.message_body.append(ss.str());
     }
-    while (boost::asio::read(ssl_socket, response_buffer, ec)) {
+    while (boost::asio::read(*socket_ptr, response_buffer, ec)) {
         std::stringstream ss;
         ss << &response_stream;
         response.message_body.append(ss.str());

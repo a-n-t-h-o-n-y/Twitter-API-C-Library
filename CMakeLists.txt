@@ -22,7 +22,7 @@ include_directories(include)
 
 # Collect Source Files into Variable Names
 set(TAL_SRC src/account.cpp src/app.cpp src/oauth.cpp src/request.cpp
-          src/encode.cpp src/network.cpp src/response.cpp)
+          src/encode.cpp src/network.cpp src/response.cpp src/stream.cpp)
 
 add_library(TAL STATIC ${TAL_SRC})
 

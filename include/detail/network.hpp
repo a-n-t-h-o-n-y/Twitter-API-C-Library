@@ -3,9 +3,15 @@
 
 #include "../response.hpp"
 
+#include <memory>
+
 namespace tal {
 class Request;
 namespace detail {
+
+using ssl_socket = boost::asio::ssl::stream<boost::asio::ip::tcp::socket>;
+
+std::unique_ptr<ssl_socket> make_connection(const Request& r);
 
 /// Creates a connection and sends a fully formed response to the endpoint.
 /// \returns HTTP response from the endpoint.
