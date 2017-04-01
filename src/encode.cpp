@@ -6,10 +6,15 @@
 #include <utility>
 #include <ios>
 #include <iomanip>
+#include <iostream> // temp
 
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 #include <openssl/buffer.h>
+
+#include <boost/iostreams/filter/gzip.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/device/back_inserter.hpp>
 
 namespace tal {
 namespace detail {
@@ -62,6 +67,18 @@ std::string base64_encode(const std::vector<unsigned char>& message) {
     std::string result(bufferPtr->data, bufferPtr->length);
     BUF_MEM_free(bufferPtr);
     return result;
+}
+
+/// Decodes a gzip archive, for use with encoded message bodies.
+void decode_gzip(std::string& zipped) {
+    std::string decoded;
+    boost::iostreams::filtering_ostream f_os;
+    f_os.push(boost::iostreams::gzip_decompressor());
+    f_os.push(boost::iostreams::back_inserter(decoded));
+
+    boost::iostreams::write(f_os, &zipped[0], zipped.size());
+    boost::iostreams::close(f_os);
+    zipped = decoded;
 }
 
 }  // namespace detail

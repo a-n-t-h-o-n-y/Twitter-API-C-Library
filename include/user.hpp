@@ -1,11 +1,9 @@
 #ifndef USER_HPP
 #define USER_HPP
 
-#include <cstdint>
+#include "detail/types.hpp"
 
 namespace tal {
-
-using twitter_id = std::int64_t;
 
 // move coordinates to another header
 struct coordinates {

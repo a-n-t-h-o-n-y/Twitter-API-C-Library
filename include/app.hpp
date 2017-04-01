@@ -41,13 +41,15 @@ class App {
     // Twitter Functions
     void update_status(const std::string& message);
 
+    Account account() const { return account_; }
+
    private:
     std::string consumer_key_;
     std::string consumer_secret_;
     std::string bearer_token_;
-    User_stream user_stream_(this);
-    Public_stream filtered_stream_(this, "/1.1/statuses/filter.json", "POST");
-    Public_stream sample_stream_(this, "/1.1/statuses/sample.json", "GET");
+    User_stream user_stream_{this};
+    Public_stream filtered_stream_{this, "/1.1/statuses/filter.json", "POST"};
+    Public_stream sample_stream_{this, "/1.1/statuses/sample.json", "GET"};
 
     // Every request through this app will send to these accounts, is there a
     // use case for multiple accounts?
@@ -56,9 +58,9 @@ class App {
     // These two functions are used by each public method above.
     // Sends the request off to the account with the proper oauth header created
     // and inserted into the original request.
-    Response send(const Request& request, const Account& account);
+    Response send(Request& request, const Account& account);
     // sends an application authentication only request
-    Response send(const Request& request);
+    Response send(Request& request);
 };
 }
 

@@ -15,8 +15,10 @@
 
 #include "user.hpp"
 #include "response.hpp"
+#include "request.hpp"
 
 namespace {
+using namespace tal;
 struct Stream_parameters {
     std::string delimited;
     bool stall_warnings;
@@ -42,6 +44,7 @@ struct Stream_parameters {
 }  // namespace
 
 namespace tal {
+class App;
 
 class Stream {
    public:
@@ -50,7 +53,8 @@ class Stream {
 
     Stream(App* app, std::string host, std::string uri, std::string method);
 
-    void register_function(Callback f1, Condition f2 = []() { return true; });
+    void register_function(Callback f1,
+                           Condition f2 = [](const Response&) { return true; });
 
     // Parameters
     void set_delimited(std::string v) {
@@ -59,7 +63,7 @@ class Stream {
     }
     void set_stall_warnings(bool v) {
         parameters_.stall_warnings = v;
-        reconnect_;
+        reconnect_ = true;
     }
     void set_filter_level(std::string v) {
         parameters_.filter_level = std::move(v);
@@ -95,14 +99,15 @@ class Stream {
         }
         parameters_.track.erase(pos);
         reconnect_ = true;
+        return true;
     }
     void set_locations(float lat_1, float lon_1, float lat_2, float lon_2) {
-        parameters_.locations = std::make_pair(coordinates(lat_1, lon_1),
-                                               coordinates(lat_2, lon_2));
+        parameters_.locations = std::make_pair(coordinates{lat_1, lon_1},
+                                               coordinates{lat_2, lon_2});
         parameters_.use_locations_ = true;
         reconnect_ = true;
     }
-    void set_locations(std::pair<coordinates> v) {
+    void set_locations(std::pair<coordinates, coordinates> v) {
         parameters_.locations = v;
         parameters_.use_locations_ = true;
         reconnect_ = true;
@@ -123,7 +128,7 @@ class Stream {
         parameters_.replies = std::move(v);
         reconnect_ = true;
     }
-    bool set_stringify_friend_ids(bool v) {
+    void set_stringify_friend_ids(bool v) {
         parameters_.stringify_friend_ids = v;
         reconnect_ = true;
     }
@@ -178,17 +183,17 @@ class Stream {
     // Only builds the shared parameters.
     virtual void build_parameters(Request& r);
 
-    virtual authorize(Request& r) = 0;
+    virtual void authorize(Request& r) = 0;
 
     // Makes and stores the connection. Called by run().
-    void make_connection();
+    void make_connection(const Request& r);
 
     // Disconnects from the streaming API.
     void end_connection();
 
     // Reads from the socket, creates Response objects and sends them to each
     // callback. Checks for reconnect_ on beginning of every iteration.
-    void dispatch(const boost::system::error_code ec& ec,
+    void dispatch(const boost::system::error_code& ec,
                   std::size_t bytes_transfered);
 
     // Starts the async pulling of objects off the Stream.
@@ -203,15 +208,15 @@ class User_stream : public Stream {
    private:
     // Calls down to the base implementation and adds on extra user params.
     virtual void build_parameters(Request& r) override;
-    virtual authorize(Request& r) override;
+    virtual void authorize(Request& r) override;
 };
 
 class Public_stream : public Stream {
    public:
-    Public_stream(App* app);
+Public_stream(App* app, std::string uri, std::string method);
 
    private:
-    virtual authorize(Request& r) override;
+    virtual void authorize(Request& r) override;
 };
 
 }  // namespace tal

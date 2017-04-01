@@ -30,16 +30,21 @@ set(MAIN src/main.cpp)
 
 # set(TEST_SOURCES test/test.cpp)
 
-find_package(Boost 1.58.0 COMPONENTS system)
+find_package(Boost 1.58.0 COMPONENTS system iostreams)
 if(Boost_FOUND)
     add_executable(main ${MAIN})
     include_directories(${Boost_INCLUDE_DIRS})
     link_directories(${Boost_LIBRARY_DIRS})
 endif(Boost_FOUND)
 
+find_package(ZLIB REQUIRED)
+if (ZLIB_FOUND)
+    include_directories(${ZLIB_INCLUDE_DIRS})
+endif(ZLIB_FOUND)
+
 # Link libraries to executables
-target_link_libraries(main TAL ${Boost_SYSTEM_LIBRARY} -lssl -lcrypto
-    -pthread)
+target_link_libraries(main TAL ${ZLIB_LIBRARIES} ${Boost_LIBRARIES} -lssl
+    -lcrypto -pthread)
 # target_link_libraries(tests gtest gtest_main ${Boost_SYSTEM_LIBRARY} -lssl
         # -lcrypto -pthread)
 

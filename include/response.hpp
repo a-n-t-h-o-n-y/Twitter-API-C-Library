@@ -9,13 +9,14 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
+#include "detail/types.hpp"
+
 namespace tal {
 
 class Response {
    public:
     Response() = default;
-    explicit Response(
-        boost::asio::ssl::stream<boost::asio::ip::tcp::socket>& ssl_socket);
+    explicit Response(ssl_socket& socket);
 
     /// Return response as string.
     explicit operator std::string() const;

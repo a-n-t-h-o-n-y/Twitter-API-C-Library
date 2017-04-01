@@ -15,24 +15,24 @@
 
 namespace tal {
 
-Response App::send(const Request& request, const Account& account) {
+Response App::send(Request& request, const Account& account) {
     // Inject OAuth to the request
-    Request authenticated_request = detail::authorize(request, *this, account);
-    // std::cout << authenticated_request;
+    detail::authorize(request, *this, account);
+    // std::cout << request;
     // std::cout << std::endl;
 
     // Send request to generic send function
-    Response response = detail::send_HTTP(authenticated_request);
+    Response response = detail::send_HTTP(request);
     // std::cout << response;
     return response;
 }
 
-Response App::send(const Request& request) {
+Response App::send(Request& request) {
     // Inject Application only OAuth into the request
-    Request authenticated_request = detail::authorize(request, *this);
+    detail::authorize(request, *this);
 
     // send request to generic send function
-    Response response = detail::send_HTTP(authenticated_request);
+    Response response = detail::send_HTTP(request);
     // std::cout << response;
     return response;  // combine this with above detail::send once cout gone.
 }

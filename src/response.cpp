@@ -1,7 +1,13 @@
 #include "response.hpp"
+#include "detail/encode.hpp"
+#include "detail/network.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
+
+#include <boost/iostreams/filter/gzip.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/device/back_inserter.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -9,57 +15,76 @@
 
 namespace tal {
 
-Response::Response(
-    boost::asio::ssl::stream<boost::asio::ip::tcp::socket>& ssl_socket) {
+Response::Response(ssl_socket& socket) {
     // Get Status Line Response
     boost::asio::streambuf response_buffer;
     boost::system::error_code ec;
-    auto n = boost::asio::read_until(ssl_socket, response_buffer, "\r\n", ec);
+    auto n = boost::asio::read_until(socket, response_buffer, "\r\n", ec);
     if (ec && ec != boost::asio::error::eof) {
         throw boost::system::system_error(ec);
     }
-    std::istream status_stream(&response_buffer);
-    status_stream >> this->HTTP_version;
-    status_stream >> this->status_code;
-    std::getline(status_stream, this->reason_phrase);
-    
+    std::istream response_stream(&response_buffer);
+    response_stream >> this->HTTP_version;
+    response_stream >> this->status_code;
+    std::getline(response_stream, this->reason_phrase);
+
     // Get Response Headers
-    n = boost::asio::read_until(ssl_socket, response_buffer, "\r\n\r\n", ec);
+    n = boost::asio::read_until(socket, response_buffer, "\r\n\r\n", ec);
     if (ec && ec != boost::asio::error::eof) {
         throw boost::system::system_error(ec);
     }
-    std::cout << n << std::endl;
-    std::istream header_stream(&response_buffer);
+    std::string headers_s(n, ' ');
+    response_stream.read(&headers_s[0], n);
+    std::stringstream headers_ss{headers_s};
     std::string header;
-    while (std::getline(header_stream, header) ) { //&& header != "\r"
+    while (std::getline(headers_ss, header) && header != "\r") {
         std::istringstream iss{header};
         std::string key;
         iss >> key;
-        key.pop_back(); // remove ':'
-        std::ostringstream oss;
-        oss << iss.rdbuf();
-        std::string value{oss.str()};
+        if (!key.empty()) {
+            key.pop_back();  // remove ':'
+        }
+        std::string value(++std::istreambuf_iterator<char>(iss), {});
+        // Remove trailing whitespace
+        auto pos = value.find_last_not_of(" \r\n");
+        if (pos != std::string::npos) {
+            value.erase(pos + 1);
+        }
         this->headers.push_back(std::make_pair(key, value));
     }
 
-    // if (ec == boost::asio::error::eof) {
-    //     return;
-    // }
+    if (ec == boost::asio::error::eof) {
+        return;
+    }
 
     // Get Message Body
-    // if (response_buffer.size() > 0) {
-    //     std::stringstream ss;
-    //     ss << &response_buffer;
-    //     this->message_body.append(ss.str());
-    // }
-    // while (boost::asio::read(ssl_socket, response_buffer, ec)) {
-    //     std::stringstream ss;
-    //     ss << &response_stream;
-    //     this->message_body.append(ss.str());
-    // }
-    if (ec != boost::asio::error::eof) {
-        // Short read is closing of ssl socket notification from server.
-        // std::cout << ec.message() << std::endl;
+    // Search for content-length in *this
+    std::string cl_value = this->find_header("content-length");
+    std::size_t message_length{0};
+    if (!cl_value.empty()) {
+        message_length = std::stoi(cl_value);
+        n = boost::asio::read(socket, response_buffer,
+                              boost::asio::transfer_exactly(message_length),
+                              ec);
+        // read n bytes out of response_buffer and into string
+        this->message_body = std::string(n, ' ');
+        response_stream.read(&this->message_body[0], n);
+    } else if (find_header("transfer-encoding") == "chunked") {
+        // Read chunked message body
+        this->message_body = detail::read_chunked_body(socket);
+        // n = boost::asio::read(socket, response_buffer, ec);
+    }
+    if (ec && ec != boost::asio::error::eof) {
+        throw boost::system::system_error(ec);
+    }
+
+    std::string encoding = this->find_header("content-encoding");
+    if (encoding == "gzip" || encoding == "x-gzip") {
+        detail::decode_gzip(this->message_body);
+    }
+
+    if (ec && ec != boost::asio::error::eof) {
+        throw boost::system::system_error(ec);
     }
 }
 

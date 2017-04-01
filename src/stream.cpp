@@ -1,4 +1,5 @@
 #include "stream.hpp"
+#include "app.hpp"
 #include "detail/oauth.hpp"
 #include "detail/network.hpp"
 
@@ -30,12 +31,13 @@ Request Stream::build_request() {
     r.URI = get_URI();
     r.content_type = "application/json";  // Might not need
     build_parameters(r);
+    return r;
 }
 
 // Only builds the shared parameters.
-virtual void Stream::build_parameters(Request& r) {
+void Stream::build_parameters(Request& r) {
     if (!parameters_.delimited.empty()) {
-        r.add_query("delimited", parameters_.delimited)
+        r.add_query("delimited", parameters_.delimited);
     }
     r.add_query("stall_warnings",
                 parameters_.stall_warnings ? "true" : "false");
@@ -79,18 +81,18 @@ void Stream::end_connection() {
 
 // Reads from the socket, creates Response objects and sends them to each
 // callback. Checks for reconnect_ on beginning of every iteration.
-void Stream::dispatch(const boost::system::error_code ec& ec,
+void Stream::dispatch(const boost::system::error_code& ec,
                       std::size_t bytes_transfered) {
     // In its own thread
     reconnect_mtx_.lock();
     reconnect_ = false;
-    reconnect_mtx.unlock();
+    reconnect_mtx_.unlock();
     while (!reconnect_) {
-        Response r(socket_);
+        Response r(*socket_);
         callbacks_mutex_.lock();
         for (auto& pair : callbacks_) {
-            if (pair.first(r)) {
-                pair.second(r);
+            if (pair.second(r)) {
+                pair.first(r);
             }
         }
         callbacks_mutex_.unlock();
@@ -106,8 +108,8 @@ void Stream::run() {
     this->authorize(r);
     this->make_connection(r);
     boost::asio::async_write(
-        *socket_, std::string(r),
-        std::bind(Stream::dispatch, this, std::placeholders::_1,
+        *socket_, boost::asio::buffer(std::string(r)),
+        std::bind(&Stream::dispatch, this, std::placeholders::_1,
                   std::placeholders::_2));
 }
 
@@ -115,7 +117,7 @@ User_stream::User_stream(App* app)
     : Stream(app, "userstream.twitter.com", "/1.1/user.json", "GET") {}
 
 void User_stream::authorize(Request& r) {
-    detail::authorize(r, app_, app_->account());
+    detail::authorize(r, *app_, app_->account());
 }
 
 void User_stream::build_parameters(Request& r) {
@@ -134,7 +136,7 @@ Public_stream::Public_stream(App* app, std::string uri, std::string method)
     : Stream(app, "stream.twitter.com", uri, method) {}
 
 void Public_stream::authorize(Request& r) {
-    detail::authorize(r, app_);
+    detail::authorize(r, *app_);
 }
 
 }  // namespace tal

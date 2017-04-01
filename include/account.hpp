@@ -8,6 +8,7 @@ namespace tal {
 /// Represets a Twitter account, with access token and secret.
 class Account {
    public:
+    Account() = default;
     /// Set the token and token secret at construction.
     Account(const std::string& token, const std::string& secret)
         : token_{token}, token_secret_{secret} {}
