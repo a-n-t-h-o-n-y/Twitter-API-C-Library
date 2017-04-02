@@ -12,12 +12,16 @@
 #include <string>
 #include <sstream>
 #include <vector>
-
-#include <iostream>  // temp
+#include <sstream>
+#include <stdexcept>
 
 #include <openssl/hmac.h>
 #include <openssl/rand.h>
+
 #include <boost/algorithm/string.hpp>
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 // Helper functions here (they will not be accessibly from outside).
 namespace {
@@ -147,14 +151,13 @@ void integrate_oauth(Request& original, const std::string& oauth_header) {
     original.authorization = oauth_header;
 }
 
-
 }  // namespace
 
 namespace tal {
 namespace detail {
 
 // Get bearer token from server
-void acquire_bearer_token(const App& app) {
+void acquire_bearer_token(App& app) {
     std::string token_credentials =
         detail::url_encode(app.key()) + ':' + detail::url_encode(app.secret());
     std::vector<unsigned char> token_base64(std::begin(token_credentials),
@@ -172,21 +175,15 @@ void acquire_bearer_token(const App& app) {
     Response response = detail::send_HTTP(bearer_request);
     // Makes sure the response was OK.
     detail::digest(response);
-    // std::cout << bearer_request;
-    std::cout << response;
-
-    // Parse response for bearer token and save it in bearer_token_
-
-    // std::string token_type = response.message_body.substr(
-    //     response.message_body.find("token_type") + 12, 6);
-    // if (token_type != "bearer") {
-    //     throw std::runtime_error(
-    //         "Wrong token type when attempting to aquire bearer token.");
-    // }
-    // std::size_t token_beg = response.message_body.find("access_token") + 15;
-    // std::size_t token_end = response.message_body.find("\"}");
-    // this->bearer_token_ =
-    //     response.message_body.substr(token_beg, token_end - token_beg);
+    // Parse JSON resonse into bearer token
+    boost::property_tree::ptree json_tree;
+    std::istringstream ss(response.message_body);
+    boost::property_tree::read_json(ss, json_tree);
+    std::string token_type{json_tree.get<std::string>("token_type")};
+    if (token_type != "bearer") {
+        throw std::runtime_error("Invalid bearer token type");
+    }
+    app.set_bearer_token(json_tree.get<std::string>("access_token"));
 }
 
 void authorize(Request& request, const App& app, const Account& account) {

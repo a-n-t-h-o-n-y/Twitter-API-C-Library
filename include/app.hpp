@@ -32,19 +32,33 @@ class App {
     /// Set consumer secret.
     void set_secret(const std::string& secret) { consumer_secret_ = secret; }
 
-    /// Get bearer token from server
-    // void acquire_bearer_token();
-
     /// Return bearer token.
     std::string bearer_token() const { return bearer_token_; }
+
+    /// Set bearer token value.
+    void set_bearer_token(std::string token) {
+        bearer_token_ = std::move(token);
+    }
+
+    /// Get account associated with this App object.
+    Account account() const { return account_; }
 
     // Twitter Functions
     void update_status(const std::string& message);
 
-    Account account() const { return account_; }
+    void verify_credentials();
 
-   private:
-    std::string consumer_key_;
+    void get_favorites(const std::string& user);
+
+    // Streams
+    void register_to_user_stream(Stream::Callback callback,
+                            Stream::Condition condition =
+                                [](const Response&) { return true; });
+    void register_to_filtered_stream();
+
+    void register_to_sample_stream();
+
+        private : std::string consumer_key_;
     std::string consumer_secret_;
     std::string bearer_token_;
     User_stream user_stream_{this};

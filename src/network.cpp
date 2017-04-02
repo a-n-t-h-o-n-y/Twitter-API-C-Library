@@ -4,7 +4,6 @@
 #include <boost/asio/ssl.hpp>
 
 #include <algorithm>
-#include <iostream>
 #include <sstream>
 #include <cstdlib>
 #include <cstddef>
@@ -46,15 +45,6 @@ Response send_HTTP(const Request& request) {
 
     // Read Response
     Response response{*socket_ptr};
-    // boost::system::error_code ec;
-    // socket_ptr->cancel(ec);
-    // socket_ptr->async_shutdown([&](...) {
-        // socket_ptr->close(); };
-    // socket_ptr->lowest_layer().shutdown(
-        // boost::asio::ip::tcp::socket::shutdown_both, ec);
-    // if (ec) {
-        // throw boost::system::system_error(ec);
-    // }
     socket_ptr->lowest_layer().close();
     return response;
 }
@@ -80,11 +70,9 @@ std::string read_chunked_body(ssl_socket& socket) {
         std::string chunk_size_str;  // second time around this is '\r'
         std::getline(response_stream, chunk_size_str);
         auto chunk_size = std::stoul(chunk_size_str, nullptr, 16);
-        std::cout << "chunk_size: " << chunk_size << std::endl;
         if (chunk_size == 0) {
             auto t =
                 boost::asio::read_until(socket, response_buffer, "\r\n", ec);
-            std::cout << "bytes read after 0: " << t << std::endl;
             std::string trash(t, ' ');
             response_stream.read(&trash[0], t);
             if (ec && ec != boost::asio::error::eof) {
@@ -101,7 +89,6 @@ std::string read_chunked_body(ssl_socket& socket) {
         std::string chunk(n, ' ');
         response_stream.read(&chunk[0], n);
         message_body.append(chunk);
-        // fix?
         auto t = boost::asio::read_until(socket, response_buffer, "\r\n", ec);
         std::string trash(t, ' ');
         response_stream.read(&trash[0], t);
@@ -109,7 +96,6 @@ std::string read_chunked_body(ssl_socket& socket) {
             throw boost::system::system_error(ec);
         }
     }
-    std::cout << message_body << std::endl;
     return message_body;
 }
 

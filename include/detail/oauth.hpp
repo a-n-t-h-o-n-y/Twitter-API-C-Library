@@ -20,7 +20,7 @@ void authorize(Request& request,
 void authorize(Request& request, App& app);
 
 /// Get bearer token from server
-void acquire_bearer_token(const App& app);
+void acquire_bearer_token(App& app);
 
 }  // namespace detail
 }  // namespace tal
