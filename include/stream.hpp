@@ -17,8 +17,9 @@
 #include "response.hpp"
 #include "request.hpp"
 
-namespace {
-using namespace tal;
+namespace tal {
+class App;
+
 struct Stream_parameters {
     std::string delimited;
     bool stall_warnings;
@@ -41,10 +42,6 @@ struct Stream_parameters {
     std::string URI;
     std::string method;
 };
-}  // namespace
-
-namespace tal {
-class App;
 
 class Stream {
    public:

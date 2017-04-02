@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <cstddef>
 #include <iostream>
+#include <utility>
 
 namespace tal {
 
@@ -19,8 +20,7 @@ Response App::send(Request& request, const Account& account) {
     detail::authorize(request, *this, account);
 
     // Send request to generic send function
-    Response response = detail::send_HTTP(request);
-    return response;
+    return detail::send_HTTP(request);
 }
 
 Response App::send(Request& request) {
@@ -64,6 +64,22 @@ void App::get_favorites(const std::string& user) {
     r.add_query("screen_name", user);
     r.add_query("count", "1");
     std::cout << this->send(r) << std::endl;
+}
+
+void App::register_to_user_stream(Stream::Callback callback,
+                                  Stream::Condition condition) {
+    user_stream_.register_function(std::move(callback), std::move(condition));
+}
+
+void App::register_to_filtered_stream(Stream::Callback callback,
+                                      Stream::Condition condition) {
+    filtered_stream_.register_function(std::move(callback),
+                                       std::move(condition));
+}
+
+void App::register_to_sample_stream(Stream::Callback callback,
+                                    Stream::Condition condition) {
+    sample_stream_.register_function(std::move(callback), std::move(condition));
 }
 
 }  // namespace tal

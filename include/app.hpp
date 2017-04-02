@@ -52,13 +52,18 @@ class App {
 
     // Streams
     void register_to_user_stream(Stream::Callback callback,
-                            Stream::Condition condition =
-                                [](const Response&) { return true; });
-    void register_to_filtered_stream();
+                                 Stream::Condition condition =
+                                     [](const Response&) { return true; });
+    void register_to_filtered_stream(Stream::Callback callback,
+                                     Stream::Condition condition =
+                                         [](const Response&) { return true; });
 
-    void register_to_sample_stream();
+    void register_to_sample_stream(Stream::Callback callback,
+                                   Stream::Condition condition =
+                                       [](const Response&) { return true; });
 
-        private : std::string consumer_key_;
+   private:
+    std::string consumer_key_;
     std::string consumer_secret_;
     std::string bearer_token_;
     User_stream user_stream_{this};

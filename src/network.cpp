@@ -10,6 +10,7 @@
 #include <vector>
 #include <stdexcept>
 #include <string>
+#include <memory>
 
 #include "request.hpp"
 
@@ -21,7 +22,7 @@ std::unique_ptr<ssl_socket> make_connection(const Request& r) {
     ssl_context.set_verify_mode(boost::asio::ssl::verify_peer);
     ssl_context.set_default_verify_paths();  // change this to certs download
 
-    static boost::asio::io_service ios;  // put this in static class method
+    static boost::asio::io_service ios; // put this in App class, take as param
 
     auto socket_ptr = std::make_unique<ssl_socket>(ios, ssl_context);
 

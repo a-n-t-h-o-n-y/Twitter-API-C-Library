@@ -8,10 +8,8 @@
 
 namespace tal {
 
-Stream::Stream(App* app,
-               std::string host,
-               std::string uri,
-               std::string method) {
+Stream::Stream(App* app, std::string host, std::string uri, std::string method)
+    : app_{app} {
     set_host(std::move(host));
     set_URI(std::move(uri));
     set_method(std::move(method));
@@ -21,6 +19,9 @@ void Stream::register_function(Callback f1, Condition f2) {
     callbacks_mutex_.lock();
     callbacks_.push_back(std::make_pair(f1, f2));
     callbacks_mutex_.unlock();
+    if (socket_ == nullptr) {
+        this->run();
+    }
 }
 
 // Builds the complete request with endpoint and parameters.

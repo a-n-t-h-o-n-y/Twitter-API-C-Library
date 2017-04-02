@@ -2,6 +2,7 @@
 #define ACCOUNT_HPP
 
 #include <string>
+#include <utility>
 
 namespace tal {
 
@@ -10,8 +11,10 @@ class Account {
    public:
     Account() = default;
     /// Set the token and token secret at construction.
-    Account(const std::string& token, const std::string& secret)
-        : token_{token}, token_secret_{secret} {}
+    Account(std::string token, std::string secret)
+        : token_{std::move(token)}, token_secret_{std::move(secret)} {}
+
+    Account(const Account&) = default;
 
     /// returns the token.
     std::string token() const { return token_; }
