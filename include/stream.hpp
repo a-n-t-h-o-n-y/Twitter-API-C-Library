@@ -173,6 +173,7 @@ class Stream {
     std::mutex reconnect_mtx_;
     std::string endpoint_;
     App* app_;
+    std::unique_ptr<boost::asio::deadline_timer> timer_ptr_;
 
     // Builds the complete request with endpoint and parameters.
     Request build_request();
@@ -190,6 +191,8 @@ class Stream {
 
     // Disconnects from the streaming API.
     void end_connection();
+
+    void timer_expired(boost::system::error_code ec);
 
     // Reads from the socket, creates Response objects and sends them to
     // each

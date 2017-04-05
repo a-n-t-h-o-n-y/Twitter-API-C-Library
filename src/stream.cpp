@@ -9,12 +9,18 @@
 #include <functional>
 #include <sstream>
 #include <iostream>
+#include <memory>
+
+#include <boost/asio.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 
 namespace tal {
 
 Stream::Stream(App* app, std::string host, std::string uri, std::string method)
     : app_{app} {
-    set_host(std::move(host));
+    timer_ptr_ =
+        std::make_unique<boost::asio::deadline_timer>(app->io_service());
+    set_host(std::move(host));  // why are these down here and not intitialized?
     set_URI(std::move(uri));
     set_method(std::move(method));
 }
@@ -104,7 +110,12 @@ void Stream::dispatch(const boost::system::error_code& ec,
         // what about keep alive newlines?
         std::size_t pos{0};
         while ((pos = message_str.find("\r\n")) == std::string::npos) {
+            timer_ptr_->expires_from_now(
+                boost::posix_time::seconds(90));
+            timer_ptr_->async_wait(
+                std::bind(&Stream::timer_expired, this, std::placeholders::_1));
             message_str.append(detail::read_chunk(*socket_));
+            timer_ptr_->expires_at(boost::posix_time::pos_infin);
         }
         auto message = message_str.substr(0, pos);
         // if (header.get("content-encoding") == "gzip") {
@@ -119,6 +130,12 @@ void Stream::dispatch(const boost::system::error_code& ec,
     }
     // If it makes it here, then reconnect_ was set true
     end_connection();
+    run();
+}
+
+void Stream::timer_expired(boost::system::error_code ec) {
+    end_connection();
+    std::cout << "Reconnecting..." << std::endl;
     run();
 }
 

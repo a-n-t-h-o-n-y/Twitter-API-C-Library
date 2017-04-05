@@ -70,14 +70,14 @@ class App {
     Public_stream& filtered_stream() { return filtered_stream_; }
 
    private:
+    std::unique_ptr<boost::asio::io_service> ios_ptr_{
+        std::make_unique<boost::asio::io_service>()};
     std::string consumer_key_;
     std::string consumer_secret_;
     std::string bearer_token_;
     User_stream user_stream_{this};
     Public_stream filtered_stream_{this, "/1.1/statuses/filter.json", "POST"};
     Public_stream sample_stream_{this, "/1.1/statuses/sample.json", "GET"};
-    std::unique_ptr<boost::asio::io_service> ios_ptr_{
-        std::make_unique<boost::asio::io_service>()};
 
     // Every request through this app will send to these accounts, is there a
     // use case for multiple accounts?
