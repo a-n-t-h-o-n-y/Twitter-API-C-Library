@@ -172,12 +172,10 @@ void acquire_bearer_token(App& app) {
     bearer_request.add_query("include_entities", "true");
     bearer_request.add_header("Accept-Encoding", "gzip");
 
-    Response response = detail::send_HTTP(bearer_request);
-    // Makes sure the response was OK.
-    detail::digest(response);
+    auto message = detail::send_HTTP(bearer_request, app.io_service());
     // Parse JSON resonse into bearer token
     boost::property_tree::ptree json_tree;
-    std::istringstream ss(response.message_body);
+    std::istringstream ss(static_cast<std::string>(message));
     boost::property_tree::read_json(ss, json_tree);
     std::string token_type{json_tree.get<std::string>("token_type")};
     if (token_type != "bearer") {

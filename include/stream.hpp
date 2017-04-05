@@ -14,18 +14,18 @@
 #include <boost/asio/ssl.hpp>
 
 #include "user.hpp"
-#include "response.hpp"
 #include "request.hpp"
+#include "message.hpp"
 
 namespace tal {
 class App;
 
 struct Stream_parameters {
     std::string delimited;
-    bool stall_warnings;
+    bool stall_warnings{false};
     std::vector<std::string> track;
     std::pair<coordinates, coordinates> locations;
-    bool use_locations_;
+    bool use_locations_{false};
 
     std::string language;
     std::vector<twitter_id> follow;
@@ -35,7 +35,7 @@ struct Stream_parameters {
     // User Stream Only
     std::string with;
     std::string replies;
-    bool stringify_friend_ids;
+    bool stringify_friend_ids{false};
 
     // Request Parameters
     std::string host;
@@ -45,13 +45,13 @@ struct Stream_parameters {
 
 class Stream {
    public:
-    using Callback = std::function<void(const Response&)>;
-    using Condition = std::function<bool(const Response&)>;
+    using Callback = std::function<void(const Message&)>;
+    using Condition = std::function<bool(const Message&)>;
 
     Stream(App* app, std::string host, std::string uri, std::string method);
 
     void register_function(Callback f1,
-                           Condition f2 = [](const Response&) { return true; });
+                           Condition f2 = [](const Message&) { return true; });
 
     // Parameters
     void set_delimited(std::string v) {
@@ -182,13 +182,17 @@ class Stream {
 
     virtual void authorize(Request& r) = 0;
 
+    // Sends to all functions registered to this Stream.
+    void send_message(const Message& message);
+
     // Makes and stores the connection. Called by run().
     void make_connection(const Request& r);
 
     // Disconnects from the streaming API.
     void end_connection();
 
-    // Reads from the socket, creates Response objects and sends them to each
+    // Reads from the socket, creates Response objects and sends them to
+    // each
     // callback. Checks for reconnect_ on beginning of every iteration.
     void dispatch(const boost::system::error_code& ec,
                   std::size_t bytes_transfered);
@@ -210,7 +214,7 @@ class User_stream : public Stream {
 
 class Public_stream : public Stream {
    public:
-Public_stream(App* app, std::string uri, std::string method);
+    Public_stream(App* app, std::string uri, std::string method);
 
    private:
     virtual void authorize(Request& r) override;

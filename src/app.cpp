@@ -2,7 +2,6 @@
 
 #include "detail/network.hpp"
 #include "request.hpp"
-#include "response.hpp"
 #include "detail/oauth.hpp"
 #include "detail/encode.hpp"
 
@@ -13,22 +12,25 @@
 #include <iostream>
 #include <utility>
 
+#include <boost/asio.hpp>
+#include "message.hpp"
+
 namespace tal {
 
-Response App::send(Request& request, const Account& account) {
+Message App::send(Request& request, const Account& account) {
     // Inject OAuth to the request
     detail::authorize(request, *this, account);
 
     // Send request to generic send function
-    return detail::send_HTTP(request);
+    return detail::send_HTTP(request, this->io_service());
 }
 
-Response App::send(Request& request) {
+Message App::send(Request& request) {
     // Inject Application only OAuth into the request
     detail::authorize(request, *this);
 
     // send request to generic send function
-    return detail::send_HTTP(request);
+    return detail::send_HTTP(request, this->io_service());
 }
 
 void App::set_account(const Account& account) {
@@ -43,8 +45,8 @@ void App::update_status(const std::string& message) {
 
     us_request.add_message("status", message);
 
-    detail::digest(this->send(us_request, account_));
-    std::cout << "Tweet sent: " << message;
+    std::cout << "Tweet about to be sent: " << message << std::endl; // temp
+    this->send(us_request, account_);
 }
 
 void App::verify_credentials() {

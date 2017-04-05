@@ -5,8 +5,10 @@
 #include <vector>
 
 #include "account.hpp"
-#include "response.hpp"
 #include "stream.hpp"
+#include "message.hpp"
+
+#include <boost/asio.hpp>
 
 namespace tal {
 class Account;
@@ -16,7 +18,9 @@ class App {
    public:
     /// Set the consumer key and consumer secret at construction.
     App(const std::string& key, const std::string& secret)
-        : consumer_key_{key}, consumer_secret_{secret} {};
+        : consumer_key_{key}, consumer_secret_{secret} {}
+
+    ~App() { ios_ptr_->run(); }
 
     void set_account(const Account& account);
 
@@ -40,6 +44,8 @@ class App {
         bearer_token_ = std::move(token);
     }
 
+    boost::asio::io_service& io_service() { return *ios_ptr_; }
+
     /// Get account associated with this App object.
     Account account() const { return account_; }
 
@@ -53,14 +59,15 @@ class App {
     // Streams
     void register_to_user_stream(Stream::Callback callback,
                                  Stream::Condition condition =
-                                     [](const Response&) { return true; });
+                                     [](const Message&) { return true; });
     void register_to_filtered_stream(Stream::Callback callback,
                                      Stream::Condition condition =
-                                         [](const Response&) { return true; });
+                                         [](const Message&) { return true; });
 
     void register_to_sample_stream(Stream::Callback callback,
                                    Stream::Condition condition =
-                                       [](const Response&) { return true; });
+                                       [](const Message&) { return true; });
+    Public_stream& filtered_stream() { return filtered_stream_; }
 
    private:
     std::string consumer_key_;
@@ -69,6 +76,8 @@ class App {
     User_stream user_stream_{this};
     Public_stream filtered_stream_{this, "/1.1/statuses/filter.json", "POST"};
     Public_stream sample_stream_{this, "/1.1/statuses/sample.json", "GET"};
+    std::unique_ptr<boost::asio::io_service> ios_ptr_{
+        std::make_unique<boost::asio::io_service>()};
 
     // Every request through this app will send to these accounts, is there a
     // use case for multiple accounts?
@@ -77,9 +86,9 @@ class App {
     // These two functions are used by each public method above.
     // Sends the request off to the account with the proper oauth header created
     // and inserted into the original request.
-    Response send(Request& request, const Account& account);
+    Message send(Request& request, const Account& account);
     // sends an application authentication only request
-    Response send(Request& request);
+    Message send(Request& request);
 };
 }
 

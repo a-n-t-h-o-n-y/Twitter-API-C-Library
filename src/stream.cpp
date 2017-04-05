@@ -2,9 +2,13 @@
 #include "app.hpp"
 #include "detail/oauth.hpp"
 #include "detail/network.hpp"
+#include "detail/parse.hpp"
+#include "detail/encode.hpp"
+#include "headers.hpp"
 
 #include <functional>
 #include <sstream>
+#include <iostream>
 
 namespace tal {
 
@@ -72,7 +76,7 @@ void Stream::build_parameters(Request& r) {
 
 // Makes and stores the connection. Called by run().
 void Stream::make_connection(const Request& r) {
-    socket_ = detail::make_connection(r);
+    socket_ = detail::make_connection(r, app_->io_service());
 }
 
 // Disconnects from the streaming API.
@@ -84,29 +88,55 @@ void Stream::end_connection() {
 // callback. Checks for reconnect_ on beginning of every iteration.
 void Stream::dispatch(const boost::system::error_code& ec,
                       std::size_t bytes_transfered) {
-    // In its own thread
     reconnect_mtx_.lock();
     reconnect_ = false;
     reconnect_mtx_.unlock();
+    detail::digest(Status_line(*socket_));
+    // Headers header(*socket_);  // change to socket_ptr_ eventually
+    // std::cout << header << std::endl;
+
+    // if (header.get("transfer-encoding") != "chunked") {
+    //     throw std::runtime_error("Stream transfer encoding is not chunked.");
+    // }
+
+    std::string message_str;
     while (!reconnect_) {
-        Response r(*socket_);
-        callbacks_mutex_.lock();
-        for (auto& pair : callbacks_) {
-            if (pair.second(r)) {
-                pair.first(r);
-            }
+        // what about keep alive newlines?
+        std::size_t pos{0};
+        while ((pos = message_str.find("\r\n")) == std::string::npos) {
+            message_str.append(detail::read_chunk(*socket_));
         }
-        callbacks_mutex_.unlock();
+        auto message = message_str.substr(0, pos);
+        // if (header.get("content-encoding") == "gzip") {
+        //     detail::decode_gzip(message);
+        // }
+        if (message.size() > 1) {
+            this->send_message(Message{message});
+            message_str.erase(0, pos + 2);
+        } else {
+            message_str.clear();
+        }
     }
     // If it makes it here, then reconnect_ was set true
     end_connection();
     run();
 }
 
+void Stream::send_message(const Message& message) {
+    callbacks_mutex_.lock();
+    for (auto& pair : callbacks_) {
+        if (pair.second(message)) {
+            pair.first(message);
+        }
+    }
+    callbacks_mutex_.unlock();
+}
+
 // builds the request and calls asio::write()
 void Stream::run() {
     Request r = build_request();
     this->authorize(r);
+    // std::cout << r << std::endl;
     this->make_connection(r);
     boost::asio::async_write(
         *socket_, boost::asio::buffer(std::string(r)),
@@ -137,7 +167,8 @@ Public_stream::Public_stream(App* app, std::string uri, std::string method)
     : Stream(app, "stream.twitter.com", uri, method) {}
 
 void Public_stream::authorize(Request& r) {
-    detail::authorize(r, *app_);
+    // detail::authorize(r, *app_);
+    detail::authorize(r, *app_, app_->account());
 }
 
 }  // namespace tal

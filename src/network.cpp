@@ -13,16 +13,19 @@
 #include <memory>
 
 #include "request.hpp"
+#include "message.hpp"
+#include "headers.hpp"
+#include "detail/parse.hpp"
+#include "detail/encode.hpp"
 
 namespace tal {
 namespace detail {
 
-std::unique_ptr<ssl_socket> make_connection(const Request& r) {
+std::unique_ptr<ssl_socket> make_connection(const Request& r,
+                                            boost::asio::io_service& ios) {
     boost::asio::ssl::context ssl_context(boost::asio::ssl::context::sslv23);
     ssl_context.set_verify_mode(boost::asio::ssl::verify_peer);
     ssl_context.set_default_verify_paths();  // change this to certs download
-
-    static boost::asio::io_service ios; // put this in App class, take as param
 
     auto socket_ptr = std::make_unique<ssl_socket>(ios, ssl_context);
 
@@ -36,68 +39,51 @@ std::unique_ptr<ssl_socket> make_connection(const Request& r) {
     return socket_ptr;
 }
 
-Response send_HTTP(const Request& request) {
-    auto socket_ptr = make_connection(request);
+// This should only write to the socket the request, it should return the
+// ssl_socket, and the client can use that socket to read a status_line etc..
+Message send_HTTP(const Request& request, boost::asio::io_service& ios) {
+    auto socket_ptr = make_connection(request, ios);
     // Send request
-    boost::asio::streambuf request_buffer;
-    std::ostream request_stream(&request_buffer);
-    request_stream << request;
-    boost::asio::write(*socket_ptr, request_buffer);
+    boost::asio::streambuf buffer;
+    std::ostream stream(&buffer);
+    stream << request;
+    boost::asio::write(*socket_ptr, buffer);
 
     // Read Response
-    Response response{*socket_ptr};
-    socket_ptr->lowest_layer().close();
-    return response;
-}
+    detail::digest(Status_line(*socket_ptr));
 
-void digest(const Response& response) {
-    if (response.status_code != "200") {
-        throw std::runtime_error("HTTP error. Reason: " +
-                                 response.reason_phrase + ". Status Code: " +
-                                 response.status_code);
-    }
-}
-
-std::string read_chunked_body(ssl_socket& socket) {
-    std::string message_body;
-    boost::asio::streambuf response_buffer;
-    boost::system::error_code ec;
-    while (true) {
-        boost::asio::read_until(socket, response_buffer, "\r\n", ec);
-        if (ec && ec != boost::asio::error::eof) {
-            throw boost::system::system_error(ec);
-        }
-        std::istream response_stream(&response_buffer);
-        std::string chunk_size_str;  // second time around this is '\r'
-        std::getline(response_stream, chunk_size_str);
-        auto chunk_size = std::stoul(chunk_size_str, nullptr, 16);
-        if (chunk_size == 0) {
-            auto t =
-                boost::asio::read_until(socket, response_buffer, "\r\n", ec);
-            std::string trash(t, ' ');
-            response_stream.read(&trash[0], t);
-            if (ec && ec != boost::asio::error::eof) {
-                throw boost::system::system_error(ec);
+    auto header = Headers(*socket_ptr);
+    std::string content_length = header.get("content-length");
+    std::string message;
+    if (!content_length.empty()) {
+        auto length = std::stoi(content_length);
+        message = detail::read_length(*socket_ptr, length);
+    } else if (header.get("transfer-encoding") == "chunked") {
+        while (true) {
+            std::string chunk{read_chunk(*socket_ptr)};
+            if (chunk.empty()) {
+                break;
             }
-            break;
-        }
-        auto n =
-            boost::asio::read(socket, response_buffer,
-                              boost::asio::transfer_exactly(chunk_size), ec);
-        if (ec && ec != boost::asio::error::eof) {
-            throw boost::system::system_error(ec);
-        }
-        std::string chunk(n, ' ');
-        response_stream.read(&chunk[0], n);
-        message_body.append(chunk);
-        auto t = boost::asio::read_until(socket, response_buffer, "\r\n", ec);
-        std::string trash(t, ' ');
-        response_stream.read(&trash[0], t);
-        if (ec && ec != boost::asio::error::eof) {
-            throw boost::system::system_error(ec);
+            message.append(chunk);
         }
     }
-    return message_body;
+    if (header.get("content-encoding") == "gzip") {
+        detail::decode_gzip(message);
+    }
+
+    socket_ptr->lowest_layer().close();
+    return Message(message);
+}
+
+void digest(const Status_line& status) {
+    if (status.status_code != "200") {
+        std::stringstream ss;
+        ss << "HTTP error. Reason: ";
+        ss << status.reason_phrase;
+        ss << ". Status Code: ";
+        ss << status.status_code;
+        throw std::runtime_error(ss.str());
+    }
 }
 
 }  // namespace detail
