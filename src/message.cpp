@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <ostream>
+#include <memory>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -20,12 +21,24 @@ Message::operator std::string() const {
 void Message::deduce_type() {
     object_type_ = Type::Unknown;
 }
+void Message::build_ptree() const {
+    json_tree_ptr_ = std::make_unique<boost::property_tree::ptree>();
+    std::stringstream ss{message_body_};
+    boost::property_tree::read_json(ss, *json_tree_ptr_);
+}
+
+boost::property_tree::ptree& Message::ptree() const {
+    if (json_tree_ptr_ == nullptr) {
+        this->build_ptree();
+    }
+    return *json_tree_ptr_;
+}
 
 std::string Message::get(const std::string& key) const {
-    boost::property_tree::ptree json_tree; // should be member variable
-    std::istringstream ss(message_body_);
-    boost::property_tree::read_json(ss, json_tree);
-    return json_tree.get<std::string>(key);
+    if (json_tree_ptr_ == nullptr) {
+        this->build_ptree();
+    }
+    return json_tree_ptr_->get<std::string>(key);
 }
 
 }  // namespace tal
