@@ -25,7 +25,9 @@ set(TAL_SRC src/account.cpp src/app.cpp src/oauth.cpp src/request.cpp
           src/encode.cpp src/network.cpp src/stream.cpp src/status_line.cpp
           src/headers.cpp src/message.cpp src/parse.cpp src/hashtag.cpp
           src/size.cpp src/sizes.cpp src/url.cpp src/user_mention.cpp
-          src/media.cpp src/entities.cpp)
+          src/media.cpp src/entities.cpp src/coordinates.cpp
+          src/bounding_box.cpp src/place_attributes.cpp src/place.cpp
+          src/user.cpp src/tweet.cpp)
 
 add_library(TAL STATIC ${TAL_SRC})
 

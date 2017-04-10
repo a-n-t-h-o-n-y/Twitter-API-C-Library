@@ -5,13 +5,12 @@
 #include <cstdint>
 #include <array>
 #include <boost/property_tree/ptree.hpp>
+#include "objects_template.hpp"
 
 namespace tal {
 
-struct User_mention {
-    User_mention() = default;
-    explicit User_mention(const std::string& json);
-    explicit User_mention(const boost::property_tree::ptree& tree);
+struct User_mention_data {
+    explicit operator std::string() const;
 
     std::int64_t id;
     std::string id_str;
@@ -19,9 +18,11 @@ struct User_mention {
     std::string name;
     std::string screen_name;
 
-   private:
+   protected:
     void construct(const boost::property_tree::ptree& tree);
 };
+
+using User_mention = detail::Objects_template<User_mention_data>;
 
 }  // namespace tal
 #endif  // USER_MENTION_HPP

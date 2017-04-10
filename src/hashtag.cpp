@@ -7,18 +7,14 @@
 
 namespace tal {
 
-Hashtag::Hashtag(const std::string& json) {
-    boost::property_tree::ptree tree;
-    std::istringstream ss(json);
-    boost::property_tree::read_json(ss, tree);
-    this->construct(tree);
+Hashtag_data::operator std::string() const {
+    std::stringstream ss;
+    ss << "text: " << text
+       << "\nindices: " << indices[0] << ", " << indices[1];
+    return ss.str();
 }
 
-Hashtag::Hashtag(const boost::property_tree::ptree& tree) {
-    this->construct(tree);
-}
-
-void Hashtag::construct(const boost::property_tree::ptree& tree) {
+void Hashtag_data::construct(const boost::property_tree::ptree& tree) {
     text = tree.get<std::string>("text");
     auto indices_tree = tree.get_child("indices");
     int count{0};

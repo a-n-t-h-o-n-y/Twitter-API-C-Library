@@ -7,6 +7,7 @@
 #include <ostream>
 #include <vector>
 #include <boost/property_tree/ptree.hpp>
+#include "objects_template.hpp"
 #include "objects/hashtag.hpp"
 #include "objects/media.hpp"
 #include "objects/url.hpp"
@@ -14,11 +15,7 @@
 
 namespace tal {
 
-struct Entities {
-    Entities() = default;
-    explicit Entities(const std::string& json);
-    explicit Entities(const boost::property_tree::ptree& tree);
-
+struct Entities_data {
     explicit operator std::string() const;
 
     std::vector<Hashtag> hashtags;
@@ -26,12 +23,11 @@ struct Entities {
     std::vector<URL> urls;
     std::vector<User_mention> user_mentions;
 
-   private:
+   protected:
     void construct(const boost::property_tree::ptree& tree);
 };
 
-inline std::ostream& operator<<(std::ostream& os, const Entities& media) {
-    return os << static_cast<std::string>(media);
-}
+using Entities = detail::Objects_template<Entities_data>;
+
 }  // namespace tal
 #endif  // ENTITIES_HPP

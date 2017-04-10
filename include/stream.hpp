@@ -13,7 +13,8 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
-#include "user.hpp"
+// #include "user.hpp"
+#include "detail/types.hpp"
 #include "request.hpp"
 #include "message.hpp"
 

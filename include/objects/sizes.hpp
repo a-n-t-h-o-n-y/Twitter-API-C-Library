@@ -4,15 +4,12 @@
 #include <string>
 #include <ostream>
 #include <boost/property_tree/ptree.hpp>
-#include "objects/size.hpp"
+#include "size.hpp"
+#include "objects_template.hpp"
 
 namespace tal {
 
-struct Sizes {
-    Sizes() = default;
-    explicit Sizes(const std::string& json);
-    explicit Sizes(const boost::property_tree::ptree& tree);
-
+struct Sizes_data {
     explicit operator std::string() const;
 
     Size thumb;
@@ -20,13 +17,11 @@ struct Sizes {
     Size medium;
     Size small;
 
-   private:
+   protected:
     void construct(const boost::property_tree::ptree& tree);
 };
 
-inline std::ostream& operator<<(std::ostream& os, const Sizes& sizes) {
-    return os << static_cast<std::string>(sizes);
-}
+using Sizes = detail::Objects_template<Sizes_data>;
 
 }  // namespace tal
 #endif  // SIZES_HPP

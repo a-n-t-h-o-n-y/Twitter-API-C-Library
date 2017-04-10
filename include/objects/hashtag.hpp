@@ -4,20 +4,21 @@
 #include <string>
 #include <array>
 #include <boost/property_tree/ptree.hpp>
+#include "objects_template.hpp"
 
 namespace tal {
 
-struct Hashtag {
-    Hashtag() = default;
-    explicit Hashtag(const std::string& json);
-    explicit Hashtag(const boost::property_tree::ptree& tree);
+struct Hashtag_data {
+    explicit operator std::string() const;
 
     std::string text;
     std::array<int, 2> indices;
 
-    private:
+   protected:
     void construct(const boost::property_tree::ptree& tree);
 };
+
+using Hashtag = detail::Objects_template<Hashtag_data>;
 
 }  // namespace tal
 #endif  // HASHTAG_HPP

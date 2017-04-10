@@ -9,18 +9,7 @@
 
 namespace tal {
 
-Media::Media(const std::string& json) {
-    boost::property_tree::ptree tree;
-    std::istringstream ss(json);
-    boost::property_tree::read_json(ss, tree);
-    this->construct(tree);
-}
-
-Media::Media(const boost::property_tree::ptree& tree) {
-    this->construct(tree);
-}
-
-Media::operator std::string() const {
+Media_data::operator std::string() const {
     std::stringstream ss;
     ss << "display_url: " << display_url << "\nexpanded_url: " << expanded_url
        << "\nid: " << id << "\nid_str: " << id_str
@@ -33,7 +22,7 @@ Media::operator std::string() const {
     return ss.str();
 }
 
-void Media::construct(const boost::property_tree::ptree& tree) {
+void Media_data::construct(const boost::property_tree::ptree& tree) {
     display_url = tree.get<std::string>("display_url", "");
     expanded_url = tree.get<std::string>("expanded_url", "");
     id = tree.get<std::int64_t>("id", 0);

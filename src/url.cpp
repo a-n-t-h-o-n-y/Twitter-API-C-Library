@@ -7,18 +7,16 @@
 
 namespace tal {
 
-URL::URL(const std::string& json) {
-    boost::property_tree::ptree tree;
-    std::istringstream ss(json);
-    boost::property_tree::read_json(ss, tree);
-    this->construct(tree);
+URL_data::operator std::string() const {
+    std::stringstream ss;
+    ss << "display_url: " << display_url
+       << "\nexpanded_url: " << expanded_url
+       << "\nurl: " << url
+       << "\nindices: " << indices[0] << ", " << indices[1];
+    return ss.str();
 }
 
-URL::URL(const boost::property_tree::ptree& tree) {
-    this->construct(tree);
-}
-
-void URL::construct(const boost::property_tree::ptree& tree) {
+void URL_data::construct(const boost::property_tree::ptree& tree) {
     display_url = tree.get<std::string>("display_url");
     expanded_url = tree.get<std::string>("expanded_url");
     url = tree.get<std::string>("url");

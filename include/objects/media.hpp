@@ -6,15 +6,12 @@
 #include <cstdint>
 #include <ostream>
 #include <boost/property_tree/ptree.hpp>
-#include "objects/sizes.hpp"
+#include "sizes.hpp"
+#include "objects_template.hpp"
 
 namespace tal {
 
-struct Media {
-    Media() = default;
-    explicit Media(const std::string& json);
-    explicit Media(const boost::property_tree::ptree& tree);
-
+struct Media_data {
     explicit operator std::string() const;
 
     std::string display_url;
@@ -30,12 +27,11 @@ struct Media {
     std::string type;
     std::string url;
 
-   private:
+   protected:
     void construct(const boost::property_tree::ptree& tree);
 };
 
-inline std::ostream& operator<<(std::ostream& os, const Media& media) {
-    return os << static_cast<std::string>(media);
-}
+using Media = detail::Objects_template<Media_data>;
+
 }  // namespace tal
 #endif  // MEDIA_HPP

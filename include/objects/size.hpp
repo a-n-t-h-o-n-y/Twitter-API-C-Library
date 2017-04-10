@@ -2,29 +2,23 @@
 #define SIZE_HPP
 
 #include <string>
-#include <ostream>
 #include <boost/property_tree/ptree.hpp>
+#include "objects_template.hpp"
 
 namespace tal {
 
-struct Size {
-    Size() = default;
-    explicit Size(const std::string& json);
-    explicit Size(const boost::property_tree::ptree& tree);
-
+struct Size_data {
     explicit operator std::string() const;
 
     int height;
     int width;
     std::string resize;
 
-   private:
+   protected:
     void construct(const boost::property_tree::ptree& tree);
 };
 
-inline std::ostream& operator<<(std::ostream& os, const Size& size) {
-    return os << static_cast<std::string>(size);
-}
+using Size = detail::Objects_template<Size_data>;
 
 }  // namespace tal
 #endif  // SIZE_HPP
