@@ -17,12 +17,16 @@ Bounding_box_data::operator std::string() const {
 
 void Bounding_box_data::construct(const boost::property_tree::ptree& tree) {
     type = tree.get<std::string>("type", "");
-    auto bounding_tree = tree.get_child("coordinates").front().second;
+    auto outer_tree = tree.get_child("coordinates", boost::property_tree::ptree());
+    if (outer_tree.empty()) {
+        return;
+    }
+    auto bounding_tree = outer_tree.front().second;
     for (const auto& tree : bounding_tree) {
-        coordinates.push_back(std::array<float, 2>{0.0});
+        coordinates.push_back(std::array<float, 2>{{0.0}});
         int count{0};
         for (const auto& coord : tree.second) {
-            coordinates.back()[count++] = coord.second.get_value<float>(0.0);
+            coordinates.back()[count++] = coord.second.get_value<float>(-1.0);
         }
     }
 }

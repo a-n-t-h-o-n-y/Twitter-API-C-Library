@@ -15,9 +15,9 @@ Size_data::operator std::string() const {
 }
 
 void Size_data::construct(const boost::property_tree::ptree& tree) {
-    height = tree.get<int>("h");
-    width = tree.get<int>("w");
-    resize = tree.get<std::string>("resize");
+    height = tree.get<int>("h", -1);
+    width = tree.get<int>("w", -1);
+    resize = tree.get<std::string>("resize", "");
 }
 
 }  // namespace tal

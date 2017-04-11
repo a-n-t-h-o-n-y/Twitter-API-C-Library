@@ -3,10 +3,11 @@
 
 #include <string>
 #include <cstdint>
+#include <memory>
 #include <boost/property_tree/ptree_fwd.hpp>
+#include "tweet.hpp"
 #include "objects_template.hpp"
 #include "entities.hpp"
-#include "tweet.hpp"
 
 namespace tal {
 

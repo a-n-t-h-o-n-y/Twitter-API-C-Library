@@ -8,8 +8,8 @@ namespace tal {
 
 Place_data::operator std::string() const {
     std::stringstream ss;
-    ss << "attributes: " << attributes
-       << "\nbounding_box: " << bounding_box
+    ss << "attributes:\n" << attributes
+       << "\nbounding_box:\n" << bounding_box
        << "\ncountry: " << country
        << "\ncoutry_code: " << country_code
        << "\nfull_name: " << full_name

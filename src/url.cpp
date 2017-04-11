@@ -17,13 +17,13 @@ URL_data::operator std::string() const {
 }
 
 void URL_data::construct(const boost::property_tree::ptree& tree) {
-    display_url = tree.get<std::string>("display_url");
-    expanded_url = tree.get<std::string>("expanded_url");
-    url = tree.get<std::string>("url");
-    auto indices_tree = tree.get_child("indices");
+    display_url = tree.get<std::string>("display_url", "");
+    expanded_url = tree.get<std::string>("expanded_url", "");
+    url = tree.get<std::string>("url", "");
+    auto indices_tree = tree.get_child("indices", boost::property_tree::ptree());
     int count{0};
     for (auto& pair : indices_tree) {
-        indices[count++] = pair.second.get_value<int>();
+        indices[count++] = pair.second.get_value<int>(-1);
     }
 }
 
