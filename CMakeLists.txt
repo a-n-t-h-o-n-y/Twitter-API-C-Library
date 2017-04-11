@@ -31,13 +31,13 @@ set(TAL_SRC src/account.cpp src/app.cpp src/oauth.cpp src/request.cpp
 
 add_library(TAL STATIC ${TAL_SRC})
 
-set(MAIN src/main.cpp)
+# set(MAIN src/main.cpp)
 
-# set(TEST_SOURCES test/test.cpp)
+set(TEST test/messy_tester.cpp)
 
 find_package(Boost 1.58.0 COMPONENTS system iostreams)
 if(Boost_FOUND)
-    add_executable(main ${MAIN})
+    add_executable(tests ${TEST})
     include_directories(${Boost_INCLUDE_DIRS})
     link_directories(${Boost_LIBRARY_DIRS})
 endif(Boost_FOUND)
@@ -48,10 +48,10 @@ if (ZLIB_FOUND)
 endif(ZLIB_FOUND)
 
 # Link libraries to executables
-target_link_libraries(main TAL ${ZLIB_LIBRARIES} ${Boost_LIBRARIES} -lssl
-    -lcrypto -pthread)
-# target_link_libraries(tests gtest gtest_main ${Boost_SYSTEM_LIBRARY} -lssl
-        # -lcrypto -pthread)
+# target_link_libraries(main TAL ${ZLIB_LIBRARIES} ${Boost_LIBRARIES} -lssl
+#     -lcrypto -pthread)
+target_link_libraries(tests TAL ${ZLIB_LIBRARIES} ${Boost_LIBRARIES}
+    -lssl -lcrypto -pthread gtest gtest_main)
 
 # Doxygen Target - Doxyfile in project/doc - make doc
 find_package(Doxygen)

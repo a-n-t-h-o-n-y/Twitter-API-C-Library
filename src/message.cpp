@@ -38,7 +38,7 @@ std::string Message::get(const std::string& key) const {
     if (json_tree_ptr_ == nullptr) {
         this->build_ptree();
     }
-    return json_tree_ptr_->get<std::string>(key);
+    return json_tree_ptr_->get<std::string>(key, "");
 }
 
 }  // namespace tal

@@ -15,13 +15,15 @@
 #include <sstream>
 #include <stdexcept>
 
+#include <iostream> // temp
+
 #include <openssl/hmac.h>
 #include <openssl/rand.h>
 
 #include <boost/algorithm/string.hpp>
 
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
+// #include <boost/property_tree/ptree.hpp>
+// #include <boost/property_tree/json_parser.hpp>
 
 // Helper functions here (they will not be accessibly from outside).
 namespace {
@@ -173,15 +175,11 @@ void acquire_bearer_token(App& app) {
     bearer_request.add_header("Accept-Encoding", "gzip");
 
     auto message = detail::send_HTTP(bearer_request, app.io_service());
-    // Parse JSON resonse into bearer token
-    boost::property_tree::ptree json_tree;
-    std::istringstream ss(static_cast<std::string>(message));
-    boost::property_tree::read_json(ss, json_tree);
-    std::string token_type{json_tree.get<std::string>("token_type")};
+    std::string token_type{message.get("token_type")};
     if (token_type != "bearer") {
         throw std::runtime_error("Invalid bearer token type");
     }
-    app.set_bearer_token(json_tree.get<std::string>("access_token"));
+    app.set_bearer_token(message.get("access_token"));
 }
 
 void authorize(Request& request, const App& app, const Account& account) {

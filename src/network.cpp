@@ -12,6 +12,8 @@
 #include <string>
 #include <memory>
 
+#include <iostream> // temp
+
 #include "request.hpp"
 #include "message.hpp"
 #include "headers.hpp"
@@ -49,11 +51,18 @@ Message send_HTTP(const Request& request, boost::asio::io_service& ios) {
     stream << request;
     boost::asio::write(*socket_ptr, buffer);
 
-    // Read Response
+    // Read Response - throws
     detail::digest(Status_line(*socket_ptr));
 
     auto header = Headers(*socket_ptr);
+    // boost::system::error_code ec;
+    // auto n = boost::asio::read(*socket_ptr, buffer, ec);
+    // std::string out(n, ' ');
+    // std::istream ist(&buffer);
+    // ist.read(&out[0], n);
+    // std::cout << out << std::endl;
     std::string content_length = header.get("content-length");
+    std::cout << "content_length: " << content_length << std::endl;
     std::string message;
     if (!content_length.empty()) {
         auto length = std::stoi(content_length);

@@ -18,8 +18,7 @@ Status_line::Status_line(ssl_socket& socket) {
     std::istream status_stream(&buffer);
     status_stream >> this->HTTP_version;
     status_stream >> this->status_code;
-    std::getline(status_stream, this->reason_phrase);
-    this->reason_phrase.pop_back();
+    std::getline(status_stream, this->reason_phrase, '\r');
 }
 
 Status_line::operator std::string() const {

@@ -9,8 +9,9 @@
 #include <vector>
 #include <stdexcept>
 #include <cstddef>
-#include <iostream>
 #include <utility>
+
+#include <iostream> // temp
 
 #include <boost/asio.hpp>
 #include "message.hpp"
@@ -42,10 +43,7 @@ void App::update_status(const std::string& message) {
     us_request.HTTP_method = "POST";
     us_request.host = "api.twitter.com";
     us_request.URI = "/1.1/statuses/update.json";
-
     us_request.add_message("status", message);
-
-    std::cout << "Tweet about to be sent: " << message << std::endl; // temp
     this->send(us_request, account_);
 }
 
@@ -55,7 +53,6 @@ void App::verify_credentials() {
     r.host = "api.twitter.com";
     r.URI = "/1.1/account/verify_credentials.json";
     std::cout << this->send(r) << std::endl;
-    // detail::digest(this->send(r));
 }
 
 void App::get_favorites(const std::string& user) {
@@ -65,7 +62,7 @@ void App::get_favorites(const std::string& user) {
     r.URI = "/1.1/favorites/list.json";
     r.add_query("screen_name", user);
     r.add_query("count", "1");
-    std::cout << this->send(r) << std::endl;
+    this->send(r);
 }
 
 void App::register_to_user_stream(Stream::Callback callback,
