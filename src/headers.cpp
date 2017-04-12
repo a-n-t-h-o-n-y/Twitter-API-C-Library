@@ -4,33 +4,25 @@
 #include <istream>
 #include <utility>
 #include <sstream>
-#include <iostream> // temp
-
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
-
 #include "detail/types.hpp"
 
 namespace tal {
 
-Headers::Headers(ssl_socket& socket) {
-    boost::asio::streambuf buffer;
+Headers::Headers(ssl_socket& socket, boost::asio::streambuf& buffer) {
     boost::system::error_code ec;
-    auto n = boost::asio::read_until(socket, buffer, "\r\n\r\n", ec);
+    boost::asio::read_until(socket, buffer, "\r\n\r\n", ec);
     if (ec && ec != boost::asio::error::eof) {
         throw boost::system::system_error(ec);
     }
     std::istream header_stream(&buffer);
-    //
-    std::string out(n, ' ');
-    header_stream.read(&out[0], n);
-    std::cout << out << std::endl;
-    //
     std::string key;
     std::string value;
-    // value needs to be a getline, it can have spaces
-    while(header_stream >> key >> value) {
-        key.pop_back(); // Remove :
+    while (header_stream >> key && std::getline(header_stream, value)) {
+        key = key.substr(0, key.size() - 1);  // To remove ':'
+        // To remove leading ' ' and trailing '\r'
+        value = value.substr(1, value.size() - 2);
         this->headers_.push_back(std::make_pair(key, value));
     }
 }

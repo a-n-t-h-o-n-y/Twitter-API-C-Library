@@ -5,14 +5,14 @@
 #include <vector>
 #include <utility>
 #include <ostream>
-
+#include <boost/asio/streambuf.hpp>
 #include "detail/types.hpp"
 
 namespace tal {
 
 class Headers {
    public:
-    Headers(ssl_socket& socket);
+    Headers(ssl_socket& socket, boost::asio::streambuf& buffer);
     explicit operator std::string() const;
     std::string get(const std::string& key) const;
 

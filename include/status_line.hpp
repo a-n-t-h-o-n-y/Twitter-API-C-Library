@@ -1,15 +1,15 @@
 #ifndef STATUS_LINE_HPP
 #define STATUS_LINE_HPP
 
-#include "detail/types.hpp"
-
 #include <ostream>
 #include <string>
+#include <boost/asio/streambuf.hpp>
+#include "detail/types.hpp"
 
 namespace tal {
 
 struct Status_line {
-    Status_line(ssl_socket& socket);
+    Status_line(ssl_socket& socket, boost::asio::streambuf& buffer);
     explicit operator std::string() const;
 
     std::string HTTP_version;

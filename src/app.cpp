@@ -4,6 +4,7 @@
 #include "request.hpp"
 #include "detail/oauth.hpp"
 #include "detail/encode.hpp"
+#include "objects/user.hpp"
 
 #include <string>
 #include <vector>
@@ -11,7 +12,7 @@
 #include <cstddef>
 #include <utility>
 
-#include <iostream> // temp
+#include <iostream>  // temp
 
 #include <boost/asio.hpp>
 #include "message.hpp"
@@ -47,12 +48,18 @@ void App::update_status(const std::string& message) {
     this->send(us_request, account_);
 }
 
-void App::verify_credentials() {
+void App::verify_credentials(bool include_entities,
+                             bool skip_status,
+                             bool include_email) {
     Request r;
     r.HTTP_method = "GET";
     r.host = "api.twitter.com";
     r.URI = "/1.1/account/verify_credentials.json";
-    std::cout << this->send(r) << std::endl;
+    auto bool_to_string = [](bool b){ return b ? "true" : "false";};
+    r.add_query("include_entities", bool_to_string(include_entities));
+    r.add_query("skip_status", bool_to_string(skip_status));
+    r.add_query("include_email", bool_to_string(include_email));
+    std::cout << this->send(r, account_) << std::endl;
 }
 
 void App::get_favorites(const std::string& user) {

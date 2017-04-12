@@ -46,30 +46,24 @@ std::unique_ptr<ssl_socket> make_connection(const Request& r,
 Message send_HTTP(const Request& request, boost::asio::io_service& ios) {
     auto socket_ptr = make_connection(request, ios);
     // Send request
-    boost::asio::streambuf buffer;
-    std::ostream stream(&buffer);
+    boost::asio::streambuf write_buffer;
+    std::ostream stream(&write_buffer);
     stream << request;
-    boost::asio::write(*socket_ptr, buffer);
+    boost::asio::write(*socket_ptr, write_buffer);
 
     // Read Response - throws
-    detail::digest(Status_line(*socket_ptr));
+    boost::asio::streambuf read_buffer;
+    detail::digest(Status_line(*socket_ptr, read_buffer));
 
-    auto header = Headers(*socket_ptr);
-    // boost::system::error_code ec;
-    // auto n = boost::asio::read(*socket_ptr, buffer, ec);
-    // std::string out(n, ' ');
-    // std::istream ist(&buffer);
-    // ist.read(&out[0], n);
-    // std::cout << out << std::endl;
+    auto header = Headers(*socket_ptr, read_buffer);
     std::string content_length = header.get("content-length");
-    std::cout << "content_length: " << content_length << std::endl;
     std::string message;
     if (!content_length.empty()) {
         auto length = std::stoi(content_length);
-        message = detail::read_length(*socket_ptr, length);
+        message = detail::read_length(*socket_ptr, read_buffer, length);
     } else if (header.get("transfer-encoding") == "chunked") {
         while (true) {
-            std::string chunk{read_chunk(*socket_ptr)};
+            std::string chunk{read_chunk(*socket_ptr, read_buffer)};
             if (chunk.empty()) {
                 break;
             }

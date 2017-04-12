@@ -8,8 +8,7 @@
 #include <boost/asio/ssl.hpp>
 
 namespace tal {
-Status_line::Status_line(ssl_socket& socket) {
-    boost::asio::streambuf buffer;
+Status_line::Status_line(ssl_socket& socket, boost::asio::streambuf& buffer) {
     boost::system::error_code ec;
     boost::asio::read_until(socket, buffer, "\r\n", ec);
     if (ec && ec != boost::asio::error::eof) {

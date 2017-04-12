@@ -52,7 +52,7 @@ class App {
     // Twitter Functions
     void update_status(const std::string& message);
 
-    void verify_credentials();
+    void verify_credentials(bool include_entities = true, bool skip_status = false, bool include_email = false);
 
     void get_favorites(const std::string& user);
 

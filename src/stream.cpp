@@ -1,18 +1,17 @@
 #include "stream.hpp"
+
+#include <functional>
+#include <sstream>
+#include <iostream>
+#include <memory>
+#include <boost/asio.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include "app.hpp"
 #include "detail/oauth.hpp"
 #include "detail/network.hpp"
 #include "detail/parse.hpp"
 #include "detail/encode.hpp"
 #include "headers.hpp"
-
-#include <functional>
-#include <sstream>
-#include <iostream>
-#include <memory>
-
-#include <boost/asio.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
 
 namespace tal {
 
@@ -97,7 +96,8 @@ void Stream::dispatch(const boost::system::error_code& ec,
     reconnect_mtx_.lock();
     reconnect_ = false;
     reconnect_mtx_.unlock();
-    detail::digest(Status_line(*socket_));
+    boost::asio::streambuf buffer;
+    detail::digest(Status_line(*socket_, buffer));
     // Headers header(*socket_);  // change to socket_ptr_ eventually
     // std::cout << header << std::endl;
 
@@ -114,7 +114,7 @@ void Stream::dispatch(const boost::system::error_code& ec,
                 boost::posix_time::seconds(90));
             timer_ptr_->async_wait(
                 std::bind(&Stream::timer_expired, this, std::placeholders::_1));
-            message_str.append(detail::read_chunk(*socket_));
+            message_str.append(detail::read_chunk(*socket_, buffer));
             timer_ptr_->expires_at(boost::posix_time::pos_infin);
         }
         auto message = message_str.substr(0, pos);
