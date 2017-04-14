@@ -8,6 +8,7 @@
 
 namespace tal {
 
+    //maybe change this to Response?
 class Message {
    public:
     explicit Message(std::string message_body);
