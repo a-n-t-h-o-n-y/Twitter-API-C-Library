@@ -45,9 +45,14 @@ if (ZLIB_FOUND)
     include_directories(${ZLIB_INCLUDE_DIRS})
 endif(ZLIB_FOUND)
 
+find_package(OpenSSL REQUIRED)
+if (OPENSSL_FOUND)
+    include_directories(${OPENSSL_INCLUDE_DIR})
+endif()
+
 # Link libraries to executables
 target_link_libraries(tests TAL ${ZLIB_LIBRARIES} ${Boost_LIBRARIES}
-    -lssl -lcrypto -pthread gtest gtest_main)
+    ${OPENSSL_LIBRARIES} -pthread gtest gtest_main)
 
 # Doxygen Target - Doxyfile in project/doc - make doc
 find_package(Doxygen)
