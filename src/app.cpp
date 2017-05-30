@@ -1,44 +1,43 @@
 #include "app.hpp"
 
-#include "detail/network.hpp"
-#include "request.hpp"
-#include "response.hpp"
-#include "detail/oauth.hpp"
-#include "detail/encode.hpp"
-
 #include <string>
 #include <vector>
 #include <stdexcept>
 #include <cstddef>
-
+#include <utility>
 #include <iostream>  // temp
+#include <boost/asio.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include "message.hpp"
+#include "detail/network.hpp"
+#include "request.hpp"
+#include "detail/oauth.hpp"
+#include "detail/encode.hpp"
+#include "objects/user.hpp"
+#include "objects/tweet.hpp"
+#include "detail/to_string.hpp"
 
 namespace tal {
 
-Response App::send(const Request& request, const Account& account) {
+Message App::send(Request& request, const Account& account) {
     // Inject OAuth to the request
-    Request authenticated_request = detail::authorize(request, *this, account);
-    // std::cout << authenticated_request;
-    // std::cout << std::endl;
+    detail::authorize(request, *this, account);
 
     // Send request to generic send function
-    Response response = detail::send_HTTP(authenticated_request);
-    // std::cout << response;
-    return response;
+    return detail::send_HTTP(request, this->io_service());
 }
 
-Response App::send(const Request& request) {
+Message App::send(Request& request) {
     // Inject Application only OAuth into the request
-    Request authenticated_request = detail::authorize(request, *this);
+    detail::authorize(request, *this);
 
     // send request to generic send function
-    Response response = detail::send_HTTP(authenticated_request);
-    // std::cout << response;
-    return response;  // combine this with above detail::send once cout gone.
+    return detail::send_HTTP(request, this->io_service());
 }
 
-void App::add_account(const Account& account) {
-    accounts_.push_back(account);
+void App::set_account(const Account& account) {
+    account_ = account;
 }
 
 void App::update_status(const std::string& message) {
@@ -46,59 +45,79 @@ void App::update_status(const std::string& message) {
     us_request.HTTP_method = "POST";
     us_request.host = "api.twitter.com";
     us_request.URI = "/1.1/statuses/update.json";
-
     us_request.add_message("status", message);
+    this->send(us_request, account_);
+}
 
-    for (const Account& a : accounts_) {
-        detail::digest(this->send(us_request, a));
+User App::verify_credentials(bool include_entities,
+                             bool skip_status,
+                             bool include_email) {
+    Request r;
+    r.HTTP_method = "GET";
+    r.host = "api.twitter.com";
+    r.URI = "/1.1/account/verify_credentials.json";
+
+    r.add_query("include_entities", detail::to_string(include_entities));
+    r.add_query("skip_status", detail::to_string(skip_status));
+    r.add_query("include_email", detail::to_string(include_email));
+
+    return User{this->send(r, account_)};
+}
+
+std::vector<Tweet> App::get_favorites(const std::string& screen_name,
+                                      int count,
+                                      bool include_entities,
+                                      std::int64_t user_id,
+                                      std::int64_t since_id,
+                                      std::int64_t max_id) {
+    Request r;
+    r.HTTP_method = "GET";
+    r.host = "api.twitter.com";
+    r.URI = "/1.1/favorites/list.json";
+
+    if (!screen_name.empty()) {
+        r.add_query("screen_name", screen_name);
     }
-    std::cout << "Tweet sent: " << message;
+    if (count != -1) {
+        r.add_query("count", detail::to_string(count));
+    }
+    r.add_query("include_entities", detail::to_string(include_entities));
+    if (user_id != -1) {
+        r.add_query("user_id", detail::to_string(user_id));
+    }
+    if (since_id != -1) {
+        r.add_query("since_id", detail::to_string(since_id));
+    }
+    if (since_id != -1) {
+        r.add_query("max_id", detail::to_string(max_id));
+    }
+
+    // Parse Tweet Array
+    boost::property_tree::ptree tree;
+    std::stringstream json_stream{this->send(r).json()};
+    boost::property_tree::read_json(json_stream, tree);
+    tree = tree.get_child("");
+    std::vector<Tweet> result;
+    for (const auto& pair : tree) {
+        result.push_back(Tweet(pair.second));
+    }
+    return result;
 }
 
-void App::acquire_bearer_token() {
-    std::string token_credentials = detail::url_encode(this->key()) + ':' +
-                                    detail::url_encode(this->secret());
-    std::vector<unsigned char> token_base64(std::begin(token_credentials),
-                                            std::end(token_credentials));
-    token_credentials = detail::base64_encode(token_base64);
-    Request bearer_request;
-    bearer_request.HTTP_method = "POST";
-    bearer_request.URI = "/oauth2/token";
-    bearer_request.authorization = "Basic " + token_credentials;
-    bearer_request.content_type += ";charset=UTF8";
-    bearer_request.add_message("grant_type", "client_credentials");
-    bearer_request.add_query("include_entities", "true");
-    bearer_request.add_header("Accept-Encoding", "gzip");
-
-    Response response = detail::send_HTTP(bearer_request);
-    // Makes sure the response was OK.
-    detail::digest(response);
-    // std::cout << bearer_request;
-    std::cout << response;
-
-
-    // Parse response for bearer token and save it in bearer_token_
-
-    // std::string token_type = response.message_body.substr(
-    //     response.message_body.find("token_type") + 12, 6);
-    // if (token_type != "bearer") {
-    //     throw std::runtime_error(
-    //         "Wrong token type when attempting to aquire bearer token.");
-    // }
-    // std::size_t token_beg = response.message_body.find("access_token") + 15;
-    // std::size_t token_end = response.message_body.find("\"}");
-    // this->bearer_token_ =
-    //     response.message_body.substr(token_beg, token_end - token_beg);
+void App::register_to_user_stream(Stream::Callback callback,
+                                  Stream::Condition condition) {
+    user_stream_.register_function(std::move(callback), std::move(condition));
 }
 
-void App::contact_google() {
-    Request request;
-    request.host = "www.google.com";
-    request.URI = "/";
-    request.HTTP_method = "GET";
+void App::register_to_filtered_stream(Stream::Callback callback,
+                                      Stream::Condition condition) {
+    filtered_stream_.register_function(std::move(callback),
+                                       std::move(condition));
+}
 
-    Response response = detail::send_HTTP(request);
-    std::cout << response.message_body;
+void App::register_to_sample_stream(Stream::Callback callback,
+                                    Stream::Condition condition) {
+    sample_stream_.register_function(std::move(callback), std::move(condition));
 }
 
 }  // namespace tal

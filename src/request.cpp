@@ -22,7 +22,7 @@ Request::operator std::string() const {
 
     // Header
     request << "Accept: " << accept << "\r\n";
-    request << "Connection: " << connection << "\r\n";
+    // request << "Connection: " << connection << "\r\n";
     request << "User-Agent: " << user_agent << "\r\n";
     request << "Content-Type: " << content_type << "\r\n";
     if (!authorization.empty()) {

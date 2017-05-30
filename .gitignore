@@ -1,5 +1,6 @@
 *.txt
 !CMakeLists.txt
+test/*
 bin/*
 doc/*
 notes/
@@ -10,5 +11,4 @@ certs/
 *.vim
 *.a
 *.so
-main.cpp
 tags

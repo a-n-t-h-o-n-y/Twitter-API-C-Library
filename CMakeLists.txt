@@ -22,26 +22,37 @@ include_directories(include)
 
 # Collect Source Files into Variable Names
 set(TAL_SRC src/account.cpp src/app.cpp src/oauth.cpp src/request.cpp
-          src/encode.cpp src/network.cpp src/response.cpp)
+          src/encode.cpp src/network.cpp src/stream.cpp src/status_line.cpp
+          src/headers.cpp src/message.cpp src/parse.cpp src/hashtag.cpp
+          src/size.cpp src/sizes.cpp src/url.cpp src/user_mention.cpp
+          src/media.cpp src/entities.cpp src/coordinates.cpp
+          src/bounding_box.cpp src/place_attributes.cpp src/place.cpp
+          src/user.cpp src/tweet.cpp)
 
 add_library(TAL STATIC ${TAL_SRC})
 
-set(MAIN src/main.cpp)
+set(TEST test/main.cpp)
 
-# set(TEST_SOURCES test/test.cpp)
-
-find_package(Boost 1.58.0 COMPONENTS system)
+find_package(Boost 1.58.0 COMPONENTS system iostreams)
 if(Boost_FOUND)
-    add_executable(main ${MAIN})
+    add_executable(tests ${TEST})
     include_directories(${Boost_INCLUDE_DIRS})
     link_directories(${Boost_LIBRARY_DIRS})
 endif(Boost_FOUND)
 
+find_package(ZLIB REQUIRED)
+if (ZLIB_FOUND)
+    include_directories(${ZLIB_INCLUDE_DIRS})
+endif(ZLIB_FOUND)
+
+find_package(OpenSSL REQUIRED)
+if (OPENSSL_FOUND)
+    include_directories(${OPENSSL_INCLUDE_DIR})
+endif()
+
 # Link libraries to executables
-target_link_libraries(main TAL ${Boost_SYSTEM_LIBRARY} -lssl -lcrypto
-    -pthread)
-# target_link_libraries(tests gtest gtest_main ${Boost_SYSTEM_LIBRARY} -lssl
-        # -lcrypto -pthread)
+target_link_libraries(tests TAL ${ZLIB_LIBRARIES} ${Boost_LIBRARIES}
+    ${OPENSSL_LIBRARIES} -pthread gtest gtest_main)
 
 # Doxygen Target - Doxyfile in project/doc - make doc
 find_package(Doxygen)

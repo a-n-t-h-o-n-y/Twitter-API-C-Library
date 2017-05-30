@@ -1,0 +1,48 @@
+#include "headers.hpp"
+
+#include <string>
+#include <istream>
+#include <utility>
+#include <sstream>
+#include <boost/asio.hpp>
+#include <boost/asio/ssl.hpp>
+#include "detail/types.hpp"
+
+namespace tal {
+
+Headers::Headers(ssl_socket& socket, boost::asio::streambuf& buffer) {
+    boost::system::error_code ec;
+    boost::asio::read_until(socket, buffer, "\r\n\r\n", ec);
+    if (ec && ec != boost::asio::error::eof) {
+        throw boost::system::system_error(ec);
+    }
+    std::istream header_stream(&buffer);
+    std::string key;
+    std::string value;
+    while (header_stream >> key && std::getline(header_stream, value)) {
+        key = key.substr(0, key.size() - 1);  // To remove ':'
+        // To remove leading ' ' and trailing '\r'
+        value = value.substr(1, value.size() - 2);
+        this->headers_.push_back(std::make_pair(key, value));
+    }
+}
+
+Headers::operator std::string() const {
+    std::stringstream header_stream;
+    for (const auto& key_pair : headers_) {
+        header_stream << key_pair.first << ": " << key_pair.second << "\r\n";
+    }
+    header_stream << "\r\n";
+    return header_stream.str();
+}
+
+std::string Headers::get(const std::string& key) const {
+    for (const auto& key_value : headers_) {
+        if (key_value.first == key) {
+            return key_value.second;
+        }
+    }
+    return "";
+}
+
+}  // namespace tal
