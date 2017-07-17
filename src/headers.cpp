@@ -4,6 +4,8 @@
 #include <istream>
 #include <utility>
 #include <sstream>
+#include <iostream>  // temp
+
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 #include "detail/types.hpp"
@@ -16,14 +18,18 @@ Headers::Headers(ssl_socket& socket, boost::asio::streambuf& buffer) {
     if (ec && ec != boost::asio::error::eof) {
         throw boost::system::system_error(ec);
     }
-    std::istream header_stream(&buffer);
+    std::string line;
     std::string key;
     std::string value;
-    while (header_stream >> key && std::getline(header_stream, value)) {
-        key = key.substr(0, key.size() - 1);  // To remove ':'
-        // To remove leading ' ' and trailing '\r'
-        value = value.substr(1, value.size() - 2);
-        this->headers_.push_back(std::make_pair(key, value));
+    std::istream header_stream(&buffer);
+    while (std::getline(header_stream, line, '\n')) {
+        if (line.size() > 2) {
+            line.pop_back();
+            auto pos = line.find(": ");
+            key = std::string(std::begin(line), std::begin(line) + pos);
+            value = std::string(std::begin(line) + pos + 2, std::end(line));
+            this->headers_.push_back(std::make_pair(key, value));
+        }
     }
 }
 

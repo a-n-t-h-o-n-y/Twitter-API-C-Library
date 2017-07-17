@@ -55,11 +55,9 @@ class App {
     // REST API
     Message get_account_settings();
 
-    User verify_credentials(bool include_entities = true,
+    Message verify_credentials(bool include_entities = true,
                             bool skip_status = false,
                             bool include_email = false);
-
-    Message get_rate_limit_status(std::string resources = std::string());
 
     // Implement cursoring and interface that makes sense for that.
     // It's easy
@@ -272,6 +270,10 @@ class App {
         int count = -1,
         bool include_entities = false,
         bool include_retweets = true);
+
+    Message get_application_rate_limit_status();
+
+    Message get_account_rate_limit_status();
 
     ////////////////////////////////////////////////////////////////////////////
 

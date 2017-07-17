@@ -49,7 +49,7 @@ void App::update_status(const std::string& message) {
     this->send(us_request, account_);
 }
 
-User App::verify_credentials(bool include_entities,
+Message App::verify_credentials(bool include_entities,
                              bool skip_status,
                              bool include_email) {
     Request r;
@@ -60,8 +60,31 @@ User App::verify_credentials(bool include_entities,
     r.add_query("include_entities", detail::to_string(include_entities));
     r.add_query("skip_status", detail::to_string(skip_status));
     r.add_query("include_email", detail::to_string(include_email));
+    return this->send(r, account_);
+}
 
-    return User{this->send(r, account_)};
+Message App::get_application_rate_limit_status() {
+    Request r;
+    r.HTTP_method = "GET";
+    r.host = "api.twitter.com";
+    r.URI = "/1.1/application/rate_limit_status.json";
+    return this->send(r);
+}
+
+Message App::get_account_settings() {
+    Request r;
+    r.HTTP_method = "GET";
+    r.host = "api.twitter.com";
+    r.URI = "/1.1/account/settings.json";
+    return this->send(r, account_);
+}
+
+Message App::get_account_rate_limit_status() {
+    Request r;
+    r.HTTP_method = "GET";
+    r.host = "api.twitter.com";
+    r.URI = "/1.1/application/rate_limit_status.json";
+    return this->send(r, account_);
 }
 
 std::vector<Tweet> App::get_favorites(const std::string& screen_name,
