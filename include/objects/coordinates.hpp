@@ -1,5 +1,5 @@
-#ifndef COORDINATES_HPP
-#define COORDINATES_HPP
+#ifndef OBJECTS_COORDINATES_HPP
+#define OBJECTS_COORDINATES_HPP
 
 #include <array>
 #include <string>
@@ -11,8 +11,8 @@ namespace tal {
 struct Coordinates_data {
     explicit operator std::string() const;
 
-    float longitude;
-    float latitude;
+    float longitude = 0.0;
+    float latitude = 0.0;
     std::string type;
 
    protected:
@@ -22,4 +22,4 @@ struct Coordinates_data {
 using Coordinates = detail::Objects_template<Coordinates_data>;
 
 }  // namespace tal
-#endif  // COORDINATES_HPP
+#endif  // OBJECTS_COORDINATES_HPP

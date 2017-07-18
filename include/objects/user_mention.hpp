@@ -1,5 +1,5 @@
-#ifndef USER_MENTION_HPP
-#define USER_MENTION_HPP
+#ifndef DETAIL_USER_MENTION_HPP
+#define DETAIL_USER_MENTION_HPP
 
 #include <string>
 #include <cstdint>
@@ -25,4 +25,4 @@ struct User_mention_data {
 using User_mention = detail::Objects_template<User_mention_data>;
 
 }  // namespace tal
-#endif  // USER_MENTION_HPP
+#endif  // DETAIL_USER_MENTION_HPP

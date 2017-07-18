@@ -1,5 +1,5 @@
-#ifndef ENTITIES_HPP
-#define ENTITIES_HPP
+#ifndef DETAIL_ENTITIES_HPP
+#define DETAIL_ENTITIES_HPP
 
 #include <string>
 #include <array>
@@ -30,4 +30,4 @@ struct Entities_data {
 using Entities = detail::Objects_template<Entities_data>;
 
 }  // namespace tal
-#endif  // ENTITIES_HPP
+#endif  // DETAIL_ENTITIES_HPP

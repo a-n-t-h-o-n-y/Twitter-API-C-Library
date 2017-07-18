@@ -1,9 +1,9 @@
-#include "detail/oauth.hpp"
 #include "account.hpp"
 #include "app.hpp"
-#include "request.hpp"
 #include "detail/encode.hpp"
 #include "detail/network.hpp"
+#include "detail/oauth.hpp"
+#include "request.hpp"
 
 #include <algorithm>
 #include <ctime>
@@ -15,15 +15,12 @@
 #include <sstream>
 #include <stdexcept>
 
-#include <iostream> // temp
+#include <iostream>  // temp
 
 #include <openssl/hmac.h>
 #include <openssl/rand.h>
 
 #include <boost/algorithm/string.hpp>
-
-// #include <boost/property_tree/ptree.hpp>
-// #include <boost/property_tree/json_parser.hpp>
 
 // Helper functions here (they will not be accessibly from outside).
 namespace {
@@ -55,17 +52,17 @@ std::string hmac_sha1_signature(const std::string& key,
     unsigned int length = 20;
     std::vector<unsigned char> result_buffer(length, ' ');
 
-    HMAC_CTX context;
-    HMAC_CTX_init(&context);
+    HMAC_CTX* context = HMAC_CTX_new();
+    HMAC_CTX_reset(context);
 
     // Key
-    HMAC_Init_ex(&context, static_cast<const void*>(key_buffer.data()),
+    HMAC_Init_ex(context, static_cast<const void*>(key_buffer.data()),
                  key.length(), EVP_sha1(), nullptr);
     // Message
-    HMAC_Update(&context, message_buffer.data(), message.length());
+    HMAC_Update(context, message_buffer.data(), message.length());
+
     // Resultant Signature
-    HMAC_Final(&context, result_buffer.data(), &length);
-    HMAC_CTX_cleanup(&context);
+    HMAC_Final(context, result_buffer.data(), &length);
 
     return detail::base64_encode(result_buffer);
 }
@@ -169,7 +166,7 @@ void acquire_bearer_token(App& app) {
     bearer_request.HTTP_method = "POST";
     bearer_request.URI = "/oauth2/token";
     bearer_request.authorization = "Basic " + token_credentials;
-    bearer_request.content_type += ";charset=UTF8";
+    bearer_request.content_type += ";charset=UTF-8";
     bearer_request.add_message("grant_type", "client_credentials");
     bearer_request.add_query("include_entities", "true");
     bearer_request.add_header("Accept-Encoding", "gzip");

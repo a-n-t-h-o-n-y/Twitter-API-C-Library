@@ -1,5 +1,5 @@
-#ifndef BOUNDING_BOX_HPP
-#define BOUNDING_BOX_HPP
+#ifndef OBJECTS_BOUNDING_BOX_HPP
+#define OBJECTS_BOUNDING_BOX_HPP
 
 #include <string>
 #include <boost/property_tree/ptree_fwd.hpp>
@@ -20,4 +20,4 @@ struct Bounding_box_data {
 using Bounding_box = detail::Objects_template<Bounding_box_data>;
 
 }  // namespace tal
-#endif  // BOUNDING_BOX_HPP
+#endif  // OBJECTS_BOUNDING_BOX_HPP

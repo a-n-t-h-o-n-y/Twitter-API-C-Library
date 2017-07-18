@@ -1,5 +1,5 @@
-#ifndef TYPES_HPP
-#define TYPES_HPP
+#ifndef DETAIL_TYPES_HPP
+#define DETAIL_TYPES_HPP
 
 #include <cstdint>
 
@@ -18,4 +18,4 @@ struct coordinates {
 
 } // namespace tal
 
-#endif // TYPES_HPP
+#endif // DETAIL_TYPES_HPP

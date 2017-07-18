@@ -13,7 +13,6 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
-// #include "user.hpp"
 #include "detail/types.hpp"
 #include "request.hpp"
 #include "message.hpp"
@@ -208,12 +207,12 @@ class Stream {
 
 class User_stream : public Stream {
    public:
-    User_stream(App* app);
+    explicit User_stream(App* app);
 
    private:
     // Calls down to the base implementation and adds on extra user params.
-    virtual void build_parameters(Request& r) override;
-    virtual void authorize(Request& r) override;
+    void build_parameters(Request& r) override;
+    void authorize(Request& r) override;
 };
 
 class Public_stream : public Stream {
@@ -221,7 +220,7 @@ class Public_stream : public Stream {
     Public_stream(App* app, std::string uri, std::string method);
 
    private:
-    virtual void authorize(Request& r) override;
+    void authorize(Request& r) override;
 };
 
 }  // namespace tal

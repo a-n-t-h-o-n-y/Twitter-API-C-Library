@@ -96,8 +96,8 @@ void Stream::dispatch(const boost::system::error_code& ec,
     reconnect_mtx_.lock();
     reconnect_ = false;
     reconnect_mtx_.unlock();
-    boost::asio::streambuf buffer;
-    detail::digest(Status_line(*socket_, buffer));
+    boost::asio::streambuf buffer_read;
+    detail::digest(Status_line(*socket_, buffer_read));
     // Headers header(*socket_);  // change to socket_ptr_ eventually
     // std::cout << header << std::endl;
 
@@ -110,11 +110,10 @@ void Stream::dispatch(const boost::system::error_code& ec,
         // what about keep alive newlines?
         std::size_t pos{0};
         while ((pos = message_str.find("\r\n")) == std::string::npos) {
-            timer_ptr_->expires_from_now(
-                boost::posix_time::seconds(90));
+            timer_ptr_->expires_from_now(boost::posix_time::seconds(90));
             timer_ptr_->async_wait(
                 std::bind(&Stream::timer_expired, this, std::placeholders::_1));
-            message_str.append(detail::read_chunk(*socket_, buffer));
+            message_str.append(detail::read_chunk(*socket_, buffer_read));
             timer_ptr_->expires_at(boost::posix_time::pos_infin);
         }
         auto message = message_str.substr(0, pos);

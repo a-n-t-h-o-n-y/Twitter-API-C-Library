@@ -1,5 +1,5 @@
-#ifndef SIZES_HPP
-#define SIZES_HPP
+#ifndef DETAIL_SIZES_HPP
+#define DETAIL_SIZES_HPP
 
 #include <string>
 #include <ostream>
@@ -24,4 +24,4 @@ struct Sizes_data {
 using Sizes = detail::Objects_template<Sizes_data>;
 
 }  // namespace tal
-#endif  // SIZES_HPP
+#endif  // DETAIL_SIZES_HPP

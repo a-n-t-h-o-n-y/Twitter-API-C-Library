@@ -1,5 +1,5 @@
-#ifndef ENCODE_HPP
-#define ENCODE_HPP
+#ifndef DETAIL_ENCODE_HPP
+#define DETAIL_ENCODE_HPP
 
 #include <string>
 #include <vector>
@@ -20,7 +20,7 @@ std::string base64_encode(const std::vector<unsigned char>& message);
 /// Unencode gzip
 void decode_gzip(std::string& zipped);
 
-}  // detail
+}  // namespace detail
 }  // namespace tal
 
-#endif  // ENCODE_HPP
+#endif  // DETAIL_ENCODE_HPP

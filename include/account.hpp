@@ -14,7 +14,7 @@ class Account {
     Account(std::string token, std::string secret)
         : token_{std::move(token)}, token_secret_{std::move(secret)} {}
 
-    Account(const Account&) = default;
+    // Account(const Account&) = default;
 
     /// returns the token.
     std::string token() const { return token_; }

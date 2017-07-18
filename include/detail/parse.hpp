@@ -1,5 +1,5 @@
-#ifndef PARSE_HPP
-#define PARSE_HPP
+#ifndef DETAIL_PARSE_HPP
+#define DETAIL_PARSE_HPP
 
 #include <string>
 #include <cstddef>
@@ -12,9 +12,8 @@ namespace detail {
 std::string read_chunk(ssl_socket& socket, boost::asio::streambuf& buffer);
 
 std::string read_length(ssl_socket& socket,
-                        boost::asio::streambuf& buffer,
-                        std::size_t n);
-
+                        std::size_t n,
+                        boost::asio::streambuf& buffer);
 }  // namespace detail
 }  // namespace tal
-#endif  // PARSE_HPP
+#endif  // DETAIL_PARSE_HPP

@@ -1,12 +1,12 @@
-#ifndef OBJECTS_TEMPLATE_HPP
-#define OBJECTS_TEMPLATE_HPP
+#ifndef DETAIL_OBJECTS_TEMPLATE_HPP
+#define DETAIL_OBJECTS_TEMPLATE_HPP
 
 #include <string>
 #include <sstream>
 #include <ostream>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include "../message.hpp"
+#include "message.hpp"
 
 namespace tal {
 namespace detail {
@@ -15,7 +15,7 @@ template <typename T>
 class Objects_template : public T {
    public:
     Objects_template() = default;
-    explicit Objects_template(const std::string json) {
+    explicit Objects_template(const std::string& json) {
         T::construct(string_to_ptree(json));
     }
     explicit Objects_template(const boost::property_tree::ptree& tree) {
@@ -44,4 +44,4 @@ std::ostream& operator<<(std::ostream& os, const Objects_template<T>& o) {
 
 }  // namespace detail
 }  // namespace tal
-#endif  // OBJECTS_TEMPLATE_HPP
+#endif  // DETAIL_OBJECTS_TEMPLATE_HPP

@@ -27,7 +27,14 @@ void Message::build_ptree() const {
     boost::property_tree::read_json(ss, *json_tree_ptr_);
 }
 
-boost::property_tree::ptree& Message::ptree() const {
+boost::property_tree::ptree Message::ptree() const {
+    if (json_tree_ptr_ == nullptr) {
+        this->build_ptree();
+    }
+    return *json_tree_ptr_;
+}
+
+boost::property_tree::ptree& Message::ptree() {
     if (json_tree_ptr_ == nullptr) {
         this->build_ptree();
     }

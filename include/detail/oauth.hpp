@@ -1,5 +1,5 @@
-#ifndef OAUTH_HPP
-#define OAUTH_HPP
+#ifndef DETAIL_OAUTH_HPP
+#define DETAIL_OAUTH_HPP
 
 #include <string>
 
@@ -25,4 +25,4 @@ void acquire_bearer_token(App& app);
 }  // namespace detail
 }  // namespace tal
 
-#endif  // OAUTH_HPP
+#endif  // DETAIL_OAUTH_HPP
