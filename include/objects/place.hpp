@@ -1,5 +1,5 @@
-#ifndef PLACE_HPP
-#define PLACE_HPP
+#ifndef DETAIL_PLACE_HPP
+#define DETAIL_PLACE_HPP
 
 #include <string>
 #include <boost/property_tree/ptree_fwd.hpp>
@@ -29,4 +29,4 @@ struct Place_data {
 using Place = detail::Objects_template<Place_data>;
 
 }  // namespace tal
-#endif  // PLACE_HPP
+#endif  // DETAIL_PLACE_HPP

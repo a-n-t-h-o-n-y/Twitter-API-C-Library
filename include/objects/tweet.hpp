@@ -1,5 +1,5 @@
-#ifndef TWEET_HPP
-#define TWEET_HPP
+#ifndef DETAIL_TWEET_HPP
+#define DETAIL_TWEET_HPP
 
 #include <string>
 #include <vector>
@@ -58,4 +58,4 @@ struct Tweet_data {
 using Tweet = detail::Objects_template<Tweet_data>;
 
 }  // namespace tal
-#endif  // TWEET_HPP
+#endif  // DETAIL_TWEET_HPP

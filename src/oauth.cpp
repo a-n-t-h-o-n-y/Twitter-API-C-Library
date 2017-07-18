@@ -176,7 +176,6 @@ void acquire_bearer_token(App& app) {
     if (token_type != "bearer") {
         throw std::runtime_error("Invalid bearer token type");
     }
-    std::cout << message.get("access_token") << std::endl;
     app.set_bearer_token(message.get("access_token"));
 }
 

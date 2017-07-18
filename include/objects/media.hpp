@@ -1,5 +1,5 @@
-#ifndef MEDIA_HPP
-#define MEDIA_HPP
+#ifndef DETAIL_MEDIA_HPP
+#define DETAIL_MEDIA_HPP
 
 #include <string>
 #include <array>
@@ -34,4 +34,4 @@ struct Media_data {
 using Media = detail::Objects_template<Media_data>;
 
 }  // namespace tal
-#endif  // MEDIA_HPP
+#endif  // DETAIL_MEDIA_HPP

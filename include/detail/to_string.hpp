@@ -1,5 +1,5 @@
-#ifndef TO_STRING_HPP
-#define TO_STRING_HPP
+#ifndef DETAIL_TO_STRING_HPP
+#define DETAIL_TO_STRING_HPP
 
 #include <string>
 #include <sstream>
@@ -17,4 +17,4 @@ std::string to_string(const T& thing) {
 
 }  // namespace detail
 }  // namespace tal
-#endif  // TO_STRING_HPP
+#endif  // DETAIL_TO_STRING_HPP

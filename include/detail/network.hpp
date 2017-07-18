@@ -1,5 +1,5 @@
-#ifndef NETWORK_HPP
-#define NETWORK_HPP
+#ifndef DETAIL_NETWORK_HPP
+#define DETAIL_NETWORK_HPP
 
 #include "types.hpp"
 #include "message.hpp"
@@ -27,4 +27,4 @@ void digest(const Status_line& status);
 }  // namespace detail
 }  // namespace tal
 
-#endif  // NETWORK_HPP
+#endif  // DETAIL_NETWORK_HPP

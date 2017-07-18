@@ -1,5 +1,5 @@
-#ifndef SIZE_HPP
-#define SIZE_HPP
+#ifndef DETAIL_SIZE_HPP
+#define DETAIL_SIZE_HPP
 
 #include <string>
 #include <boost/property_tree/ptree.hpp>
@@ -21,4 +21,4 @@ struct Size_data {
 using Size = detail::Objects_template<Size_data>;
 
 }  // namespace tal
-#endif  // SIZE_HPP
+#endif  // DETAIL_SIZE_HPP

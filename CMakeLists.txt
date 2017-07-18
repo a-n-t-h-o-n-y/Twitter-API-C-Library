@@ -31,7 +31,7 @@ set(TAL_SRC src/account.cpp src/app.cpp src/oauth.cpp src/request.cpp
 
 add_library(TAL STATIC ${TAL_SRC})
 
-set(TEST test/messy_tester.cpp)
+set(TEST test/main.cpp)
 
 find_package(Boost 1.58.0 COMPONENTS system iostreams)
 if(Boost_FOUND)

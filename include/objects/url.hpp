@@ -1,5 +1,5 @@
-#ifndef URL_HPP
-#define URL_HPP
+#ifndef DETAIL_URL_HPP
+#define DETAIL_URL_HPP
 
 #include <string>
 #include <boost/property_tree/ptree.hpp>
@@ -22,4 +22,4 @@ struct URL_data {
 using URL = detail::Objects_template<URL_data>;
 
 }  // namespace tal
-#endif  // URL_HPP
+#endif  // DETAIL_URL_HPP

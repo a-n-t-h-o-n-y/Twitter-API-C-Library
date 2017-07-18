@@ -56,7 +56,7 @@ Message send_HTTP(const Request& request, boost::asio::io_service& ios) {
     detail::digest(Status_line(*socket_ptr, buffer_read));
 
     auto header = Headers(*socket_ptr, buffer_read);
-    std::cout << "headers: \n" << header << std::endl;
+    // std::cout << "headers: \n" << header << std::endl;
     std::string content_length = header.get("content-length");
     std::string message;
     if (!content_length.empty()) {

@@ -1,5 +1,5 @@
-#ifndef HASHTAG_HPP
-#define HASHTAG_HPP
+#ifndef DETAIL_HASHTAG_HPP
+#define DETAIL_HASHTAG_HPP
 
 #include <string>
 #include <array>
@@ -21,4 +21,4 @@ struct Hashtag_data {
 using Hashtag = detail::Objects_template<Hashtag_data>;
 
 }  // namespace tal
-#endif  // HASHTAG_HPP
+#endif  // DETAIL_HASHTAG_HPP
