@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include <networklib/message.hpp>
+#include <networklib/response.hpp>
 #include <networklib/stream.hpp>
 #include <twitterlib/account.hpp>
 #include <twitterlib/objects/place.hpp>
@@ -51,11 +51,11 @@ class App {
     // - - - REST API - - -
     void update_status(const std::string& message);
 
-    Message get_account_settings();
+    Response get_account_settings();
 
-    Message verify_credentials(bool include_entities = true,
-                               bool skip_status = false,
-                               bool include_email = false);
+    Response verify_credentials(bool include_entities = true,
+                                bool skip_status = false,
+                                bool include_email = false);
 
     std::vector<std::int64_t> get_blocked_ids();
 
@@ -64,17 +64,17 @@ class App {
 
     // TODO: Change return type to Colletion, that wraps a vector<Tweet> and
     // includes the description data as well.
-    Message get_collection(const std::string& id,
-                           int count = -1,
-                           int max_position = -1,
-                           int min_position = -1);
+    Response get_collection(const std::string& id,
+                            int count = -1,
+                            int max_position = -1,
+                            int min_position = -1);
 
-    Message find_collections(const std::string& screen_name,
-                             std::int64_t user_id = -1,
-                             std::int64_t tweet_id = -1,
-                             int count = -1);
+    Response find_collections(const std::string& screen_name,
+                              std::int64_t user_id = -1,
+                              std::int64_t tweet_id = -1,
+                              int count = -1);
 
-    Message get_collection_info(const std::string& id);
+    Response get_collection_info(const std::string& id);
 
     /// Use -1 or empty string for a value you do not wish to specify.
     std::vector<Tweet> get_favorites(const std::string& screen_name,
@@ -84,23 +84,23 @@ class App {
                                      std::int64_t since_id = -1,
                                      std::int64_t max_id = -1);
 
-    Message get_application_rate_limit_status();
+    Response get_application_rate_limit_status();
 
-    Message get_account_rate_limit_status();
+    Response get_account_rate_limit_status();
 
     ////////////////////////////////////////////////////////////////////////////
     // - - - STREAMING API - - -
     // void register_to_user_stream(Stream::Callback callback,
     //                              Stream::Condition condition =
-    //                                  [](const Message&) { return true; });
+    //                                  [](const Response&) { return true; });
     // void register_to_filtered_stream(Stream::Callback callback,
     //                                  Stream::Condition condition =
-    //                                      [](const Message&) { return true;
+    //                                      [](const Response&) { return true;
     //                                      });
 
     // void register_to_sample_stream(Stream::Callback callback,
     //                                Stream::Condition condition =
-    //                                    [](const Message&) { return true; });
+    //                                    [](const Response&) { return true; });
     // Public_stream& filtered_stream() { return filtered_stream_; }
 
    private:
@@ -116,10 +116,10 @@ class App {
     Account account_;
 
     // Sends an Account Authorized request.
-    Message send(Request& request, const Account& account);
+    Response send(Request& request, const Account& account);
 
     // Sends an application only authentication request.
-    Message send(Request& request);
+    Response send(Request& request);
 };
 }  // namespace tal
 

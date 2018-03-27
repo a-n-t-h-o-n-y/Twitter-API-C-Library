@@ -14,15 +14,15 @@
 #include <networklib/detail/encode.hpp>
 #include <networklib/detail/network.hpp>
 #include <networklib/detail/to_string.hpp>
-#include <networklib/message.hpp>
 #include <networklib/oauth/oauth.hpp>
 #include <networklib/request.hpp>
+#include <networklib/response.hpp>
 #include <twitterlib/objects/tweet.hpp>
 #include <twitterlib/objects/user.hpp>
 
 namespace tal {
 
-Message App::send(Request& request, const Account& account) {
+Response App::send(Request& request, const Account& account) {
     // Inject OAuth to the request
     detail::authorize(request, consumer_key_, consumer_secret_, account.token(),
                       account.secret());
@@ -31,7 +31,7 @@ Message App::send(Request& request, const Account& account) {
     return detail::send_HTTP(request);
 }
 
-Message App::send(Request& request) {
+Response App::send(Request& request) {
     // Inject Application only OAuth into the request
     bearer_token_ = detail::get_bearer_token(consumer_key_, consumer_secret_);
     using namespace std::string_literals;
@@ -53,9 +53,9 @@ void App::update_status(const std::string& message) {
     this->send(us_request, account_);
 }
 
-Message App::verify_credentials(bool include_entities,
-                                bool skip_status,
-                                bool include_email) {
+Response App::verify_credentials(bool include_entities,
+                                 bool skip_status,
+                                 bool include_email) {
     Request r;
     r.HTTP_method = "GET";
     r.URI = "/1.1/account/verify_credentials.json";
@@ -66,14 +66,14 @@ Message App::verify_credentials(bool include_entities,
     return this->send(r, account_);
 }
 
-Message App::get_application_rate_limit_status() {
+Response App::get_application_rate_limit_status() {
     Request r;
     r.HTTP_method = "GET";
     r.URI = "/1.1/application/rate_limit_status.json";
     return this->send(r);
 }
 
-Message App::get_account_settings() {
+Response App::get_account_settings() {
     Request r;
     r.HTTP_method = "GET";
     r.host = "api.twitter.com";
@@ -81,7 +81,7 @@ Message App::get_account_settings() {
     return this->send(r, account_);
 }
 
-Message App::get_account_rate_limit_status() {
+Response App::get_account_rate_limit_status() {
     Request r;
     r.HTTP_method = "GET";
     r.URI = "/1.1/application/rate_limit_status.json";
@@ -97,7 +97,7 @@ std::vector<std::int64_t> App::get_blocked_ids() {
         r.HTTP_method = "GET";
         r.URI = "/1.1/blocks/ids.json";
         r.add_query("cursor", cursor);
-        Message page = this->send(r, account_);
+        Response page = this->send(r, account_);
         for (auto& id : page.ptree().get_child("ids")) {
             result.push_back(id.second.get_value<std::int64_t>());
         }
@@ -115,7 +115,7 @@ std::vector<User> App::get_blocked_users(bool include_entities,
         r.HTTP_method = "GET";
         r.URI = "/1.1/blocks/list.json";
         r.add_query("cursor", cursor);
-        Message page = this->send(r, account_);
+        Response page = this->send(r, account_);
         for (auto& user : page.ptree().get_child("users")) {
             result.emplace_back(user.second);
         }
@@ -124,10 +124,10 @@ std::vector<User> App::get_blocked_users(bool include_entities,
     return result;
 }
 
-Message App::get_collection(const std::string& id,
-                            int count,
-                            int max_position,
-                            int min_position) {
+Response App::get_collection(const std::string& id,
+                             int count,
+                             int max_position,
+                             int min_position) {
     Request r;
     r.HTTP_method = "GET";
     r.URI = "/1.1/collections/entries.json";
@@ -144,11 +144,11 @@ Message App::get_collection(const std::string& id,
     return this->send(r, account_);
 }
 
-Message App::find_collections(const std::string& screen_name,
-                              std::int64_t user_id,
-                              std::int64_t tweet_id,
-                              int count) {
-    Message result;
+Response App::find_collections(const std::string& screen_name,
+                               std::int64_t user_id,
+                               std::int64_t tweet_id,
+                               int count) {
+    Response result;
     std::string cursor{"-1"};
     // not actually cursored, you need a way to accumulate what you return
     while (cursor != "0") {

@@ -7,7 +7,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include <networklib/message.hpp>
+#include <networklib/response.hpp>
 
 namespace tal {
 namespace detail {
@@ -22,8 +22,8 @@ class Objects_template : public T {
     explicit Objects_template(const boost::property_tree::ptree& tree) {
         T::construct(tree);
     }
-    explicit Objects_template(const Message& m) {
-        T::construct(string_to_ptree(m.json()));
+    explicit Objects_template(const Response& r) {
+        T::construct(string_to_ptree(r.json()));
     }
 
     explicit operator std::string() const { return T::operator std::string(); }

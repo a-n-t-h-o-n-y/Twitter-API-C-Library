@@ -2,24 +2,25 @@
 #define DETAIL_NETWORK_HPP
 #include <memory>
 
-#include <boost/asio.hpp>
-
 #include <networklib/detail/types.hpp>
-#include <networklib/message.hpp>
+#include <networklib/response.hpp>
 #include <networklib/status_line.hpp>
+
+// just need to be able to forward declar boost::asio::io_service..
+// Okay, can probably contain io_service to network.cpp or wherever it needs to
+// be. Then these go away
 
 namespace tal {
 class Request;
 namespace detail {
 
-boost::asio::io_service& io_service();  // try to forward declare io_service
+// boost::asio::io_service& io_service();  // try to forward declare io_service
 
-std::unique_ptr<ssl_socket> make_connection(const Request& r,
-                                            boost::asio::io_service& ios);
+std::unique_ptr<ssl_socket> make_connection(const Request& r);
 
 /// Creates a connection and sends a fully formed response to the endpoint.
 /// \returns HTTP response from the endpoint.
-Message send_HTTP(const Request& request);
+Response send_HTTP(const Request& request);
 
 /// Throws exception if HTTP resonse is not 200.
 void digest(const Status_line& status);

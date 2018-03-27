@@ -6,20 +6,19 @@
 #include <utility>
 #include <vector>
 
-#include <boost/asio.hpp>
-#include <boost/asio/ssl.hpp>
-
 #include <networklib/detail/network.hpp>
-#include <networklib/detail/types.hpp>
-#include <networklib/message.hpp>
 #include <networklib/request.hpp>
+#include <networklib/response.hpp>
 
 namespace tal {
+namespace detail {
+struct Socket;
+}  // namespace detail
 
 class Stream {
    public:
-    using Callback = std::function<void(const Message&)>;
-    using Condition = std::function<bool(const Message&)>;
+    using Callback = std::function<void(const Response&)>;
+    using Condition = std::function<bool(const Response&)>;
 
     /// Create an asynchronous Stream object with an authorized Request. Does
     /// not open the stream.
@@ -28,7 +27,7 @@ class Stream {
     /// Register a callback function to the stream which will be called when the
     /// Stream is open and a Response had been recieved.
     void register_function(Callback f1,
-                           Condition f2 = [](const Message&) { return true; });
+                           Condition f2 = [](const Response&) { return true; });
 
     /// Connects to the Stream endpoing and begins processing Responses.
     void open();
@@ -37,12 +36,9 @@ class Stream {
     void close();
 
    private:
-    boost::asio::deadline_timer timer_{detail::io_service(),
-                                       boost::posix_time::seconds(90)};
     Request request_;
 
-    using ssl_socket = boost::asio::ssl::stream<boost::asio::ip::tcp::socket>;
-    std::unique_ptr<ssl_socket> sock_stream_{nullptr};
+    std::unique_ptr<detail::Socket> sock_stream_;
 
     std::vector<std::pair<Callback, Condition>> callbacks_;
     std::mutex callbacks_mutex_;
@@ -51,10 +47,7 @@ class Stream {
     std::mutex reconnect_mtx_;
 
     // Sends to all functions registered to this Stream.
-    void send_message(const Message& message);
-
-    // Makes and stores the connection. Called by run().
-    void make_connection(const Request& r);
+    void send_response(const Response& response);
 
     void timer_expired(boost::system::error_code ec);
 

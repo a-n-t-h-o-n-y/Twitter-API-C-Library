@@ -15,16 +15,20 @@
 #include <networklib/detail/encode.hpp>
 #include <networklib/detail/parse.hpp>
 #include <networklib/headers.hpp>
-#include <networklib/message.hpp>
 #include <networklib/request.hpp>
+#include <networklib/response.hpp>
 
-namespace tal {
-namespace detail {
+namespace {
 
 boost::asio::io_service& io_service() {
     static boost::asio::io_service io_s;
     return io_s;
 }
+
+}  // namespace
+
+namespace tal {
+namespace detail {
 
 std::unique_ptr<ssl_socket> make_connection(const Request& r) {
     boost::asio::ssl::context ssl_context(boost::asio::ssl::context::sslv23);
@@ -45,7 +49,7 @@ std::unique_ptr<ssl_socket> make_connection(const Request& r) {
 
 // This should only write to the socket the request, it should return the
 // ssl_socket, and the client can use that socket to read a status_line etc..
-Message send_HTTP(const Request& request) {
+Response send_HTTP(const Request& request) {
     auto socket_ptr = make_connection(request);
     // Send request
     boost::asio::streambuf buffer_send;
@@ -60,10 +64,10 @@ Message send_HTTP(const Request& request) {
     auto header = Headers(*socket_ptr, buffer_read);
     // std::cout << "headers: \n" << header << std::endl;
     std::string content_length = header.get("content-length");
-    std::string message;
+    std::string response;
     if (!content_length.empty()) {
         auto length = std::stoi(content_length);
-        message = detail::read_length(*socket_ptr, length, buffer_read);
+        response = detail::read_length(*socket_ptr, length, buffer_read);
     } else if (header.get("transfer-encoding") == "chunked") {
         while (true) {
             std::string chunk{read_chunk(*socket_ptr, buffer_read)};
@@ -71,17 +75,17 @@ Message send_HTTP(const Request& request) {
                 break;
             }
             if (chunk != " ") {
-                message.append(chunk);
+                response.append(chunk);
             }
         }
     }
     if (header.get("content-encoding") == "gzip") {
-        detail::decode_gzip(message);
+        detail::decode_gzip(response);
     }
 
     socket_ptr->lowest_layer().close();
-    // std::cout << message << std::endl;
-    return Message(message);
+    // std::cout << response << std::endl;
+    return Response(response);
 }
 
 void digest(const Status_line& status) {

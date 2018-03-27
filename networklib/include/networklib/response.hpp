@@ -1,5 +1,5 @@
-#ifndef MESSAGE_HPP
-#define MESSAGE_HPP
+#ifndef RESPONSE_HPP
+#define RESPONSE_HPP
 #include <memory>
 #include <string>
 
@@ -8,10 +8,10 @@
 namespace tal {
 
 // Change this to Response.
-class Message {
+class Response {
    public:
-    Message() = default;
-    explicit Message(std::string message_body);
+    Response() = default;
+    explicit Response(std::string message_body);
     explicit operator std::string() const;
     enum Type { Unknown, Event, User };
     std::string get(const std::string& key) const;
@@ -28,9 +28,9 @@ class Message {
     void build_ptree() const;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const Message& m) {
+inline std::ostream& operator<<(std::ostream& os, const Response& m) {
     return os << static_cast<std::string>(m);
 }
 
 }  // namespace tal
-#endif  // MESSAGE_HPP
+#endif  // RESPONSE_HPP

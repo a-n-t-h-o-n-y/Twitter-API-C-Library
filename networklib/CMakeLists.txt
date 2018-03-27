@@ -3,7 +3,7 @@ project(networklib LANGUAGES CXX)
 add_library(networklib STATIC
     src/encode.cpp
     src/headers.cpp
-    src/message.cpp
+    src/response.cpp
     src/network.cpp
     src/oauth.cpp
     src/parse.cpp

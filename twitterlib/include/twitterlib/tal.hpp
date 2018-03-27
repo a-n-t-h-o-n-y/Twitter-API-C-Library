@@ -1,11 +1,6 @@
 #ifndef TAL_HPP
 #define TAL_HPP
 
-// #include <networklib/headers.hpp>
-// #include <networklib/message.hpp>
-// #include <networklib/request.hpp>
-// #include <networklib/status_line.hpp>
-// #include <networklib/stream.hpp>
 #include <twitterlib/account.hpp>
 #include <twitterlib/app.hpp>
 #include <twitterlib/objects/bounding_box.hpp>

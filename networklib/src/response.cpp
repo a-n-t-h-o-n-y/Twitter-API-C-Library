@@ -1,4 +1,4 @@
-#include <networklib/message.hpp>
+#include <networklib/response.hpp>
 
 #include <memory>
 #include <ostream>
@@ -10,38 +10,38 @@
 
 namespace tal {
 
-Message::Message(std::string message_body) : message_body_{message_body} {
+Response::Response(std::string message_body) : message_body_{message_body} {
     deduce_type();
 }
 
-Message::operator std::string() const {
+Response::operator std::string() const {
     return message_body_;
 }
 
-void Message::deduce_type() {
+void Response::deduce_type() {
     object_type_ = Type::Unknown;
 }
-void Message::build_ptree() const {
+void Response::build_ptree() const {
     json_tree_ptr_ = std::make_unique<boost::property_tree::ptree>();
     std::stringstream ss{message_body_};
     boost::property_tree::read_json(ss, *json_tree_ptr_);
 }
 
-boost::property_tree::ptree Message::ptree() const {
+boost::property_tree::ptree Response::ptree() const {
     if (json_tree_ptr_ == nullptr) {
         this->build_ptree();
     }
     return *json_tree_ptr_;
 }
 
-boost::property_tree::ptree& Message::ptree() {
+boost::property_tree::ptree& Response::ptree() {
     if (json_tree_ptr_ == nullptr) {
         this->build_ptree();
     }
     return *json_tree_ptr_;
 }
 
-std::string Message::get(const std::string& key) const {
+std::string Response::get(const std::string& key) const {
     if (json_tree_ptr_ == nullptr) {
         this->build_ptree();
     }
