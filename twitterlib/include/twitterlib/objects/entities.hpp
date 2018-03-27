@@ -1,0 +1,34 @@
+#ifndef DETAIL_ENTITIES_HPP
+#define DETAIL_ENTITIES_HPP
+#include <array>
+#include <cstdint>
+#include <ostream>
+#include <string>
+#include <vector>
+
+#include <boost/property_tree/ptree.hpp>
+
+#include <twitterlib/objects/hashtag.hpp>
+#include <twitterlib/objects/media.hpp>
+#include <twitterlib/objects/url.hpp>
+#include <twitterlib/objects/user_mention.hpp>
+#include <twitterlib/objects/objects_template.hpp>
+
+namespace tal {
+
+struct Entities_data {
+    explicit operator std::string() const;
+
+    std::vector<Hashtag> hashtags;
+    std::vector<Media> media;
+    std::vector<URL> urls;
+    std::vector<User_mention> user_mentions;
+
+   protected:
+    void construct(const boost::property_tree::ptree& tree);
+};
+
+using Entities = detail::Objects_template<Entities_data>;
+
+}  // namespace tal
+#endif  // DETAIL_ENTITIES_HPP

@@ -4,7 +4,7 @@ test/*
 doc/*
 !doc/Doxyfile
 notes/
-build/
+build*/
 *.json
 certs/
 *.a
