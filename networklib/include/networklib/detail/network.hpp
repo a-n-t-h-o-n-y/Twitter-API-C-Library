@@ -19,10 +19,6 @@ Response send_HTTP(const Request& request);
 /// Throws exception if HTTP resonse is not 200.
 void digest(const Status_line& status);
 
-/// Reads a message body if it is chunked.
-// std::string read_chunked_body(ssl_socket& socket);
-
 }  // namespace detail
 }  // namespace network
-
 #endif  // NETWORKLIB_DETAIL_NETWORK_HPP

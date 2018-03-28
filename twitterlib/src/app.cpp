@@ -6,8 +6,6 @@
 #include <utility>
 #include <vector>
 
-#include <boost/asio.hpp>
-
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 

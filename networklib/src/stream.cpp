@@ -69,7 +69,7 @@ void Stream::dispatch(const boost::system::error_code& ec,
     // }
 
     std::string message_str;
-    while (!reconnect_) {
+    while (!reconnect_) {  // how is reconnect_ set?
         // what about keep alive newlines?
         std::size_t pos{0};
         boost::asio::deadline_timer timer{
@@ -85,9 +85,6 @@ void Stream::dispatch(const boost::system::error_code& ec,
             timer.cancel();
         }
         auto response = message_str.substr(0, pos);
-        // if (header.get("content-encoding") == "gzip") {
-        //     detail::decode_gzip(response);
-        // }
         if (response.size() > 1) {
             this->send_response(Response{response});
             message_str.erase(0, pos + 2);
@@ -95,12 +92,17 @@ void Stream::dispatch(const boost::system::error_code& ec,
             message_str.clear();
         }
     }
-    // If it makes it here, then reconnect_ was set true
-    this->close();  // why?
-    this->open();   // why?
+    // reconnect_ was set
+    this->reconnect();
+}
+
+void Stream::reconnect() {
+    this->close();
+    this->open();
 }
 
 void Stream::timer_expired(const boost::system::error_code& ec) {
+    // this->reconnect();
     this->close();
     std::cout << "Reconnecting..." << std::endl;
     this->open();

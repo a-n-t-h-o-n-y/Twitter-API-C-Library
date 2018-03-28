@@ -42,6 +42,9 @@ class Stream {
     /// Shuts down the stream, stopping processing.
     void close();
 
+    /// Close and then reopen the stream.
+    void reconnect();
+
    private:
     Request request_;
 
