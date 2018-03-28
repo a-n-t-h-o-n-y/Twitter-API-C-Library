@@ -163,9 +163,7 @@ class Stream {
     std::string get_method() const { return parameters_.method; }
 
    protected:
-    using ssl_socket = boost::asio::ssl::stream<boost::asio::ip::tcp::socket>;
-
-    std::unique_ptr<ssl_socket> socket_;
+    std::unique_ptr<Socket_stream> socket_;
     std::vector<std::pair<Callback, Condition>> callbacks_;
     std::mutex callbacks_mutex_;
     Stream_parameters parameters_;

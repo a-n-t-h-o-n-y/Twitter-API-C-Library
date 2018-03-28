@@ -2,15 +2,15 @@
 #define NETWORKLIB_DETAIL_NETWORK_HPP
 #include <memory>
 
+#include <networklib/detail/socket_stream.hpp>
 #include <networklib/detail/status_line.hpp>
-#include <networklib/detail/types.hpp>
 #include <networklib/response.hpp>
 
 namespace network {
 class Request;
 namespace detail {
 
-std::unique_ptr<ssl_socket> make_connection(const Request& r);
+std::unique_ptr<Socket_stream> make_connection(const Request& r);
 
 /// Creates a connection and sends a fully formed response to the endpoint.
 /// \returns HTTP response from the endpoint.

@@ -5,16 +5,14 @@
 #include <utility>
 #include <vector>
 
-#include <boost/asio/streambuf.hpp>
-
-#include <networklib/detail/types.hpp>
+#include <networklib/detail/socket_stream.hpp>
 
 namespace network {
 namespace detail {
 
 class Headers {
    public:
-    Headers(detail::ssl_socket& socket, boost::asio::streambuf& buffer);
+    Headers(Socket_stream& socket, Streambuf& buffer);
     explicit operator std::string() const;
     std::string get(const std::string& key) const;
 

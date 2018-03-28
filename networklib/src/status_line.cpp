@@ -7,10 +7,12 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
+#include <networklib/detail/socket_stream.hpp>
+
 namespace network {
 namespace detail {
 
-Status_line::Status_line(detail::ssl_socket& socket,
+Status_line::Status_line(Socket_stream& socket,
                          boost::asio::streambuf& buffer) {
     // boost::asio::streambuf buffer;
     boost::system::error_code ec;

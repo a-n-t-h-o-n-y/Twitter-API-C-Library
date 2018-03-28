@@ -15,6 +15,7 @@
 #include <networklib/detail/encode.hpp>
 #include <networklib/detail/headers.hpp>
 #include <networklib/detail/parse.hpp>
+#include <networklib/detail/socket_stream.hpp>
 #include <networklib/request.hpp>
 #include <networklib/response.hpp>
 
@@ -30,12 +31,13 @@ boost::asio::io_service& io_service() {
 namespace network {
 namespace detail {
 
-std::unique_ptr<ssl_socket> make_connection(const Request& r) {
+std::unique_ptr<Socket_stream> make_connection(const Request& r) {
     boost::asio::ssl::context ssl_context(boost::asio::ssl::context::sslv23);
     ssl_context.set_verify_mode(boost::asio::ssl::verify_peer);
     ssl_context.set_default_verify_paths();  // change this to certs download
 
-    auto socket_ptr = std::make_unique<ssl_socket>(io_service(), ssl_context);
+    auto socket_ptr =
+        std::make_unique<Socket_stream>(io_service(), ssl_context);
 
     boost::asio::ip::tcp::resolver resolver(io_service());
     boost::asio::ip::tcp::resolver::query query(r.host, r.HTTP_protocol);
@@ -43,12 +45,12 @@ std::unique_ptr<ssl_socket> make_connection(const Request& r) {
 
     // Make connection, perform tls handshake.
     boost::asio::connect(socket_ptr->lowest_layer(), endpoint_iterator);
-    socket_ptr->handshake(ssl_socket::client);
+    socket_ptr->handshake(Socket_stream::client);
     return socket_ptr;
-}  // namespace detail
+}
 
 // This should only write to the socket the request, it should return the
-// ssl_socket, and the client can use that socket to read a status_line etc..
+// Socket_stream, and the client can use that socket to read a status_line etc..
 Response send_HTTP(const Request& request) {
     auto socket_ptr = make_connection(request);
     // Send request
@@ -59,7 +61,7 @@ Response send_HTTP(const Request& request) {
 
     // Read Response - throws
     boost::asio::streambuf buffer_read;
-    detail::digest(Status_line(*socket_ptr, buffer_read));
+    digest(Status_line(*socket_ptr, buffer_read));
 
     auto header = Headers(*socket_ptr, buffer_read);
     // std::cout << "headers: \n" << header << std::endl;
@@ -67,7 +69,7 @@ Response send_HTTP(const Request& request) {
     std::string response;
     if (!content_length.empty()) {
         auto length = std::stoi(content_length);
-        response = detail::read_length(*socket_ptr, length, buffer_read);
+        response = read_length(*socket_ptr, length, buffer_read);
     } else if (header.get("transfer-encoding") == "chunked") {
         while (true) {
             std::string chunk{read_chunk(*socket_ptr, buffer_read)};
@@ -80,7 +82,7 @@ Response send_HTTP(const Request& request) {
         }
     }
     if (header.get("content-encoding") == "gzip") {
-        detail::decode_gzip(response);
+        decode_gzip(response);
     }
 
     socket_ptr->lowest_layer().close();

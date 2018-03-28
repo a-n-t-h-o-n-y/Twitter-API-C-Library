@@ -3,18 +3,17 @@
 #include <cstddef>
 #include <string>
 
-#include <boost/asio/streambuf.hpp>
-
-#include <networklib/detail/types.hpp>
+#include <networklib/detail/socket_stream.hpp>
 
 namespace network {
 namespace detail {
 
-std::string read_chunk(ssl_socket& socket, boost::asio::streambuf& buffer);
+std::string read_chunk(Socket_stream& socket, Streambuf& buffer);
 
-std::string read_length(ssl_socket& socket,
+std::string read_length(Socket_stream& socket,
                         std::size_t n,
-                        boost::asio::streambuf& buffer);
+                        Streambuf& buffer);
+
 }  // namespace detail
 }  // namespace network
 #endif  // NETWORKLIB_DETAIL_PARSE_HPP

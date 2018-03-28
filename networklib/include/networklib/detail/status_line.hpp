@@ -5,13 +5,13 @@
 
 #include <boost/asio/streambuf.hpp>
 
-#include <networklib/detail/types.hpp>
+#include <networklib/detail/socket_stream.hpp>
 
 namespace network {
 namespace detail {
 
 struct Status_line {
-    Status_line(detail::ssl_socket& socket, boost::asio::streambuf& buffer);
+    Status_line(Socket_stream& socket, Streambuf& buffer);
     explicit operator std::string() const;
 
     std::string HTTP_version;

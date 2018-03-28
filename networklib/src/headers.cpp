@@ -1,6 +1,5 @@
 #include <networklib/detail/headers.hpp>
 
-#include <iostream>  // temp
 #include <istream>
 #include <sstream>
 #include <string>
@@ -9,12 +8,12 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
-#include <networklib/detail/types.hpp>
+#include <networklib/detail/socket_stream.hpp>
 
 namespace network {
 namespace detail {
 
-Headers::Headers(detail::ssl_socket& socket, boost::asio::streambuf& buffer) {
+Headers::Headers(Socket_stream& socket, Streambuf& buffer) {
     boost::system::error_code ec;
     boost::asio::read_until(socket, buffer, "\r\n\r\n", ec);
     if (ec && ec != boost::asio::error::eof) {

@@ -1,21 +1,22 @@
 #include "stream.hpp"
 
 #include <functional>
-#include <sstream>
 #include <iostream>
 #include <memory>
+#include <sstream>
 
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
 #include "app.hpp"
-#include "detail/oauth.hpp"
-#include "detail/network.hpp"
-#include "detail/parse.hpp"
 #include "detail/encode.hpp"
+#include "detail/network.hpp"
+#include "detail/oauth.hpp"
+#include "detail/parse.hpp"
 #include "headers.hpp"
 
 namespace tal {
+using twitter_id = std::int64_t;
 
 Stream::Stream(App* app, std::string host, std::string uri, std::string method)
     : app_{app} {
@@ -158,7 +159,7 @@ void Stream::run() {
     boost::asio::async_write(
         *socket_, boost::asio::buffer(std::string(r)),
         std::bind(&Stream::dispatch, this, std::placeholders::_1,
-                  std::placeholders::_2)); // use lambda
+                  std::placeholders::_2));  // use lambda
 }
 
 User_stream::User_stream(App* app)

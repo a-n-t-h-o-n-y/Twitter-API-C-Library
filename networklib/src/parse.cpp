@@ -6,13 +6,12 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
-#include <networklib/detail/types.hpp>
+#include <networklib/detail/socket_stream.hpp>
 
 namespace network {
 namespace detail {
 
-std::string read_chunk(ssl_socket& socket, boost::asio::streambuf& buffer) {
-    // boost::asio::streambuf buffer;
+std::string read_chunk(Socket_stream& socket, Streambuf& buffer) {
     boost::system::error_code ec;
     // Read size
     // deadline for timeout operation.
@@ -48,10 +47,9 @@ std::string read_chunk(ssl_socket& socket, boost::asio::streambuf& buffer) {
     return chunk;
 }
 
-std::string read_length(ssl_socket& socket,
+std::string read_length(Socket_stream& socket,
                         std::size_t n,
-                        boost::asio::streambuf& buffer) {
-    // boost::asio::streambuf buffer;
+                        Streambuf& buffer) {
     boost::system::error_code ec;
     auto read_n =
         boost::asio::read(socket, buffer, boost::asio::transfer_exactly(n), ec);
