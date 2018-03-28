@@ -9,11 +9,10 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include <networklib/detail/encode.hpp>
-#include <networklib/detail/network.hpp>
 #include <networklib/oauth/oauth.hpp>
 #include <networklib/request.hpp>
 #include <networklib/response.hpp>
+#include <networklib/send.hpp>
 #include <twitterlib/detail/to_string.hpp>
 #include <twitterlib/objects/tweet.hpp>
 #include <twitterlib/objects/user.hpp>
@@ -26,7 +25,7 @@ network::Response App::send(network::Request& request, const Account& account) {
                        account.token(), account.secret());
 
     // Send request to generic send function
-    return network::detail::send_HTTP(request);
+    return network::send(request);
 }
 
 network::Response App::send(network::Request& request) {
@@ -36,7 +35,7 @@ network::Response App::send(network::Request& request) {
     request.authorization = "Bearer "s + bearer_token_;
 
     // send request to generic send function
-    return network::detail::send_HTTP(request);
+    return network::send(request);
 }
 
 void App::set_account(const Account& account) {

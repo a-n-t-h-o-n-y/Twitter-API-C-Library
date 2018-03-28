@@ -33,5 +33,16 @@ Status_line::operator std::string() const {
     return status_stream.str();
 }
 
+void digest(const Status_line& status) {
+    if (status.status_code != "200") {
+        std::stringstream ss;
+        ss << "HTTP error. Reason: ";
+        ss << status.reason_phrase;
+        ss << ". Status Code: ";
+        ss << status.status_code;
+        throw std::runtime_error(ss.str());
+    }
+}
+
 }  // namespace detail
 }  // namespace network

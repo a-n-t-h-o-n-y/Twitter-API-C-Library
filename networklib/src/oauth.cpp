@@ -16,8 +16,8 @@
 #include <boost/algorithm/string.hpp>
 
 #include <networklib/detail/encode.hpp>
-#include <networklib/detail/network.hpp>
 #include <networklib/request.hpp>
+#include <networklib/send.hpp>
 
 // Helper functions here (they will not be accessibly from outside).
 namespace {
@@ -173,7 +173,7 @@ std::string get_bearer_token(const std::string& consumer_key,
     bearer_request.add_query("include_entities", "true");
     bearer_request.add_header("Accept-Encoding", "gzip");
 
-    auto message = detail::send_HTTP(bearer_request);
+    auto message = network::send(bearer_request);
     std::string token_type{message.get("token_type")};
     if (token_type != "bearer") {
         throw std::runtime_error("Invalid bearer token type");

@@ -1,5 +1,5 @@
-#ifndef NETWORKLIB_DETAIL_PARSE_HPP
-#define NETWORKLIB_DETAIL_PARSE_HPP
+#ifndef NETWORKLIB_DETAIL_READ_SOCKET_HPP
+#define NETWORKLIB_DETAIL_READ_SOCKET_HPP
 #include <cstddef>
 #include <string>
 
@@ -16,4 +16,4 @@ std::string read_length(Socket_stream& socket,
 
 }  // namespace detail
 }  // namespace network
-#endif  // NETWORKLIB_DETAIL_PARSE_HPP
+#endif  // NETWORKLIB_DETAIL_READ_SOCKET_HPP

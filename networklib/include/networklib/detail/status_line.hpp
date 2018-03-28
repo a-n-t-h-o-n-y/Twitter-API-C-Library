@@ -23,6 +23,9 @@ inline std::ostream& operator<<(std::ostream& os, const Status_line& status) {
     return os << static_cast<std::string>(status);
 }
 
+/// Throws exception if HTTP resonse is not 200.
+void digest(const Status_line& status);
+
 }  // namespace detail
 }  // namespace network
 #endif  // NETWORKLIB_DETAIL_STATUS_LINE_HPP

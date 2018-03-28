@@ -16,9 +16,6 @@ std::string url_encode(const std::string& text);
 /// Base64 encoding
 std::string base64_encode(const std::vector<unsigned char>& message);
 
-/// Unencode gzip
-void decode_gzip(std::string& zipped);
-
 }  // namespace detail
 }  // namespace network
 

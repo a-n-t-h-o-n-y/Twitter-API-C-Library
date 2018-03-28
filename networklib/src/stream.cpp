@@ -10,10 +10,12 @@
 
 #include <networklib/detail/encode.hpp>
 #include <networklib/detail/headers.hpp>
-#include <networklib/detail/network.hpp>
-#include <networklib/detail/parse.hpp>
+#include <networklib/detail/make_connection.hpp>
+#include <networklib/detail/read_socket.hpp>
 #include <networklib/detail/socket.hpp>
+#include <networklib/detail/status_line.hpp>
 #include <networklib/oauth/oauth.hpp>
+#include <networklib/response.hpp>
 
 namespace network {
 
