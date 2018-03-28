@@ -7,7 +7,7 @@
 
 #include <twitterlib/objects/objects_template.hpp>
 
-namespace tal {
+namespace twitter {
 
 struct URL_data {
     explicit operator std::string() const;
@@ -21,7 +21,7 @@ struct URL_data {
     void construct(const boost::property_tree::ptree& tree);
 };
 
-using URL = detail::Objects_template<URL_data>;
+using URL = Objects_template<URL_data>;
 
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_URL_HPP

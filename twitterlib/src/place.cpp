@@ -5,7 +5,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-namespace tal {
+namespace twitter {
 
 Place_data::operator std::string() const {
     std::stringstream ss;
@@ -31,4 +31,5 @@ void Place_data::construct(const boost::property_tree::ptree& tree) {
     place_type = tree.get<std::string>("place_type", "");
     url = tree.get<std::string>("url", "");
 }
-}  // namespace tal
+
+}  // namespace twitter

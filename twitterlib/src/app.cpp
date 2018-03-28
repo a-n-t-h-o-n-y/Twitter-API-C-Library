@@ -13,32 +13,32 @@
 
 #include <networklib/detail/encode.hpp>
 #include <networklib/detail/network.hpp>
-#include <networklib/detail/to_string.hpp>
 #include <networklib/oauth/oauth.hpp>
 #include <networklib/request.hpp>
 #include <networklib/response.hpp>
+#include <twitterlib/detail/to_string.hpp>
 #include <twitterlib/objects/tweet.hpp>
 #include <twitterlib/objects/user.hpp>
 
-namespace tal {
+namespace twitter {
 
-Response App::send(Request& request, const Account& account) {
+network::Response App::send(network::Request& request, const Account& account) {
     // Inject OAuth to the request
-    detail::authorize(request, consumer_key_, consumer_secret_, account.token(),
-                      account.secret());
+    network::authorize(request, consumer_key_, consumer_secret_,
+                       account.token(), account.secret());
 
     // Send request to generic send function
-    return detail::send_HTTP(request);
+    return network::detail::send_HTTP(request);
 }
 
-Response App::send(Request& request) {
+network::Response App::send(network::Request& request) {
     // Inject Application only OAuth into the request
-    bearer_token_ = detail::get_bearer_token(consumer_key_, consumer_secret_);
+    bearer_token_ = network::get_bearer_token(consumer_key_, consumer_secret_);
     using namespace std::string_literals;
     request.authorization = "Bearer "s + bearer_token_;
 
     // send request to generic send function
-    return detail::send_HTTP(request);
+    return network::detail::send_HTTP(request);
 }
 
 void App::set_account(const Account& account) {
@@ -46,17 +46,17 @@ void App::set_account(const Account& account) {
 }
 
 void App::update_status(const std::string& message) {
-    Request us_request;
+    network::Request us_request;
     us_request.HTTP_method = "POST";
     us_request.URI = "/1.1/statuses/update.json";
     us_request.add_message("status", message);
     this->send(us_request, account_);
 }
 
-Response App::verify_credentials(bool include_entities,
-                                 bool skip_status,
-                                 bool include_email) {
-    Request r;
+network::Response App::verify_credentials(bool include_entities,
+                                          bool skip_status,
+                                          bool include_email) {
+    network::Request r;
     r.HTTP_method = "GET";
     r.URI = "/1.1/account/verify_credentials.json";
 
@@ -66,23 +66,23 @@ Response App::verify_credentials(bool include_entities,
     return this->send(r, account_);
 }
 
-Response App::get_application_rate_limit_status() {
-    Request r;
+network::Response App::get_application_rate_limit_status() {
+    network::Request r;
     r.HTTP_method = "GET";
     r.URI = "/1.1/application/rate_limit_status.json";
     return this->send(r);
 }
 
-Response App::get_account_settings() {
-    Request r;
+network::Response App::get_account_settings() {
+    network::Request r;
     r.HTTP_method = "GET";
     r.host = "api.twitter.com";
     r.URI = "/1.1/account/settings.json";
     return this->send(r, account_);
 }
 
-Response App::get_account_rate_limit_status() {
-    Request r;
+network::Response App::get_account_rate_limit_status() {
+    network::Request r;
     r.HTTP_method = "GET";
     r.URI = "/1.1/application/rate_limit_status.json";
     return this->send(r, account_);
@@ -93,11 +93,11 @@ std::vector<std::int64_t> App::get_blocked_ids() {
     std::vector<std::int64_t> result;
     std::string cursor{"-1"};
     while (cursor != "0") {
-        Request r;
+        network::Request r;
         r.HTTP_method = "GET";
         r.URI = "/1.1/blocks/ids.json";
         r.add_query("cursor", cursor);
-        Response page = this->send(r, account_);
+        network::Response page = this->send(r, account_);
         for (auto& id : page.ptree().get_child("ids")) {
             result.push_back(id.second.get_value<std::int64_t>());
         }
@@ -111,11 +111,11 @@ std::vector<User> App::get_blocked_users(bool include_entities,
     std::vector<User> result;
     std::string cursor{"-1"};
     while (cursor != "0") {
-        Request r;
+        network::Request r;
         r.HTTP_method = "GET";
         r.URI = "/1.1/blocks/list.json";
         r.add_query("cursor", cursor);
-        Response page = this->send(r, account_);
+        network::Response page = this->send(r, account_);
         for (auto& user : page.ptree().get_child("users")) {
             result.emplace_back(user.second);
         }
@@ -124,11 +124,11 @@ std::vector<User> App::get_blocked_users(bool include_entities,
     return result;
 }
 
-Response App::get_collection(const std::string& id,
-                             int count,
-                             int max_position,
-                             int min_position) {
-    Request r;
+network::Response App::get_collection(const std::string& id,
+                                      int count,
+                                      int max_position,
+                                      int min_position) {
+    network::Request r;
     r.HTTP_method = "GET";
     r.URI = "/1.1/collections/entries.json";
     r.add_query("id", id);
@@ -144,15 +144,15 @@ Response App::get_collection(const std::string& id,
     return this->send(r, account_);
 }
 
-Response App::find_collections(const std::string& screen_name,
-                               std::int64_t user_id,
-                               std::int64_t tweet_id,
-                               int count) {
-    Response result;
+network::Response App::find_collections(const std::string& screen_name,
+                                        std::int64_t user_id,
+                                        std::int64_t tweet_id,
+                                        int count) {
+    network::Response result;
     std::string cursor{"-1"};
     // not actually cursored, you need a way to accumulate what you return
     while (cursor != "0") {
-        Request r;
+        network::Request r;
         r.HTTP_method = "GET";
         r.URI = "/1.1/collections/list.json";
         r.add_query("cursor", cursor);
@@ -169,7 +169,7 @@ std::vector<Tweet> App::get_favorites(const std::string& screen_name,
                                       std::int64_t user_id,
                                       std::int64_t since_id,
                                       std::int64_t max_id) {
-    Request r;
+    network::Request r;
     r.HTTP_method = "GET";
     r.URI = "/1.1/favorites/list.json";
 
@@ -220,4 +220,4 @@ std::vector<Tweet> App::get_favorites(const std::string& screen_name,
 //     std::move(condition));
 // }
 
-}  // namespace tal
+}  // namespace twitter

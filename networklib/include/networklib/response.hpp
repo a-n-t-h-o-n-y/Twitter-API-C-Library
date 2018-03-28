@@ -5,7 +5,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-namespace tal {
+namespace network {
 
 // Change this to Response.
 class Response {
@@ -32,5 +32,5 @@ inline std::ostream& operator<<(std::ostream& os, const Response& m) {
     return os << static_cast<std::string>(m);
 }
 
-}  // namespace tal
+}  // namespace network
 #endif  // NETWORKLIB_RESPONSE_HPP

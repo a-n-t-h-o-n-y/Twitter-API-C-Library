@@ -1,5 +1,6 @@
 #include <twitterlib/account.hpp>
 
-namespace tal {
+namespace twitter {
+///
 
-}  // namespace tal
+}  // namespace twitter

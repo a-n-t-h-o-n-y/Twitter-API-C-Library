@@ -8,7 +8,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-namespace tal {
+namespace network {
 
 Response::Response(std::string message_body) : message_body_{message_body} {
     deduce_type();
@@ -48,4 +48,4 @@ std::string Response::get(const std::string& key) const {
     return json_tree_ptr_->get<std::string>(key, "");
 }
 
-}  // namespace tal
+}  // namespace network

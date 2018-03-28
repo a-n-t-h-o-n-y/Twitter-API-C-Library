@@ -10,7 +10,7 @@
 #include <twitterlib/objects/objects_template.hpp>
 #include <twitterlib/objects/sizes.hpp>
 
-namespace tal {
+namespace twitter {
 
 struct Media_data {
     explicit operator std::string() const;
@@ -32,7 +32,7 @@ struct Media_data {
     void construct(const boost::property_tree::ptree& tree);
 };
 
-using Media = detail::Objects_template<Media_data>;
+using Media = Objects_template<Media_data>;
 
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_MEDIA_HPP

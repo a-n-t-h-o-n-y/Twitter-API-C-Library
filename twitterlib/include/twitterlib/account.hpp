@@ -3,7 +3,7 @@
 #include <string>
 #include <utility>
 
-namespace tal {
+namespace twitter {
 
 /// Represets a Twitter account, with access token and secret.
 class Account {
@@ -32,6 +32,5 @@ class Account {
     std::string token_secret_;
 };
 
-}  // namespace tal
-
+}  // namespace twitter
 #endif  // TWITTERLIB_ACCOUNT_HPP

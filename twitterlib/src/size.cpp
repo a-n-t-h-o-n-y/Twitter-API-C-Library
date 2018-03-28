@@ -5,7 +5,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-namespace tal {
+namespace twitter {
 
 Size_data::operator std::string() const {
     std::stringstream ss;
@@ -21,4 +21,4 @@ void Size_data::construct(const boost::property_tree::ptree& tree) {
     resize = tree.get<std::string>("resize", "");
 }
 
-}  // namespace tal
+}  // namespace twitter

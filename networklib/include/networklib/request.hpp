@@ -5,8 +5,7 @@
 #include <utility>
 #include <vector>
 
-/// namespace for Twitter Application Library
-namespace tal {
+namespace network {
 
 /// Responsible for generating an HTTP Request string for a set of parameters.
 class Request {
@@ -49,5 +48,5 @@ inline std::ostream& operator<<(std::ostream& os, const Request& request) {
     return os << static_cast<std::string>(request);
 }
 
-}  // namespace tal
+}  // namespace network
 #endif  // NETWORKLIB_REQUEST_HPP

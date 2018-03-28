@@ -9,8 +9,7 @@
 
 #include <networklib/response.hpp>
 
-namespace tal {
-namespace detail {
+namespace twitter {
 
 template <typename T>
 class Objects_template : public T {
@@ -22,7 +21,7 @@ class Objects_template : public T {
     explicit Objects_template(const boost::property_tree::ptree& tree) {
         T::construct(tree);
     }
-    explicit Objects_template(const Response& r) {
+    explicit Objects_template(const network::Response& r) {
         T::construct(string_to_ptree(r.json()));
     }
 
@@ -43,6 +42,5 @@ std::ostream& operator<<(std::ostream& os, const Objects_template<T>& o) {
     // possibly downcast to T* here or up^
 }
 
-}  // namespace detail
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_TEMPLATE_HPP

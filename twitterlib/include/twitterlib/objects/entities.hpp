@@ -14,7 +14,7 @@
 #include <twitterlib/objects/url.hpp>
 #include <twitterlib/objects/user_mention.hpp>
 
-namespace tal {
+namespace twitter {
 
 struct Entities_data {
     explicit operator std::string() const;
@@ -28,7 +28,7 @@ struct Entities_data {
     void construct(const boost::property_tree::ptree& tree);
 };
 
-using Entities = detail::Objects_template<Entities_data>;
+using Entities = Objects_template<Entities_data>;
 
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_ENTITIES_HPP

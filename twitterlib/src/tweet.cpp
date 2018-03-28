@@ -16,7 +16,7 @@
 #include <twitterlib/objects/place.hpp>
 #include <twitterlib/objects/user.hpp>
 
-namespace tal {
+namespace twitter {
 
 Tweet_data::operator std::string() const {
     std::stringstream ss;
@@ -139,4 +139,5 @@ void Tweet_data::construct(const boost::property_tree::ptree& tree) {
     }
     withheld_scope = tree.get<std::string>("withheld_scope", "");
 }
-}  // namespace tal
+
+}  // namespace twitter

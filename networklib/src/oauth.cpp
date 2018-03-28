@@ -21,7 +21,7 @@
 
 // Helper functions here (they will not be accessibly from outside).
 namespace {
-using namespace tal;
+using namespace network;
 
 std::string gen_nonce() {
     std::vector<unsigned char> nonce(32, ' ');
@@ -151,8 +151,9 @@ void integrate_oauth(Request& original, const std::string& oauth_header) {
 
 }  // namespace
 
-namespace tal {
-namespace detail {
+using network::detail::url_encode;
+
+namespace network {
 
 // Get bearer token from server
 // void acquire_bearer_token(App& app) {
@@ -224,5 +225,4 @@ void authorize(Request& request,
     integrate_oauth(request, oauth.str());
 }
 
-}  // namespace detail
-}  // namespace tal
+}  // namespace network

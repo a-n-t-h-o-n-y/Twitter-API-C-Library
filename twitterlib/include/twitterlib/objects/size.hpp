@@ -6,7 +6,7 @@
 
 #include <twitterlib/objects/objects_template.hpp>
 
-namespace tal {
+namespace twitter {
 
 struct Size_data {
     explicit operator std::string() const;
@@ -19,7 +19,7 @@ struct Size_data {
     void construct(const boost::property_tree::ptree& tree);
 };
 
-using Size = detail::Objects_template<Size_data>;
+using Size = Objects_template<Size_data>;
 
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_SIZE_HPP

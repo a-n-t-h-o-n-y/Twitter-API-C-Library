@@ -11,7 +11,7 @@
 #include <twitterlib/objects/url.hpp>
 #include <twitterlib/objects/user_mention.hpp>
 
-namespace tal {
+namespace twitter {
 
 Entities_data::operator std::string() const {
     std::stringstream ss;
@@ -54,4 +54,5 @@ void Entities_data::construct(const boost::property_tree::ptree& tree) {
         user_mentions.push_back(User_mention{pair.second});
     }
 }
-}  // namespace tal
+
+}  // namespace twitter

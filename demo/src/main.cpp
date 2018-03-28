@@ -1,11 +1,12 @@
 #include <iostream>
-#include <twitterlib/tal.hpp>
+#include <twitterlib/twitterlib.hpp>
 
 int main() {
-    tal::App app{"flxndnoaoOxzseVrt1dx61iZx",
-                 "HdSCNMhaWQAWUswvEymQqC11p0nVSpf1qvZykUYe5jdgYYchHU"};
-    tal::Account account{"838185577975533571-2PXBkay7faR0b3lT7f3K2fKX2t7CAe3",
-                         "UC3HtOyZuGSFHZR7JD2tSKMHRoaSVZ8AWPQONEjXku5Rn"};
+    twitter::App app{"flxndnoaoOxzseVrt1dx61iZx",
+                     "HdSCNMhaWQAWUswvEymQqC11p0nVSpf1qvZykUYe5jdgYYchHU"};
+    twitter::Account account{
+        "838185577975533571-2PXBkay7faR0b3lT7f3K2fKX2t7CAe3",
+        "UC3HtOyZuGSFHZR7JD2tSKMHRoaSVZ8AWPQONEjXku5Rn"};
 
     app.set_account(account);
 

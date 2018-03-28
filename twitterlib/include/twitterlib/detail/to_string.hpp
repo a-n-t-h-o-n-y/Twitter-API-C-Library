@@ -1,10 +1,10 @@
-#ifndef NETWORKLIB_DETAIL_TO_STRING_HPP
-#define NETWORKLIB_DETAIL_TO_STRING_HPP
+#ifndef TWITTERLIB_DETAIL_TO_STRING_HPP
+#define TWITTERLIB_DETAIL_TO_STRING_HPP
 #include <ios>
 #include <sstream>
 #include <string>
 
-namespace tal {
+namespace twitter {
 namespace detail {
 
 template <typename T>
@@ -15,5 +15,5 @@ std::string to_string(const T& thing) {
 }
 
 }  // namespace detail
-}  // namespace tal
-#endif  // NETWORKLIB_DETAIL_TO_STRING_HPP
+}  // namespace twitter
+#endif  // TWITTERLIB_DETAIL_TO_STRING_HPP

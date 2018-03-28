@@ -1,4 +1,4 @@
-#include <networklib/status_line.hpp>
+#include <networklib/detail/status_line.hpp>
 
 #include <istream>
 #include <sstream>
@@ -7,8 +7,11 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
-namespace tal {
-Status_line::Status_line(ssl_socket& socket, boost::asio::streambuf& buffer) {
+namespace network {
+namespace detail {
+
+Status_line::Status_line(detail::ssl_socket& socket,
+                         boost::asio::streambuf& buffer) {
     // boost::asio::streambuf buffer;
     boost::system::error_code ec;
     boost::asio::read_until(socket, buffer, "\r\n", ec);
@@ -28,4 +31,5 @@ Status_line::operator std::string() const {
     return status_stream.str();
 }
 
-}  // namespace tal
+}  // namespace detail
+}  // namespace network

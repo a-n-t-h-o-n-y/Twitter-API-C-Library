@@ -8,7 +8,7 @@
 
 #include <networklib/detail/types.hpp>
 
-namespace tal {
+namespace network {
 namespace detail {
 
 std::string read_chunk(ssl_socket& socket, boost::asio::streambuf& buffer) {
@@ -65,4 +65,4 @@ std::string read_length(ssl_socket& socket,
 }
 
 }  // namespace detail
-}  // namespace tal
+}  // namespace network

@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 
-namespace tal {
+namespace twitter {
 
 Bounding_box_data::operator std::string() const {
     std::stringstream ss;
@@ -32,4 +32,4 @@ void Bounding_box_data::construct(const boost::property_tree::ptree& tree) {
     }
 }
 
-}  // namespace tal
+}  // namespace twitter

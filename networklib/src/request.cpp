@@ -5,7 +5,7 @@
 
 #include <networklib/detail/encode.hpp>
 
-namespace tal {
+namespace network {
 
 Request::operator std::string() const {
     // Encode message body
@@ -53,4 +53,4 @@ void Request::add_header(const std::string& key, const std::string& value) {
     extra_headers.push_back(std::make_pair(key, value));
 }
 
-}  // namespace tal
+}  // namespace network

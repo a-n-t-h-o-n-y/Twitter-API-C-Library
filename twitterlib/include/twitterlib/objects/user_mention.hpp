@@ -8,7 +8,7 @@
 
 #include <twitterlib/objects/objects_template.hpp>
 
-namespace tal {
+namespace twitter {
 
 struct User_mention_data {
     explicit operator std::string() const;
@@ -23,7 +23,7 @@ struct User_mention_data {
     void construct(const boost::property_tree::ptree& tree);
 };
 
-using User_mention = detail::Objects_template<User_mention_data>;
+using User_mention = Objects_template<User_mention_data>;
 
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_USER_MENTION_HPP

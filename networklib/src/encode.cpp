@@ -16,7 +16,7 @@
 #include <boost/iostreams/filter/gzip.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 
-namespace tal {
+namespace network {
 namespace detail {
 
 std::string key_value_encode(
@@ -82,4 +82,4 @@ void decode_gzip(std::string& zipped) {
 }
 
 }  // namespace detail
-}  // namespace tal
+}  // namespace network

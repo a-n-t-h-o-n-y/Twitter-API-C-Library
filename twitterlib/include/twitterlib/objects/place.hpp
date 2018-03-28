@@ -8,7 +8,7 @@
 #include <twitterlib/objects/objects_template.hpp>
 #include <twitterlib/objects/place_attributes.hpp>
 
-namespace tal {
+namespace twitter {
 
 struct Place_data {
     explicit operator std::string() const;
@@ -27,7 +27,7 @@ struct Place_data {
     void construct(const boost::property_tree::ptree& tree);
 };
 
-using Place = detail::Objects_template<Place_data>;
+using Place = Objects_template<Place_data>;
 
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_PLACE_HPP

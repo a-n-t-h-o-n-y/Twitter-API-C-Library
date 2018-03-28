@@ -6,7 +6,7 @@
 
 #include <twitterlib/objects/objects_template.hpp>
 
-namespace tal {
+namespace twitter {
 
 struct Bounding_box_data {
     explicit operator std::string() const;
@@ -18,7 +18,7 @@ struct Bounding_box_data {
     void construct(const boost::property_tree::ptree& tree);
 };
 
-using Bounding_box = detail::Objects_template<Bounding_box_data>;
+using Bounding_box = Objects_template<Bounding_box_data>;
 
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_BOUNDING_BOX_HPP

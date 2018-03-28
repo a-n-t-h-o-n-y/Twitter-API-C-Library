@@ -6,7 +6,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-namespace tal {
+namespace twitter {
 
 User_mention_data::operator std::string() const {
     std::stringstream ss;
@@ -28,4 +28,5 @@ void User_mention_data::construct(const boost::property_tree::ptree& tree) {
     name = tree.get<std::string>("name", "");
     screen_name = tree.get<std::string>("screen_name", "");
 }
-}  // namespace tal
+
+}  // namespace twitter

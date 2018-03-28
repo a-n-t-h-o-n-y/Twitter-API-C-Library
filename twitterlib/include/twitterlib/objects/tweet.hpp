@@ -12,13 +12,13 @@
 #include <twitterlib/objects/objects_template.hpp>
 #include <twitterlib/objects/place.hpp>
 
-namespace tal {
+namespace twitter {
 struct User_data;
 
 struct Tweet_data {
     explicit operator std::string() const;
 
-    std::vector<std::unique_ptr<detail::Objects_template<User_data>>>
+    std::vector<std::unique_ptr<Objects_template<User_data>>>
         contributors;
     Coordinates coordinates;
     std::string created_at;
@@ -40,15 +40,15 @@ struct Tweet_data {
     bool possibly_sensitive;
     std::int64_t quoted_status_id;
     std::string quoted_status_id_str;
-    std::unique_ptr<detail::Objects_template<Tweet_data>> quoted_status_ptr;
+    std::unique_ptr<Objects_template<Tweet_data>> quoted_status_ptr;
     std::vector<std::pair<std::string, std::string>> scopes;
     int retweet_count;
     bool retweeted;
-    std::unique_ptr<detail::Objects_template<Tweet_data>> retweeted_status_ptr;
+    std::unique_ptr<Objects_template<Tweet_data>> retweeted_status_ptr;
     std::string source;
     std::string text;
     bool truncated;
-    std::unique_ptr<detail::Objects_template<User_data>> user_ptr;
+    std::unique_ptr<Objects_template<User_data>> user_ptr;
     bool withheld_copyright;
     std::vector<std::string> withheld_in_countries;
     std::string withheld_scope;
@@ -57,7 +57,7 @@ struct Tweet_data {
     void construct(const boost::property_tree::ptree& tree);
 };
 
-using Tweet = detail::Objects_template<Tweet_data>;
+using Tweet = Objects_template<Tweet_data>;
 
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_TWEET_HPP

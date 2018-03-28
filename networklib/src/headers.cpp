@@ -1,4 +1,4 @@
-#include <networklib/headers.hpp>
+#include <networklib/detail/headers.hpp>
 
 #include <iostream>  // temp
 #include <istream>
@@ -11,9 +11,10 @@
 
 #include <networklib/detail/types.hpp>
 
-namespace tal {
+namespace network {
+namespace detail {
 
-Headers::Headers(ssl_socket& socket, boost::asio::streambuf& buffer) {
+Headers::Headers(detail::ssl_socket& socket, boost::asio::streambuf& buffer) {
     boost::system::error_code ec;
     boost::asio::read_until(socket, buffer, "\r\n\r\n", ec);
     if (ec && ec != boost::asio::error::eof) {
@@ -52,4 +53,5 @@ std::string Headers::get(const std::string& key) const {
     return "";
 }
 
-}  // namespace tal
+}  // namespace detail
+}  // namespace network

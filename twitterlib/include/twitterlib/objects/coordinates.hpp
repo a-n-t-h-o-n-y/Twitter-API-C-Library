@@ -7,7 +7,7 @@
 
 #include <twitterlib/objects/objects_template.hpp>
 
-namespace tal {
+namespace twitter {
 
 struct Coordinates_data {
     explicit operator std::string() const;
@@ -20,7 +20,7 @@ struct Coordinates_data {
     void construct(const boost::property_tree::ptree& tree);
 };
 
-using Coordinates = detail::Objects_template<Coordinates_data>;
+using Coordinates = Objects_template<Coordinates_data>;
 
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_COORDINATES_HPP

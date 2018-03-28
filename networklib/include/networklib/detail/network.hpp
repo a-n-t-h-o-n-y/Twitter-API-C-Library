@@ -2,11 +2,11 @@
 #define NETWORKLIB_DETAIL_NETWORK_HPP
 #include <memory>
 
+#include <networklib/detail/status_line.hpp>
 #include <networklib/detail/types.hpp>
 #include <networklib/response.hpp>
-#include <networklib/status_line.hpp>
 
-namespace tal {
+namespace network {
 class Request;
 namespace detail {
 
@@ -23,6 +23,6 @@ void digest(const Status_line& status);
 // std::string read_chunked_body(ssl_socket& socket);
 
 }  // namespace detail
-}  // namespace tal
+}  // namespace network
 
 #endif  // NETWORKLIB_DETAIL_NETWORK_HPP

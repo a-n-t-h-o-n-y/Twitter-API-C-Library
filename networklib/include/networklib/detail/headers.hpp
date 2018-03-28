@@ -9,11 +9,12 @@
 
 #include <networklib/detail/types.hpp>
 
-namespace tal {
+namespace network {
+namespace detail {
 
 class Headers {
    public:
-    Headers(ssl_socket& socket, boost::asio::streambuf& buffer);
+    Headers(detail::ssl_socket& socket, boost::asio::streambuf& buffer);
     explicit operator std::string() const;
     std::string get(const std::string& key) const;
 
@@ -25,5 +26,6 @@ inline std::ostream& operator<<(std::ostream& os, const Headers& h) {
     return os << static_cast<std::string>(h);
 }
 
-}  // namespace tal
+}  // namespace detail
+}  // namespace network
 #endif  // NETWORKLIB_DETAIL_HEADERS_HPP

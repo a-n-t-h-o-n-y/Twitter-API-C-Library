@@ -7,7 +7,7 @@
 
 #include <twitterlib/objects/objects_template.hpp>
 
-namespace tal {
+namespace twitter {
 
 struct Hashtag_data {
     explicit operator std::string() const;
@@ -19,7 +19,7 @@ struct Hashtag_data {
     void construct(const boost::property_tree::ptree& tree);
 };
 
-using Hashtag = detail::Objects_template<Hashtag_data>;
+using Hashtag = Objects_template<Hashtag_data>;
 
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_HASHTAG_HPP

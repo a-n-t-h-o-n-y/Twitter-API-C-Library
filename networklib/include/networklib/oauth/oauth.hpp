@@ -2,10 +2,8 @@
 #define NETWORKLIB_OAUTH_OAUTH_HPP
 #include <string>
 
-#include <networklib/request.hpp>
-
-namespace tal {
-namespace detail {
+namespace network {
+class Request;
 
 /// Add App and Account OAuth 1.0a header to HTTP request.
 void authorize(Request& request,
@@ -18,6 +16,5 @@ void authorize(Request& request,
 std::string get_bearer_token(const std::string& consumer_key,
                              const std::string& consumer_secret);
 
-}  // namespace detail
-}  // namespace tal
+}  // namespace network
 #endif  // NETWORKLIB_OAUTH_OAUTH_HPP

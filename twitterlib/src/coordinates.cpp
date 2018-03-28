@@ -5,7 +5,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-namespace tal {
+namespace twitter {
 
 Coordinates_data::operator std::string() const {
     std::stringstream ss;
@@ -23,4 +23,5 @@ void Coordinates_data::construct(const boost::property_tree::ptree& tree) {
     }
     type = tree.get<std::string>("type", "");
 }
-}  // namespace tal
+
+}  // namespace twitter

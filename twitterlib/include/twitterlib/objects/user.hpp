@@ -10,7 +10,7 @@
 #include <twitterlib/objects/objects_template.hpp>
 #include <twitterlib/objects/tweet.hpp>
 
-namespace tal {
+namespace twitter {
 
 struct User_data {
     explicit operator std::string() const;
@@ -63,7 +63,7 @@ struct User_data {
     void construct(const boost::property_tree::ptree& tree);
 };
 
-using User = detail::Objects_template<User_data>;
+using User = Objects_template<User_data>;
 
-}  // namespace tal
+}  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_USER_HPP

@@ -5,7 +5,7 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
-namespace tal {
+namespace network {
 namespace detail {
 
 struct Socket {
@@ -14,6 +14,6 @@ struct Socket {
 };
 
 }  // namespace detail
-}  // namespace tal
+}  // namespace network
 
 #endif  // NETWORKLIB_DETAIL_SOCKET_HPP

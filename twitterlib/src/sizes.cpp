@@ -7,7 +7,8 @@
 
 #include <twitterlib/objects/size.hpp>
 
-namespace tal {
+namespace twitter {
+
 Sizes_data::operator std::string() const {
     std::stringstream ss;
     ss << "thumb:\n" << thumb;
@@ -24,4 +25,4 @@ void Sizes_data::construct(const boost::property_tree::ptree& tree) {
     small = Size{tree.get_child("small", boost::property_tree::ptree())};
 }
 
-}  // namespace tal
+}  // namespace twitter

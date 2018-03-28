@@ -15,7 +15,7 @@ class error_code;
 }  // namespace system
 }  // namespace boost
 
-namespace tal {
+namespace network {
 class Response;
 
 namespace detail {
@@ -64,5 +64,5 @@ class Stream {
                   std::size_t bytes_transfered);
 };
 
-}  // namespace tal
+}  // namespace network
 #endif  // NETWORKLIB_STREAM_HPP

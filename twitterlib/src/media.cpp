@@ -9,7 +9,7 @@
 
 #include <twitterlib/objects/sizes.hpp>
 
-namespace tal {
+namespace twitter {
 
 Media_data::operator std::string() const {
     std::stringstream ss;
@@ -43,4 +43,5 @@ void Media_data::construct(const boost::property_tree::ptree& tree) {
     type = tree.get<std::string>("type", "");
     url = tree.get<std::string>("url", "");
 }
-}  // namespace tal
+
+}  // namespace twitter

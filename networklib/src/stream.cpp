@@ -9,13 +9,13 @@
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
 #include <networklib/detail/encode.hpp>
+#include <networklib/detail/headers.hpp>
 #include <networklib/detail/network.hpp>
 #include <networklib/detail/parse.hpp>
 #include <networklib/detail/socket.hpp>
-#include <networklib/headers.hpp>
 #include <networklib/oauth/oauth.hpp>
 
-namespace tal {
+namespace network {
 
 Stream::Stream(const Request& request)
     : request_{request}, sock_stream_{std::make_unique<detail::Socket>()} {}
@@ -60,7 +60,7 @@ void Stream::dispatch(const boost::system::error_code& ec,
     reconnect_ = false;
     reconnect_mtx_.unlock();
     boost::asio::streambuf buffer_read;
-    detail::digest(Status_line(*sock_stream_->socket_ptr, buffer_read));
+    detail::digest(detail::Status_line(*sock_stream_->socket_ptr, buffer_read));
     // Headers header(*sock_stream_);  // change to socket_ptr_ eventually
     // std::cout << header << std::endl;
 
@@ -116,4 +116,4 @@ void Stream::send_response(const Response& response) {
     callbacks_mutex_.unlock();
 }
 
-}  // namespace tal
+}  // namespace network

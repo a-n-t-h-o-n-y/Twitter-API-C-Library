@@ -6,7 +6,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-namespace tal {
+namespace twitter {
 
 Hashtag_data::operator std::string() const {
     std::stringstream ss;
@@ -24,4 +24,4 @@ void Hashtag_data::construct(const boost::property_tree::ptree& tree) {
     }
 }
 
-}  // namespace tal
+}  // namespace twitter

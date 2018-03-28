@@ -13,8 +13,8 @@
 #include <vector>
 
 #include <networklib/detail/encode.hpp>
+#include <networklib/detail/headers.hpp>
 #include <networklib/detail/parse.hpp>
-#include <networklib/headers.hpp>
 #include <networklib/request.hpp>
 #include <networklib/response.hpp>
 
@@ -27,7 +27,7 @@ boost::asio::io_service& io_service() {
 
 }  // namespace
 
-namespace tal {
+namespace network {
 namespace detail {
 
 std::unique_ptr<ssl_socket> make_connection(const Request& r) {
@@ -100,4 +100,4 @@ void digest(const Status_line& status) {
 }
 
 }  // namespace detail
-}  // namespace tal
+}  // namespace network

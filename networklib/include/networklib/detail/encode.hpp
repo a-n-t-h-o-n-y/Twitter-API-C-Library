@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace tal {
+namespace network {
 namespace detail {
 
 /// Encodes a list of key-value pairs into a string with values URL encoded.
@@ -20,6 +20,6 @@ std::string base64_encode(const std::vector<unsigned char>& message);
 void decode_gzip(std::string& zipped);
 
 }  // namespace detail
-}  // namespace tal
+}  // namespace network
 
 #endif  // NETWORKLIB_DETAIL_ENCODE_HPP
