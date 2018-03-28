@@ -1,5 +1,5 @@
-#ifndef RESPONSE_HPP
-#define RESPONSE_HPP
+#ifndef NETWORKLIB_RESPONSE_HPP
+#define NETWORKLIB_RESPONSE_HPP
 #include <memory>
 #include <string>
 
@@ -33,4 +33,4 @@ inline std::ostream& operator<<(std::ostream& os, const Response& m) {
 }
 
 }  // namespace tal
-#endif  // RESPONSE_HPP
+#endif  // NETWORKLIB_RESPONSE_HPP

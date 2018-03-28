@@ -1,5 +1,5 @@
-#ifndef DETAIL_URL_HPP
-#define DETAIL_URL_HPP
+#ifndef TWITTERLIB_OBJECTS_URL_HPP
+#define TWITTERLIB_OBJECTS_URL_HPP
 #include <array>
 #include <string>
 
@@ -24,4 +24,4 @@ struct URL_data {
 using URL = detail::Objects_template<URL_data>;
 
 }  // namespace tal
-#endif  // DETAIL_URL_HPP
+#endif  // TWITTERLIB_OBJECTS_URL_HPP

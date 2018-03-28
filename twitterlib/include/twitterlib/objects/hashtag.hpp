@@ -1,5 +1,5 @@
-#ifndef DETAIL_HASHTAG_HPP
-#define DETAIL_HASHTAG_HPP
+#ifndef TWITTERLIB_OBJECTS_HASHTAG_HPP
+#define TWITTERLIB_OBJECTS_HASHTAG_HPP
 #include <array>
 #include <string>
 
@@ -22,4 +22,4 @@ struct Hashtag_data {
 using Hashtag = detail::Objects_template<Hashtag_data>;
 
 }  // namespace tal
-#endif  // DETAIL_HASHTAG_HPP
+#endif  // TWITTERLIB_OBJECTS_HASHTAG_HPP

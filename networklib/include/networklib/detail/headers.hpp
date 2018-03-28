@@ -1,5 +1,5 @@
-#ifndef HEADERS_HPP
-#define HEADERS_HPP
+#ifndef NETWORKLIB_DETAIL_HEADERS_HPP
+#define NETWORKLIB_DETAIL_HEADERS_HPP
 #include <ostream>
 #include <string>
 #include <utility>
@@ -26,4 +26,4 @@ inline std::ostream& operator<<(std::ostream& os, const Headers& h) {
 }
 
 }  // namespace tal
-#endif  // HEADERS_HPP
+#endif  // NETWORKLIB_DETAIL_HEADERS_HPP

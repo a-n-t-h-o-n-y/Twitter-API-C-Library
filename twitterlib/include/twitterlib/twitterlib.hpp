@@ -1,5 +1,5 @@
-#ifndef TAL_HPP
-#define TAL_HPP
+#ifndef TWITTERLIB_TWITTERLIB_HPP
+#define TWITTERLIB_TWITTERLIB_HPP
 
 #include <twitterlib/account.hpp>
 #include <twitterlib/app.hpp>
@@ -17,4 +17,4 @@
 #include <twitterlib/objects/user.hpp>
 #include <twitterlib/objects/user_mention.hpp>
 
-#endif  // TAL_HPP
+#endif  // TWITTERLIB_TWITTERLIB_HPP

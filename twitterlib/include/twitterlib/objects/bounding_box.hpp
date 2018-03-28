@@ -1,5 +1,5 @@
-#ifndef OBJECTS_BOUNDING_BOX_HPP
-#define OBJECTS_BOUNDING_BOX_HPP
+#ifndef TWITTERLIB_OBJECTS_BOUNDING_BOX_HPP
+#define TWITTERLIB_OBJECTS_BOUNDING_BOX_HPP
 #include <string>
 
 #include <boost/property_tree/ptree_fwd.hpp>
@@ -21,4 +21,4 @@ struct Bounding_box_data {
 using Bounding_box = detail::Objects_template<Bounding_box_data>;
 
 }  // namespace tal
-#endif  // OBJECTS_BOUNDING_BOX_HPP
+#endif  // TWITTERLIB_OBJECTS_BOUNDING_BOX_HPP

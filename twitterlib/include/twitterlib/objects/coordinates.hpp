@@ -1,5 +1,5 @@
-#ifndef OBJECTS_COORDINATES_HPP
-#define OBJECTS_COORDINATES_HPP
+#ifndef TWITTERLIB_OBJECTS_COORDINATES_HPP
+#define TWITTERLIB_OBJECTS_COORDINATES_HPP
 #include <array>
 #include <string>
 
@@ -23,4 +23,4 @@ struct Coordinates_data {
 using Coordinates = detail::Objects_template<Coordinates_data>;
 
 }  // namespace tal
-#endif  // OBJECTS_COORDINATES_HPP
+#endif  // TWITTERLIB_OBJECTS_COORDINATES_HPP

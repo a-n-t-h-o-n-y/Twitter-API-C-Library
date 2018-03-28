@@ -1,5 +1,5 @@
-#ifndef DETAIL_USER_MENTION_HPP
-#define DETAIL_USER_MENTION_HPP
+#ifndef TWITTERLIB_OBJECTS_USER_MENTION_HPP
+#define TWITTERLIB_OBJECTS_USER_MENTION_HPP
 #include <array>
 #include <cstdint>
 #include <string>
@@ -26,4 +26,4 @@ struct User_mention_data {
 using User_mention = detail::Objects_template<User_mention_data>;
 
 }  // namespace tal
-#endif  // DETAIL_USER_MENTION_HPP
+#endif  // TWITTERLIB_OBJECTS_USER_MENTION_HPP

@@ -1,5 +1,5 @@
-#ifndef DETAIL_SIZES_HPP
-#define DETAIL_SIZES_HPP
+#ifndef TWITTERLIB_OBJECTS_SIZES_HPP
+#define TWITTERLIB_OBJECTS_SIZES_HPP
 #include <ostream>
 #include <string>
 
@@ -25,4 +25,4 @@ struct Sizes_data {
 using Sizes = detail::Objects_template<Sizes_data>;
 
 }  // namespace tal
-#endif  // DETAIL_SIZES_HPP
+#endif  // TWITTERLIB_OBJECTS_SIZES_HPP

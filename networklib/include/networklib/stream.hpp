@@ -1,16 +1,23 @@
-#ifndef STREAM_HPP
-#define STREAM_HPP
+#ifndef NETWORKLIB_STREAM_HPP
+#define NETWORKLIB_STREAM_HPP
 #include <cstddef>
 #include <functional>
+#include <memory>
 #include <mutex>
 #include <utility>
 #include <vector>
 
-#include <networklib/detail/network.hpp>
 #include <networklib/request.hpp>
-#include <networklib/response.hpp>
+
+namespace boost {
+namespace system {
+class error_code;
+}  // namespace system
+}  // namespace boost
 
 namespace tal {
+class Response;
+
 namespace detail {
 struct Socket;
 }  // namespace detail
@@ -49,7 +56,7 @@ class Stream {
     // Sends to all functions registered to this Stream.
     void send_response(const Response& response);
 
-    void timer_expired(boost::system::error_code ec);
+    void timer_expired(const boost::system::error_code& ec);
 
     // Reads from the socket, creates Response objects and sends them to
     // each callback. Checks for reconnect_ on beginning of every iteration.
@@ -58,4 +65,4 @@ class Stream {
 };
 
 }  // namespace tal
-#endif  // STREAM_HPP
+#endif  // NETWORKLIB_STREAM_HPP

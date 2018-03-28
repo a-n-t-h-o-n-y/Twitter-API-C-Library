@@ -100,7 +100,7 @@ void Stream::dispatch(const boost::system::error_code& ec,
     this->open();   // why?
 }
 
-void Stream::timer_expired(boost::system::error_code ec) {
+void Stream::timer_expired(const boost::system::error_code& ec) {
     this->close();
     std::cout << "Reconnecting..." << std::endl;
     this->open();

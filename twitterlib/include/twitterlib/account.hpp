@@ -1,5 +1,5 @@
-#ifndef ACCOUNT_HPP
-#define ACCOUNT_HPP
+#ifndef TWITTERLIB_ACCOUNT_HPP
+#define TWITTERLIB_ACCOUNT_HPP
 #include <string>
 #include <utility>
 
@@ -34,4 +34,4 @@ class Account {
 
 }  // namespace tal
 
-#endif  // ACCOUNT_HPP
+#endif  // TWITTERLIB_ACCOUNT_HPP

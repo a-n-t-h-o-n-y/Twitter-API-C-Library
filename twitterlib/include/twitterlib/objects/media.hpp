@@ -1,14 +1,14 @@
-#ifndef DETAIL_MEDIA_HPP
-#define DETAIL_MEDIA_HPP
-#include <string>
+#ifndef TWITTERLIB_OBJECTS_MEDIA_HPP
+#define TWITTERLIB_OBJECTS_MEDIA_HPP
 #include <array>
 #include <cstdint>
 #include <ostream>
+#include <string>
 
 #include <boost/property_tree/ptree.hpp>
 
-#include <twitterlib/objects/sizes.hpp>
 #include <twitterlib/objects/objects_template.hpp>
+#include <twitterlib/objects/sizes.hpp>
 
 namespace tal {
 
@@ -35,4 +35,4 @@ struct Media_data {
 using Media = detail::Objects_template<Media_data>;
 
 }  // namespace tal
-#endif  // DETAIL_MEDIA_HPP
+#endif  // TWITTERLIB_OBJECTS_MEDIA_HPP

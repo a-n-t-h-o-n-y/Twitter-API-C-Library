@@ -1,5 +1,5 @@
-#ifndef REQUEST_HPP
-#define REQUEST_HPP
+#ifndef NETWORKLIB_REQUEST_HPP
+#define NETWORKLIB_REQUEST_HPP
 #include <ostream>
 #include <string>
 #include <utility>
@@ -50,4 +50,4 @@ inline std::ostream& operator<<(std::ostream& os, const Request& request) {
 }
 
 }  // namespace tal
-#endif  // REQUEST_HPP
+#endif  // NETWORKLIB_REQUEST_HPP

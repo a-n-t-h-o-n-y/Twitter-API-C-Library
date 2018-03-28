@@ -1,5 +1,5 @@
-#ifndef DETAIL_SIZE_HPP
-#define DETAIL_SIZE_HPP
+#ifndef TWITTERLIB_OBJECTS_SIZE_HPP
+#define TWITTERLIB_OBJECTS_SIZE_HPP
 #include <string>
 
 #include <boost/property_tree/ptree.hpp>
@@ -22,4 +22,4 @@ struct Size_data {
 using Size = detail::Objects_template<Size_data>;
 
 }  // namespace tal
-#endif  // DETAIL_SIZE_HPP
+#endif  // TWITTERLIB_OBJECTS_SIZE_HPP

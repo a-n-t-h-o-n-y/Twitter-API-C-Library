@@ -1,5 +1,5 @@
-#ifndef DETAIL_OBJECTS_TEMPLATE_HPP
-#define DETAIL_OBJECTS_TEMPLATE_HPP
+#ifndef TWITTERLIB_OBJECTS_TEMPLATE_HPP
+#define TWITTERLIB_OBJECTS_TEMPLATE_HPP
 #include <ostream>
 #include <sstream>
 #include <string>
@@ -45,4 +45,4 @@ std::ostream& operator<<(std::ostream& os, const Objects_template<T>& o) {
 
 }  // namespace detail
 }  // namespace tal
-#endif  // DETAIL_OBJECTS_TEMPLATE_HPP
+#endif  // TWITTERLIB_OBJECTS_TEMPLATE_HPP

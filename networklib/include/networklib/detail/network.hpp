@@ -1,20 +1,14 @@
-#ifndef DETAIL_NETWORK_HPP
-#define DETAIL_NETWORK_HPP
+#ifndef NETWORKLIB_DETAIL_NETWORK_HPP
+#define NETWORKLIB_DETAIL_NETWORK_HPP
 #include <memory>
 
 #include <networklib/detail/types.hpp>
 #include <networklib/response.hpp>
 #include <networklib/status_line.hpp>
 
-// just need to be able to forward declar boost::asio::io_service..
-// Okay, can probably contain io_service to network.cpp or wherever it needs to
-// be. Then these go away
-
 namespace tal {
 class Request;
 namespace detail {
-
-// boost::asio::io_service& io_service();  // try to forward declare io_service
 
 std::unique_ptr<ssl_socket> make_connection(const Request& r);
 
@@ -31,4 +25,4 @@ void digest(const Status_line& status);
 }  // namespace detail
 }  // namespace tal
 
-#endif  // DETAIL_NETWORK_HPP
+#endif  // NETWORKLIB_DETAIL_NETWORK_HPP

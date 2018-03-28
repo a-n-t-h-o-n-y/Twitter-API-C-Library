@@ -1,5 +1,5 @@
-#ifndef DETAIL_TYPES_HPP
-#define DETAIL_TYPES_HPP
+#ifndef NETWORKLIB_DETAIL_TYPES_HPP
+#define NETWORKLIB_DETAIL_TYPES_HPP
 #include <cstdint>
 
 #include <boost/asio.hpp>
@@ -17,4 +17,4 @@ struct coordinates {
 
 }  // namespace tal
 
-#endif  // DETAIL_TYPES_HPP
+#endif  // NETWORKLIB_DETAIL_TYPES_HPP

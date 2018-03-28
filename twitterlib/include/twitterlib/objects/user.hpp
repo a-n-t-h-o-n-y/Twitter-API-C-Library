@@ -1,5 +1,5 @@
-#ifndef DETAIL_USER_HPP
-#define DETAIL_USER_HPP
+#ifndef TWITTERLIB_OBJECTS_USER_HPP
+#define TWITTERLIB_OBJECTS_USER_HPP
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -66,4 +66,4 @@ struct User_data {
 using User = detail::Objects_template<User_data>;
 
 }  // namespace tal
-#endif  // DETAIL_USER_HPP
+#endif  // TWITTERLIB_OBJECTS_USER_HPP

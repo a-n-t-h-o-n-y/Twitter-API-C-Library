@@ -1,5 +1,5 @@
-#ifndef APP_HPP
-#define APP_HPP
+#ifndef TWITTERLIB_APP_HPP
+#define TWITTERLIB_APP_HPP
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -123,4 +123,4 @@ class App {
 };
 }  // namespace tal
 
-#endif  // APP_HPP
+#endif  // TWITTERLIB_APP_HPP

@@ -1,5 +1,5 @@
-#ifndef DETAIL_PLACE_ATTRIBUTES_HPP
-#define DETAIL_PLACE_ATTRIBUTES_HPP
+#ifndef TWITTERLIB_OBJECTS_PLACE_ATTRIBUTES_HPP
+#define TWITTERLIB_OBJECTS_PLACE_ATTRIBUTES_HPP
 #include <string>
 
 #include <boost/property_tree/ptree_fwd.hpp>
@@ -28,4 +28,4 @@ struct Place_attributes_data {
 using Place_attributes = detail::Objects_template<Place_attributes_data>;
 
 };      // namespace tal
-#endif  // DETAIL_PLACE_ATTRIBUTES_HPP
+#endif  // TWITTERLIB_OBJECTS_PLACE_ATTRIBUTES_HPP

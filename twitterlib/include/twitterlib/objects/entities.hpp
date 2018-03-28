@@ -1,5 +1,5 @@
-#ifndef DETAIL_ENTITIES_HPP
-#define DETAIL_ENTITIES_HPP
+#ifndef TWITTERLIB_OBJECTS_ENTITIES_HPP
+#define TWITTERLIB_OBJECTS_ENTITIES_HPP
 #include <array>
 #include <cstdint>
 #include <ostream>
@@ -10,9 +10,9 @@
 
 #include <twitterlib/objects/hashtag.hpp>
 #include <twitterlib/objects/media.hpp>
+#include <twitterlib/objects/objects_template.hpp>
 #include <twitterlib/objects/url.hpp>
 #include <twitterlib/objects/user_mention.hpp>
-#include <twitterlib/objects/objects_template.hpp>
 
 namespace tal {
 
@@ -31,4 +31,4 @@ struct Entities_data {
 using Entities = detail::Objects_template<Entities_data>;
 
 }  // namespace tal
-#endif  // DETAIL_ENTITIES_HPP
+#endif  // TWITTERLIB_OBJECTS_ENTITIES_HPP

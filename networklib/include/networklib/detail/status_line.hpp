@@ -1,5 +1,5 @@
-#ifndef STATUS_LINE_HPP
-#define STATUS_LINE_HPP
+#ifndef NETWORKLIB_DETAIL_STATUS_LINE_HPP
+#define NETWORKLIB_DETAIL_STATUS_LINE_HPP
 #include <ostream>
 #include <string>
 
@@ -23,4 +23,4 @@ inline std::ostream& operator<<(std::ostream& os, const Status_line& status) {
 }
 
 }  // namespace tal
-#endif  // STATUS_LINE_HPP
+#endif  // NETWORKLIB_DETAIL_STATUS_LINE_HPP

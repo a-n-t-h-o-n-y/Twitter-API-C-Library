@@ -1,5 +1,5 @@
-#ifndef DETAIL_TO_STRING_HPP
-#define DETAIL_TO_STRING_HPP
+#ifndef NETWORKLIB_DETAIL_TO_STRING_HPP
+#define NETWORKLIB_DETAIL_TO_STRING_HPP
 #include <ios>
 #include <sstream>
 #include <string>
@@ -16,4 +16,4 @@ std::string to_string(const T& thing) {
 
 }  // namespace detail
 }  // namespace tal
-#endif  // DETAIL_TO_STRING_HPP
+#endif  // NETWORKLIB_DETAIL_TO_STRING_HPP
