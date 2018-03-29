@@ -13,6 +13,7 @@ add_library(networklib STATIC
     src/request.cpp
     src/status_line.cpp
     src/stream.cpp
+    src/read_keys.cpp
     )
 
 target_include_directories(networklib PUBLIC

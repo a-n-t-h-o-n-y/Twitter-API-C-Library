@@ -1,6 +1,7 @@
 #ifndef TWITTERLIB_TWITTERLIB_HPP
 #define TWITTERLIB_TWITTERLIB_HPP
 
+#include <networklib/networklib.hpp>
 #include <twitterlib/account.hpp>
 #include <twitterlib/app.hpp>
 #include <twitterlib/objects/bounding_box.hpp>
