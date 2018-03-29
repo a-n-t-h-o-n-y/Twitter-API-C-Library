@@ -49,5 +49,9 @@ std::unique_ptr<Socket_stream> make_connection(const Request& r) {
     return socket_ptr;
 }
 
+void wait_() {
+    io_service().run();
+}
+
 }  // namespace detail
 }  // namespace network

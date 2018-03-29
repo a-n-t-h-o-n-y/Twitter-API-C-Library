@@ -9,6 +9,7 @@ add_library(networklib STATIC
     src/gzip.cpp
     src/oauth.cpp
     src/read_socket.cpp
+    src/wait.cpp
     src/request.cpp
     src/status_line.cpp
     src/stream.cpp

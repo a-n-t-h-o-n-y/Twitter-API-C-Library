@@ -29,7 +29,8 @@ class Stream {
 
     /// Create an asynchronous Stream object with an authorized Request. Does
     /// not open the stream.
-    Stream(const Request& request);
+    Stream(const Request& request = Request());
+    ~Stream();
 
     /// Register a callback function to the stream which will be called when the
     /// Stream is open and a Response had been recieved.
@@ -44,6 +45,8 @@ class Stream {
 
     /// Close and then reopen the stream.
     void reconnect();
+
+    void set_request(Request r);
 
    private:
     Request request_;

@@ -11,6 +11,7 @@
 #include <twitterlib/account.hpp>
 #include <twitterlib/objects/tweet.hpp>
 #include <twitterlib/objects/user.hpp>
+#include <twitterlib/twitter_stream.hpp>
 
 namespace network {
 class Request;
@@ -18,7 +19,7 @@ class Request;
 
 namespace twitter {
 
-class App {
+class App {  // Make a struct with public access to members.
    public:
     /// Set the consumer key and consumer secret at construction.
     App(std::string key, std::string secret)
@@ -50,6 +51,10 @@ class App {
 
     /// Get account associated with this App object.
     Account account() const { return account_; }
+
+    Twitter_stream user_stream{this, build_user_stream_parameters()};
+    Twitter_stream filtered_stream{this, build_filtered_stream_parameters()};
+    Twitter_stream sample_stream{this, build_sample_stream_parameters()};
 
     ////////////////////////////////////////////////////////////////////////////
     // - - - REST API - - -
@@ -117,7 +122,8 @@ class App {
 
     // User_stream user_stream_{this};
     // Public_stream filtered_stream_{this, "/1.1/statuses/filter.json",
-    // "POST"}; Public_stream sample_stream_{this, "/1.1/statuses/sample.json",
+    // "POST"};
+    // Public_stream sample_stream_{this, "/1.1/statuses/sample.json",
     // "GET"};
 
     Account account_;

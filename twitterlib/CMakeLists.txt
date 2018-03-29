@@ -8,6 +8,7 @@ add_library(twitterlib STATIC
     src/entities.cpp
     src/hashtag.cpp
     src/media.cpp
+    src/twitter_stream.cpp
     src/place.cpp
     src/place_attributes.cpp
     src/size.cpp

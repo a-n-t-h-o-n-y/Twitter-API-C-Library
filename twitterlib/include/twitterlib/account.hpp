@@ -6,7 +6,7 @@
 namespace twitter {
 
 /// Represets a Twitter account, with access token and secret.
-class Account {
+class Account {  // make a struct with public members.
    public:
     Account() = default;
     /// Set the token and token secret at construction.

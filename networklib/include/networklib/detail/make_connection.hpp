@@ -10,6 +10,8 @@ namespace detail {
 
 std::unique_ptr<Socket_stream> make_connection(const Request& r);
 
+void wait_();
+
 }  // namespace detail
 }  // namespace network
 #endif  // NETWORKLIB_DETAIL_MAKE_CONNECTION_HPP

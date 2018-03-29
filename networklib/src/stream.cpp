@@ -22,6 +22,8 @@ namespace network {
 Stream::Stream(const Request& request)
     : request_{request}, sock_stream_{std::make_unique<detail::Socket>()} {}
 
+Stream::~Stream() {}
+
 void Stream::register_function(Callback f1, Condition f2) {
     callbacks_mutex_.lock();
     callbacks_.push_back(std::make_pair(f1, f2));
@@ -101,6 +103,10 @@ void Stream::dispatch(const boost::system::error_code& ec,
 void Stream::reconnect() {
     this->close();
     this->open();
+}
+
+void Stream::set_request(Request r) {
+    request_ = r;
 }
 
 void Stream::timer_expired(const boost::system::error_code& ec) {
