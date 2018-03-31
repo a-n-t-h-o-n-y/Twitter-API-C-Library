@@ -25,7 +25,7 @@ Response send(const Request& request) {
 
     // Read Response - throws
     boost::asio::streambuf buffer_read;
-    digest(detail::Status_line(*socket_ptr, buffer_read));
+    detail::digest(detail::Status_line(*socket_ptr, buffer_read));
 
     auto header = detail::Headers(*socket_ptr, buffer_read);
     std::string content_length = header.get("content-length");

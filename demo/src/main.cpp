@@ -10,16 +10,17 @@ int main() {
 
     app.set_account(account);
 
-    // app.filtered_stream.parameters().track.push_back("water");
-    // app.filtered_stream.register_function(
-    //     [](const auto& message) { std::cout << message << std::endl; });
-    // app.filtered_stream.open();
-    // twitter::Twitter_stream::wait();
+    // auto results = app.get_favorites("BarackObama", 3);
+    // for (const auto& tweet : results) {
+    // std::cout << tweet << "\n- - - - - - - - -" << std::endl;
+    // }
 
-    auto results = app.get_favorites("BarackObama", 3);
-    for (const auto& tweet : results) {
-        std::cout << tweet << "\n- - - - - - - - -" << std::endl;
-    }
+    app.filtered_stream.parameters().track.push_back("water");
+    app.filtered_stream.register_function([](const auto& message) {
+        std::cout << twitter::Tweet(message).text << std::endl;
+    });
+    app.filtered_stream.open();
+    twitter::Twitter_stream::wait();
 
     // for (const auto& id : app.get_blocked_users()) {
     //     std::cout << id << '\n';

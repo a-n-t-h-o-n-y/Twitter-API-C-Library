@@ -46,7 +46,7 @@ class Stream {
     /// Close and then reopen the stream.
     void reconnect();
 
-    void set_request(Request r);
+    void set_request(const Request& r);
 
    private:
     Request request_;

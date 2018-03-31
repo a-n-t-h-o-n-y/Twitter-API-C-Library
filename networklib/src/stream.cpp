@@ -17,6 +17,8 @@
 #include <networklib/oauth/oauth.hpp>
 #include <networklib/response.hpp>
 
+#include <utility/log.hpp>
+
 namespace network {
 
 Stream::Stream(const Request& request)
@@ -36,12 +38,18 @@ void Stream::open() {
         sock_stream_->socket_ptr->lowest_layer().is_open()) {
         return;
     }
+    // utility::Log l;
+    // l << "REQUEST: " << std::endl;
+    // l << request_ << std::endl;
     sock_stream_->socket_ptr = detail::make_connection(request_);
-    auto buffer = boost::asio::buffer(std::string(request_));
-    boost::asio::async_write(*sock_stream_->socket_ptr, buffer,
-                             [this](const auto& ec, std::size_t bytes) {
-                                 this->dispatch(ec, bytes);
-                             });
+    // auto buffer = boost::asio::buffer(std::string(request_));
+    boost::asio::async_write(
+        *(sock_stream_->socket_ptr), boost::asio::buffer(std::string(request_)),
+        std::bind(&Stream::dispatch, this, std::placeholders::_1,
+                  std::placeholders::_2));
+    // [this](const auto& ec, std::size_t bytes) {
+    //            this->dispatch(ec, bytes);
+    //        });
 }
 
 // Disconnects from the streaming API.
@@ -64,13 +72,15 @@ void Stream::dispatch(const boost::system::error_code& ec,
     reconnect_ = false;
     reconnect_mtx_.unlock();
     boost::asio::streambuf buffer_read;
-    detail::digest(detail::Status_line(*sock_stream_->socket_ptr, buffer_read));
-    // Headers header(*sock_stream_);  // change to socket_ptr_ eventually
-    // std::cout << header << std::endl;
+    detail::digest(
+        detail::Status_line(*(sock_stream_->socket_ptr), buffer_read));
 
-    // if (header.get("transfer-encoding") != "chunked") {
-    //     throw std::runtime_error("Stream transfer encoding is not chunked.");
-    // }
+    detail::Headers header(*sock_stream_->socket_ptr, buffer_read);
+    std::cout << header << std::endl;
+
+    if (header.get("transfer-encoding") != "chunked") {
+        throw std::runtime_error("Stream transfer encoding is not chunked.");
+    }
 
     std::string message_str;
     while (!reconnect_) {  // how is reconnect_ set?
@@ -80,12 +90,11 @@ void Stream::dispatch(const boost::system::error_code& ec,
             sock_stream_->socket_ptr->get_io_service(),
             boost::posix_time::seconds(90)};
         while ((pos = message_str.find("\r\n")) == std::string::npos) {
-            // timer_.expires_from_now(boost::posix_time::seconds(90));
             timer.async_wait(
                 std::bind(&Stream::timer_expired, this, std::placeholders::_1));
             message_str.append(
                 detail::read_chunk(*sock_stream_->socket_ptr, buffer_read));
-            // timer_.expires_at(boost::posix_time::pos_infin);
+
             timer.cancel();
         }
         auto response = message_str.substr(0, pos);
@@ -105,7 +114,7 @@ void Stream::reconnect() {
     this->open();
 }
 
-void Stream::set_request(Request r) {
+void Stream::set_request(const Request& r) {
     request_ = r;
 }
 
