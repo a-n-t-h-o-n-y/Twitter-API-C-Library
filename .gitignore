@@ -6,7 +6,6 @@ doc/*
 notes/
 build*/
 *.json
-certs/
 *.a
 *.so
 tags
