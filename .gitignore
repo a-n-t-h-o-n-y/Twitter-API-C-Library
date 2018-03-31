@@ -1,14 +1,12 @@
 *.txt
 !CMakeLists.txt
-test/*
-bin/*
+test
 doc/*
-notes/
 !doc/Doxyfile
-build/*
+notes/
+build*/
 *.json
 certs/
-*.vim
 *.a
 *.so
 tags

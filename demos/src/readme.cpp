@@ -1,8 +1,5 @@
-# C++ Twitter API Library
-Library for access to Twitter's REST and Streaming APIs.
-
-```c++
 #include <iostream>
+
 #include <twitterlib/twitterlib.hpp>
 
 int main() {
@@ -36,11 +33,3 @@ int main() {
 
     return 0;
 }
-```
-
-### Library Dependencies
-* Boost ASIO >= 1.58
-* Boost Property Tree >= 1.58
-* OpenSSL
-* zlib
-
