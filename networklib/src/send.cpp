@@ -13,8 +13,6 @@
 
 namespace network {
 
-// This should only write to the socket the request, it should return the
-// Socket_stream, and the client can use that socket to read a status_line etc..
 Response send(const Request& request) {
     auto socket_ptr = detail::make_connection(request);
     // Send request
@@ -23,7 +21,7 @@ Response send(const Request& request) {
     stream << request;
     boost::asio::write(*socket_ptr, buffer_send);
 
-    // Read Response - throws
+    // Read Response - can throw
     boost::asio::streambuf buffer_read;
     detail::digest(detail::Status_line(*socket_ptr, buffer_read));
 

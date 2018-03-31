@@ -24,7 +24,7 @@ namespace network {
 Stream::Stream(const Request& request)
     : request_{request}, sock_stream_{std::make_unique<detail::Socket>()} {}
 
-Stream::~Stream() {}
+Stream::~Stream() {}  // for unique_ptr<Socket>
 
 void Stream::register_function(Callback f1, Condition f2) {
     callbacks_mutex_.lock();
@@ -38,18 +38,12 @@ void Stream::open() {
         sock_stream_->socket_ptr->lowest_layer().is_open()) {
         return;
     }
-    // utility::Log l;
-    // l << "REQUEST: " << std::endl;
-    // l << request_ << std::endl;
     sock_stream_->socket_ptr = detail::make_connection(request_);
-    // auto buffer = boost::asio::buffer(std::string(request_));
     boost::asio::async_write(
         *(sock_stream_->socket_ptr), boost::asio::buffer(std::string(request_)),
-        std::bind(&Stream::dispatch, this, std::placeholders::_1,
-                  std::placeholders::_2));
-    // [this](const auto& ec, std::size_t bytes) {
-    //            this->dispatch(ec, bytes);
-    //        });
+        [this](const boost::system::error_code& ec, std::size_t bytes) {
+            this->dispatch(ec, bytes);
+        });
 }
 
 // Disconnects from the streaming API.
@@ -60,7 +54,9 @@ void Stream::close() {
     boost::system::error_code ec;
     sock_stream_->socket_ptr->lowest_layer().shutdown(
         boost::asio::ip::tcp::socket::shutdown_both, ec);
-    // TODO: add error handling, check ec
+    if (ec != 0) {
+        throw boost::system::system_error{ec};
+    }
     sock_stream_->socket_ptr->lowest_layer().close();
 }
 
@@ -68,6 +64,9 @@ void Stream::close() {
 // callback. Checks for reconnect_ on beginning of every iteration.
 void Stream::dispatch(const boost::system::error_code& ec,
                       std::size_t bytes_transfered) {
+    if (ec != 0) {
+        throw boost::system::system_error{ec};
+    }
     reconnect_mtx_.lock();
     reconnect_ = false;
     reconnect_mtx_.unlock();
@@ -76,15 +75,14 @@ void Stream::dispatch(const boost::system::error_code& ec,
         detail::Status_line(*(sock_stream_->socket_ptr), buffer_read));
 
     detail::Headers header(*sock_stream_->socket_ptr, buffer_read);
-    std::cout << header << std::endl;
 
     if (header.get("transfer-encoding") != "chunked") {
         throw std::runtime_error("Stream transfer encoding is not chunked.");
     }
 
     std::string message_str;
-    while (!reconnect_) {  // how is reconnect_ set?
-        // what about keep alive newlines?
+    // TODO: add support for keep alive newlines
+    while (!reconnect_) {
         std::size_t pos{0};
         boost::asio::deadline_timer timer{
             sock_stream_->socket_ptr->get_io_service(),
@@ -94,7 +92,6 @@ void Stream::dispatch(const boost::system::error_code& ec,
                 std::bind(&Stream::timer_expired, this, std::placeholders::_1));
             message_str.append(
                 detail::read_chunk(*sock_stream_->socket_ptr, buffer_read));
-
             timer.cancel();
         }
         auto response = message_str.substr(0, pos);
@@ -105,7 +102,7 @@ void Stream::dispatch(const boost::system::error_code& ec,
             message_str.clear();
         }
     }
-    // reconnect_ was set
+    // reconnect_ was set true.
     this->reconnect();
 }
 
@@ -119,10 +116,10 @@ void Stream::set_request(const Request& r) {
 }
 
 void Stream::timer_expired(const boost::system::error_code& ec) {
-    // this->reconnect();
-    this->close();
-    std::cout << "Reconnecting..." << std::endl;
-    this->open();
+    if (ec != 0) {
+        throw boost::system::system_error{ec};
+    }
+    this->reconnect();
 }
 
 void Stream::send_response(const Response& response) {

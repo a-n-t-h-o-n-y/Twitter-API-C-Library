@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <cctype>
 #include <ctime>
-#include <iostream>  // temp
 #include <iterator>
 #include <sstream>
 #include <stdexcept>
@@ -19,7 +18,6 @@
 #include <networklib/request.hpp>
 #include <networklib/send.hpp>
 
-// Helper functions here (they will not be accessibly from outside).
 namespace {
 using namespace network;
 
@@ -156,7 +154,6 @@ using network::detail::url_encode;
 namespace network {
 
 // Get bearer token from server
-// void acquire_bearer_token(App& app) {
 std::string get_bearer_token(const std::string& consumer_key,
                              const std::string& consumer_secret) {
     std::string token_credentials = detail::url_encode(consumer_key) + ':' +
@@ -182,16 +179,7 @@ std::string get_bearer_token(const std::string& consumer_key,
     return message.get("access_token");
 }
 
-// void authorize(Request& request, App& app) {
-//     if (app.bearer_token().empty()) {
-//         acquire_bearer_token(app);
-//     }
-//     std::string oauth{"Bearer " + app.bearer_token()};
-//     integrate_oauth(request, oauth);
-// }
-
 /// Add App OAuth 1.0a header to HTTP request.
-// void authorize(Request& request, const App& app, const Account& account) {
 void authorize(Request& request,
                const std::string& consumer_key,
                const std::string& consumer_secret,

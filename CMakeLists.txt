@@ -25,7 +25,7 @@ set_property(TARGET boost PROPERTY
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 add_subdirectory(networklib)
 add_subdirectory(twitterlib)
-add_subdirectory(demo)
+add_subdirectory(demos)
 
 # CLANG TIDY
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
