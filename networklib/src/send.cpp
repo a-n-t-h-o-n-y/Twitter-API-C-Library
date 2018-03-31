@@ -16,10 +16,8 @@ namespace network {
 Response send(const Request& request) {
     auto socket_ptr = detail::make_connection(request);
     // Send request
-    boost::asio::streambuf buffer_send;
-    std::ostream stream(&buffer_send);
-    stream << request;
-    boost::asio::write(*socket_ptr, buffer_send);
+    std::string r_str{request};
+    boost::asio::write(*socket_ptr, boost::asio::buffer(r_str));
 
     // Read Response - can throw
     boost::asio::streambuf buffer_read;

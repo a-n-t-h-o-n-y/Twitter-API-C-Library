@@ -11,14 +11,13 @@ int main(int argc, char* argv[]) {
     network::Keys keys;
     try {
         keys = network::read_keys("keys");
-    } catch (std::invalid_argument e) {
+    } catch (const std::invalid_argument& e) {
         std::cout << e.what() << std::endl;
         return 1;
     }
 
     twitter::App app{keys.consumer_key, keys.consumer_secret};
     twitter::Account account{keys.user_token, keys.token_secret};
-
     app.set_account(account);
 
     app.filtered_stream.parameters().track.push_back(argv[1]);
