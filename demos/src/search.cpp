@@ -22,8 +22,8 @@ int main(int argc, char* argv[]) {
     app.set_account(account);
 
     app.filtered_stream.parameters().track.push_back(argv[1]);
-    app.filtered_stream.register_function([](const auto& message) {
-        twitter::Tweet twt{message};
+    app.filtered_stream.register_function([](const auto& response) {
+        twitter::Tweet twt{response};
         std::cout << twt.user_ptr->name;
         std::cout << " (@" << twt.user_ptr->screen_name << ")" << std::endl;
         std::cout << twt.created_at << std::endl;
