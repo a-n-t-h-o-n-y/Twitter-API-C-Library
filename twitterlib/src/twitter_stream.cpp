@@ -72,9 +72,9 @@ void Twitter_stream::wait() {
 // Builds the complete, authorized Request
 network::Request Twitter_stream::build_request() {
     network::Request r{parameters_to_request(params_)};
-    const Account& account{app_->account()};
-    network::authorize(r, app_->key(), app_->secret(), account.token,
-                       account.secret);
+    const Account& account{app_->account};
+    network::authorize(r, app_->consumer_key, app_->consumer_secret,
+                       account.token, account.secret);
     return r;
 }
 

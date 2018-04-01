@@ -18,8 +18,7 @@ struct User_data;
 struct Tweet_data {
     explicit operator std::string() const;
 
-    std::vector<std::unique_ptr<Objects_template<User_data>>>
-        contributors;
+    std::vector<std::unique_ptr<Objects_template<User_data>>> contributors;
     Coordinates coordinates;
     std::string created_at;
     std::int64_t current_user_retweet_id;     // current_user_retweet.id

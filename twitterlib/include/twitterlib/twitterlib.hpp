@@ -17,5 +17,7 @@
 #include <twitterlib/objects/url.hpp>
 #include <twitterlib/objects/user.hpp>
 #include <twitterlib/objects/user_mention.hpp>
+#include <twitterlib/rest_api/rest_account.hpp>
+#include <twitterlib/rest_api/rest_favorites.hpp>
 
 #endif  // TWITTERLIB_TWITTERLIB_HPP

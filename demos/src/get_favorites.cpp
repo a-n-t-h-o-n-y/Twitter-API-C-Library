@@ -32,11 +32,11 @@ int main(int argc, char* argv[]) {
     // Set up App
     twitter::App app{keys.consumer_key, keys.consumer_secret};
     twitter::Account account{keys.user_token, keys.token_secret};
-    app.set_account(account);
+    app.account = account;
 
     std::vector<twitter::Tweet> twt_vec;
     try {
-        twt_vec = app.get_favorites(argv[1], quantity);
+        twt_vec = get_favorites(app, argv[1], quantity);
     } catch (...) {
         std::cout << "Error with request. Twitter handle \'@" << argv[1]
                   << "\' might not exist." << std::endl;

@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 
     twitter::App app{keys.consumer_key, keys.consumer_secret};
     twitter::Account account{keys.user_token, keys.token_secret};
-    app.set_account(account);
+    app.account = account;
 
     app.filtered_stream.parameters().track.push_back(argv[1]);
     app.filtered_stream.register_function([](const auto& response) {

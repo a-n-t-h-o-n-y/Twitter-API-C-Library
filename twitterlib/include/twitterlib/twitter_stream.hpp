@@ -11,7 +11,7 @@
 #include <twitterlib/objects/coordinates.hpp>
 
 namespace twitter {
-class App;
+struct App;
 
 using twitter_id = std::int64_t;
 
