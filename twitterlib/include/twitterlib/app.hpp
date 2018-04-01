@@ -1,20 +1,10 @@
 #ifndef TWITTERLIB_APP_HPP
 #define TWITTERLIB_APP_HPP
-#include <cstdint>
 #include <string>
 #include <utility>
-#include <vector>
-
-#include <networklib/response.hpp>
 
 #include <twitterlib/account.hpp>
-#include <twitterlib/objects/tweet.hpp>
-#include <twitterlib/objects/user.hpp>
 #include <twitterlib/twitter_stream.hpp>
-
-namespace network {
-class Request;
-}
 
 namespace twitter {
 
@@ -35,17 +25,6 @@ struct App {
 
     ////////////////////////////////////////////////////////////////////////////
     // - - - REST API - - -
-    // void update_status(const std::string& message);
-
-    // network::Response verify_credentials(bool include_entities = true,
-    //                                      bool skip_status = false,
-    //                                      bool include_email = false);
-
-    // std::vector<std::int64_t> get_blocked_ids();
-
-    // std::vector<User> get_blocked_users(bool include_entities = false,
-    //                                     bool skip_status = true);
-
     // // TODO: Change return type to Colletion, that wraps a vector<Tweet> and
     // // includes the description data as well.
     // network::Response get_collection(const std::string& id,
@@ -59,7 +38,6 @@ struct App {
     //                                    int count = -1);
 
     // network::Response get_collection_info(const std::string& id);
-
 
     // network::Response get_application_rate_limit_status();
 

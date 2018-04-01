@@ -19,26 +19,6 @@
 
 namespace twitter {
 
-// void App::update_status(const std::string& message) {
-//     network::Request us_request;
-//     us_request.HTTP_method = "POST";
-//     us_request.URI = "/1.1/statuses/update.json";
-//     us_request.add_message("status", message);
-//     this->send(us_request, account_);
-// }
-
-// network::Response App::verify_credentials(bool include_entities,
-//                                           bool skip_status,
-//                                           bool include_email) {
-//     network::Request r;
-//     r.HTTP_method = "GET";
-//     r.URI = "/1.1/account/verify_credentials.json";
-
-//     r.add_query("include_entities", detail::to_string(include_entities));
-//     r.add_query("skip_status", detail::to_string(skip_status));
-//     r.add_query("include_email", detail::to_string(include_email));
-//     return this->send(r, account_);
-// }
 
 // network::Response App::get_application_rate_limit_status() {
 //     network::Request r;
@@ -54,41 +34,7 @@ namespace twitter {
 //     return this->send(r, account_);
 // }
 
-// // cursored results
-// std::vector<std::int64_t> App::get_blocked_ids() {
-//     std::vector<std::int64_t> result;
-//     std::string cursor{"-1"};
-//     while (cursor != "0") {
-//         network::Request r;
-//         r.HTTP_method = "GET";
-//         r.URI = "/1.1/blocks/ids.json";
-//         r.add_query("cursor", cursor);
-//         network::Response page = this->send(r, account_);
-//         for (auto& id : page.ptree().get_child("ids")) {
-//             result.push_back(id.second.get_value<std::int64_t>());
-//         }
-//         cursor = page.get("next_cursor");
-//     }
-//     return result;
-// }
 
-// std::vector<User> App::get_blocked_users(bool include_entities,
-//                                          bool skip_status) {
-//     std::vector<User> result;
-//     std::string cursor{"-1"};
-//     while (cursor != "0") {
-//         network::Request r;
-//         r.HTTP_method = "GET";
-//         r.URI = "/1.1/blocks/list.json";
-//         r.add_query("cursor", cursor);
-//         network::Response page = this->send(r, account_);
-//         for (auto& user : page.ptree().get_child("users")) {
-//             result.emplace_back(user.second);
-//         }
-//         cursor = page.get("next_cursor");
-//     }
-//     return result;
-// }
 
 // network::Response App::get_collection(const std::string& id,
 //                                       int count,

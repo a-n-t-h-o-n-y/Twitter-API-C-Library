@@ -18,6 +18,8 @@
 #include <twitterlib/objects/user.hpp>
 #include <twitterlib/objects/user_mention.hpp>
 #include <twitterlib/rest_api/rest_account.hpp>
+#include <twitterlib/rest_api/rest_blocks.hpp>
 #include <twitterlib/rest_api/rest_favorites.hpp>
+#include <twitterlib/rest_api/rest_statuses.hpp>
 
 #endif  // TWITTERLIB_TWITTERLIB_HPP

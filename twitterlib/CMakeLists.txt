@@ -19,6 +19,8 @@ add_library(twitterlib STATIC
     src/authorize.cpp
     src/rest_account.cpp
     src/rest_favorites.cpp
+    src/rest_statuses.cpp
+    src/rest_blocks.cpp
     )
 
 target_include_directories(twitterlib PUBLIC

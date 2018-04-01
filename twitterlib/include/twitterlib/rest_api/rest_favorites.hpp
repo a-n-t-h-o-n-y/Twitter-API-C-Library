@@ -1,3 +1,5 @@
+#ifndef TWITTERLIB_REST_API_REST_FAVORITES_HPP
+#define TWITTERLIB_REST_API_REST_FAVORITES_HPP
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -17,3 +19,4 @@ std::vector<Tweet> get_favorites(const App& app,
                                  std::int64_t max_id = -1);
 
 }  // namespace twitter
+#endif  // TWITTERLIB_REST_API_REST_FAVORITES_HPP
