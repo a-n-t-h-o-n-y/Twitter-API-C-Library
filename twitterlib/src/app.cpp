@@ -21,8 +21,8 @@ namespace twitter {
 
 network::Response App::send(network::Request& request, const Account& account) {
     // Inject OAuth to the request
-    network::authorize(request, consumer_key_, consumer_secret_,
-                       account.token(), account.secret());
+    network::authorize(request, consumer_key_, consumer_secret_, account.token,
+                       account.secret);
 
     // Send request to generic send function
     return network::send(request);

@@ -1,7 +1,6 @@
 project(twitterlib LANGUAGES CXX)
 
 add_library(twitterlib STATIC
-    src/account.cpp
     src/app.cpp
     src/bounding_box.cpp
     src/coordinates.cpp
