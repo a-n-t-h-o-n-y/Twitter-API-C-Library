@@ -1,6 +1,5 @@
 #include <exception>
 #include <iostream>
-
 #include <twitterlib/twitterlib.hpp>
 
 int main() {
@@ -18,13 +17,20 @@ int main() {
     twitter::Account account{keys.user_token, keys.token_secret};
     app.account = account;
 
-    // get_account_settings
-    network::Response settings{twitter::get_account_settings(app)};
-    // std::cout << settings << std::endl;
+    app.sample_stream.register_function([](const auto& response) {
+        twitter::Tweet twt{response};
+        if (!twt.text.empty()) {
+            std::cout << twt.text << '\n' << std::endl;
+        }
+    });
 
-    // verify_credentials
-    network::Response creds{twitter::verify_credentials(app)};
-    std::cout << creds << std::endl;
+    try {
+        app.sample_stream.open();
+    } catch (const std::runtime_error& e) {
+        std::cout << e.what() << std::endl;
+        return 1;
+    }
+    twitter::Twitter_stream::wait();
 
     return 0;
 }

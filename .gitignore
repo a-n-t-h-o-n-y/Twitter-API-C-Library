@@ -1,6 +1,5 @@
 *.txt
 !CMakeLists.txt
-test
 doc/*
 !doc/Doxyfile
 notes/
