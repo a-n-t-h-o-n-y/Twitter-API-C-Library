@@ -8,6 +8,8 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
+#include <networklib/view_ptree.hpp>
+
 namespace network {
 
 Response::Response(std::string message_body) : message_body_{message_body} {
@@ -27,7 +29,7 @@ void Response::build_ptree() const {
     boost::property_tree::read_json(ss, *json_tree_ptr_);
 }
 
-boost::property_tree::ptree Response::ptree() const {
+const boost::property_tree::ptree& Response::ptree() const {
     if (json_tree_ptr_ == nullptr) {
         this->build_ptree();
     }
@@ -46,6 +48,11 @@ std::string Response::get(const std::string& key) const {
         this->build_ptree();
     }
     return json_tree_ptr_->get<std::string>(key, "");
+}
+
+std::ostream& operator<<(std::ostream& os, const Response& m) {
+    network::view_ptree(m.ptree(), os);
+    return os;
 }
 
 }  // namespace network

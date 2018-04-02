@@ -34,7 +34,7 @@ namespace detail {
 std::unique_ptr<Socket_stream> make_connection(const Request& r) {
     boost::asio::ssl::context ssl_context(boost::asio::ssl::context::sslv23);
     ssl_context.set_verify_mode(boost::asio::ssl::verify_peer);
-    ssl_context.set_default_verify_paths();  // change this to certs download
+    ssl_context.set_default_verify_paths();
 
     auto socket_ptr =
         std::make_unique<Socket_stream>(io_service(), ssl_context);
@@ -45,6 +45,9 @@ std::unique_ptr<Socket_stream> make_connection(const Request& r) {
 
     // Make connection, perform tls handshake.
     boost::asio::connect(socket_ptr->lowest_layer(), endpoint_iterator);
+    socket_ptr->set_verify_mode(boost::asio::ssl::verify_peer);
+    socket_ptr->set_verify_callback(
+        boost::asio::ssl::rfc2818_verification(r.host));
     socket_ptr->handshake(Socket_stream::client);
     return socket_ptr;
 }

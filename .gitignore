@@ -1,12 +1,10 @@
 *.txt
 !CMakeLists.txt
-test
 doc/*
 !doc/Doxyfile
 notes/
 build*/
 *.json
-certs/
 *.a
 *.so
 tags

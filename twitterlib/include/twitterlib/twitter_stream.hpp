@@ -11,9 +11,9 @@
 #include <twitterlib/objects/coordinates.hpp>
 
 namespace twitter {
-class App;
+struct App;
 
-using twitter_id = std::int64_t;
+using Twitter_id = std::int64_t;
 
 struct Stream_parameters {
     std::string delimited;
@@ -23,7 +23,7 @@ struct Stream_parameters {
     bool use_locations_{false};
 
     std::string language;
-    std::vector<twitter_id> follow;
+    std::vector<Twitter_id> follow;
     std::string filter_level;
     std::int16_t count;
 

@@ -3,11 +3,8 @@
 
 #include <twitterlib/twitterlib.hpp>
 
-int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        std::cout << "usage: search <search-term>" << std::endl;
-        return 1;
-    }
+int main() {
+    // Get OAuth keys
     network::Keys keys;
     try {
         keys = network::read_keys("keys");
@@ -16,21 +13,17 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    // Set up App
     twitter::App app{keys.consumer_key, keys.consumer_secret};
     twitter::Account account{keys.user_token, keys.token_secret};
     app.account = account;
 
-    app.filtered_stream.parameters().track.push_back(argv[1]);
-    app.filtered_stream.register_function([](const auto& response) {
-        twitter::Tweet twt{response};
-        std::cout << twt.user_ptr->name;
-        std::cout << " (@" << twt.user_ptr->screen_name << ")" << std::endl;
-        std::cout << twt.created_at << std::endl;
-        std::cout << twt.text << '\n' << std::endl;
-    });
+    // User Stream
+    app.user_stream.register_function(
+        [](const auto& response) { network::view_ptree(response.ptree()); });
 
     try {
-        app.filtered_stream.open();
+        app.user_stream.open();
     } catch (const std::runtime_error& e) {
         std::cout << e.what() << std::endl;
         return 1;

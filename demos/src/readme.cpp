@@ -8,14 +8,14 @@ int main() {
     twitter::App app{keys.consumer_key, keys.consumer_secret};
     twitter::Account account{keys.user_token, keys.token_secret};
 
-    app.set_account(account);
+    app.account = account;
 
     // REST API - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Returns JSON response from twitter.
-    std::cout << app.get_account_settings() << std::endl;
+    std::cout << get_account_settings(app) << std::endl;
 
     // Update account's status.
-    app.update_status("Hello, Twitter!");
+    update_status("Hello, Twitter!");
 
     // Streaming API - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Connect to Twitter filter stream, tracks "Seach Term" text.

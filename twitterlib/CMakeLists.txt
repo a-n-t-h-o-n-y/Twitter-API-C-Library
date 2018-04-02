@@ -1,8 +1,6 @@
 project(twitterlib LANGUAGES CXX)
 
 add_library(twitterlib STATIC
-    src/account.cpp
-    src/app.cpp
     src/bounding_box.cpp
     src/coordinates.cpp
     src/entities.cpp
@@ -17,6 +15,13 @@ add_library(twitterlib STATIC
     src/url.cpp
     src/user.cpp
     src/user_mention.cpp
+    src/authorize.cpp
+    src/rest_account.cpp
+    src/rest_favorites.cpp
+    src/rest_statuses.cpp
+    src/rest_blocks.cpp
+    src/rest_collections.cpp
+    src/rest_application.cpp
     )
 
 target_include_directories(twitterlib PUBLIC

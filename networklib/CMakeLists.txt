@@ -14,6 +14,7 @@ add_library(networklib STATIC
     src/status_line.cpp
     src/stream.cpp
     src/read_keys.cpp
+    src/view_ptree.cpp
     )
 
 target_include_directories(networklib PUBLIC
