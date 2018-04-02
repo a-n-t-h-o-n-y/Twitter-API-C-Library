@@ -27,7 +27,7 @@ void Response::build_ptree() const {
     boost::property_tree::read_json(ss, *json_tree_ptr_);
 }
 
-boost::property_tree::ptree Response::ptree() const {
+const boost::property_tree::ptree& Response::ptree() const {
     if (json_tree_ptr_ == nullptr) {
         this->build_ptree();
     }

@@ -35,9 +35,19 @@ add_executable(rest_blocks EXCLUDE_FROM_ALL src/rest_test/blocks.cpp)
 target_link_libraries(rest_blocks twitterlib)
 target_compile_features(rest_blocks PUBLIC cxx_std_14)
 
+# rest_collections
+add_executable(rest_collections EXCLUDE_FROM_ALL src/rest_test/collections.cpp)
+target_link_libraries(rest_collections twitterlib)
+target_compile_features(rest_collections PUBLIC cxx_std_14)
+
+# rest_application
+add_executable(rest_application EXCLUDE_FROM_ALL src/rest_test/application.cpp)
+target_link_libraries(rest_application twitterlib)
+target_compile_features(rest_application PUBLIC cxx_std_14)
+
 # Consolidate REST test Targets
 add_custom_target(rest_test DEPENDS rest_statuses rest_favorites rest_account
-    rest_blocks)
+    rest_blocks rest_collections rest_application)
 
 # Verify readme examples
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

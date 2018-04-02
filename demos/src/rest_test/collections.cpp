@@ -18,13 +18,18 @@ int main() {
     twitter::Account account{keys.user_token, keys.token_secret};
     app.account = account;
 
-    // get_account_settings
-    network::Response settings{twitter::get_account_settings(app)};
-    // std::cout << settings << std::endl;
+    // get_collection
+    network::Response collection_data{
+        twitter::get_collection(app, "custom-539487832448843776")};
+    // network::view_ptree(collection_data.ptree());
 
-    // verify_credentials
-    network::Response creds{twitter::verify_credentials(app)};
-    std::cout << creds << std::endl;
+    network::Response collection_ids{
+        twitter::find_collections(app, "BarackObama")};
+    // network::view_ptree(collection_ids.ptree());
+
+    network::Response collection_info{
+        twitter::get_collection_info(app, "custom-539487832448843776")};
+    // network::view_ptree(collection_info.ptree());
 
     return 0;
 }

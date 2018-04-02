@@ -7,6 +7,7 @@
 #include <networklib/response.hpp>
 #include <networklib/send.hpp>
 #include <networklib/stream.hpp>
+#include <networklib/view_ptree.hpp>
 #include <networklib/wait.hpp>
 
 #endif  // NETWORKLIB_NETWORKLIB_HPP

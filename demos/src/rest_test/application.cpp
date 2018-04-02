@@ -18,13 +18,9 @@ int main() {
     twitter::Account account{keys.user_token, keys.token_secret};
     app.account = account;
 
-    // get_account_settings
-    network::Response settings{twitter::get_account_settings(app)};
-    // std::cout << settings << std::endl;
-
-    // verify_credentials
-    network::Response creds{twitter::verify_credentials(app)};
-    std::cout << creds << std::endl;
+    // get_application_rate_limit_status
+    network::Response status{twitter::get_application_rate_limit_status(app)};
+    network::view_ptree(status.ptree());
 
     return 0;
 }
