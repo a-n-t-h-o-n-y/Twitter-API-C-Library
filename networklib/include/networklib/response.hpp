@@ -29,9 +29,7 @@ class Response {
     void build_ptree() const;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const Response& m) {
-    return os << static_cast<std::string>(m);
-}
+std::ostream& operator<<(std::ostream& os, const Response& m);
 
 }  // namespace network
 #endif  // NETWORKLIB_RESPONSE_HPP
