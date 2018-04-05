@@ -40,9 +40,9 @@ add_custom_target(compile_commands ALL
 # Doxyfile in project/doc : make doc
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-add_custom_target(doc
-${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/doc/Doxyfile
-WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/doc
-COMMENT "Generating API documentation with Doxygen" VERBATIM)
+    add_custom_target(doc
+        ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/doc/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/doc
+        COMMENT "Generating API documentation with Doxygen" VERBATIM)
 endif(DOXYGEN_FOUND)
 

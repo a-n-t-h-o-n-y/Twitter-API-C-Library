@@ -43,9 +43,7 @@ install(TARGETS twitterlib EXPORT TwitterLibraryConfig
     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
 install(EXPORT TwitterLibraryConfig DESTINATION share/TwitterLibrary/cmake)
-
 export(TARGETS twitterlib FILE TwitterLibraryConfig.cmake)
 
 # TESTS
