@@ -2,6 +2,7 @@
 !CMakeLists.txt
 doc/*
 !doc/Doxyfile
+test/
 notes/
 build*/
 *.json
