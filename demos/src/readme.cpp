@@ -18,7 +18,7 @@ int main() {
     update_status("Hello, Twitter!");
 
     // Streaming API - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Connect to Twitter filter stream, tracks "Seach Term" text.
+    // Connect to Twitter filter stream, tracks "Search Term" text.
     app.filtered_stream.parameters().track.push_back("Search Term");
 
     // Function that will be called on each response from the stream.

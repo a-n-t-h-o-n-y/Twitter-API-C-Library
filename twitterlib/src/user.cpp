@@ -18,7 +18,7 @@ User_data::operator std::string() const {
     ss << std::boolalpha;
     ss << "contributors_enabled: " << contributors_enabled
        << "\ncreated_at: " << created_at
-       << "\ndeafult_profile: " << default_profile
+       << "\ndefault_profile: " << default_profile
        << "\ndefault_profile_image: " << default_profile_image
        << "\ndescription: " << description << "\nentities:\n"
        << entities << "\nfavourites_count: " << favourites_count

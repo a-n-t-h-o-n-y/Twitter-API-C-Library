@@ -7,6 +7,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/system/error_code.hpp>
 
 #include <networklib/detail/encode.hpp>
 #include <networklib/detail/headers.hpp>
@@ -16,8 +17,6 @@
 #include <networklib/detail/status_line.hpp>
 #include <networklib/oauth/oauth.hpp>
 #include <networklib/response.hpp>
-
-#include <utility/log.hpp>
 
 namespace network {
 
@@ -54,7 +53,7 @@ void Stream::close() {
     boost::system::error_code ec;
     sock_stream_->socket_ptr->lowest_layer().shutdown(
         boost::asio::ip::tcp::socket::shutdown_both, ec);
-    if (ec != 0) {
+    if (ec != boost::system::errc::success) {
         throw boost::system::system_error{ec};
     }
     sock_stream_->socket_ptr->lowest_layer().close();
@@ -63,8 +62,8 @@ void Stream::close() {
 // Reads from the socket, creates Response objects and sends them to each
 // callback. Checks for reconnect_ on beginning of every iteration.
 void Stream::dispatch(const boost::system::error_code& ec,
-                      std::size_t bytes_transfered) {
-    if (ec != 0) {
+                      std::size_t bytes_transferred) {
+    if (ec != boost::system::errc::success) {
         throw boost::system::system_error{ec};
     }
     reconnect_mtx_.lock();
@@ -116,7 +115,7 @@ void Stream::set_request(const Request& r) {
 }
 
 void Stream::timer_expired(const boost::system::error_code& ec) {
-    if (ec != 0) {
+    if (ec != boost::system::errc::success) {
         throw boost::system::system_error{ec};
     }
     this->reconnect();
