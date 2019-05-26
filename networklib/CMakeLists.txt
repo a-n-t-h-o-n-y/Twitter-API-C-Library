@@ -57,10 +57,8 @@ install(TARGETS networklib EXPORT NetworkLibraryConfig
     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
 install(EXPORT NetworkLibraryConfig DESTINATION share/NetworkLibrary/cmake)
-
-export(TARGETS networklib FILE NetworkLibraryConfig.cmake)
+export(TARGETS networklib  FILE NetworkLibraryConfig.cmake)
 
 # TESTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

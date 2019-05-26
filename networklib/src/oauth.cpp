@@ -124,10 +124,10 @@ std::string gen_signature(const Request& request,
     // Build parameters string.
     std::sort(std::begin(encoded_parameters), std::end(encoded_parameters));
     std::stringstream parameters_ss;
-    std::string seperator{""};
+    std::string separator{""};
     for (const auto& key_value : encoded_parameters) {
-        parameters_ss << seperator << key_value;
-        seperator = "&";
+        parameters_ss << separator << key_value;
+        separator = "&";
     }
     std::string parameters_string{parameters_ss.str()};
 

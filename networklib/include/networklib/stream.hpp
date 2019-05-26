@@ -33,7 +33,7 @@ class Stream {
     ~Stream();
 
     /// Register a callback function to the stream which will be called when the
-    /// Stream is open and a Response had been recieved.
+    /// Stream is open and a Response had been received.
     void register_function(Callback f1,
                            Condition f2 = [](const Response&) { return true; });
 
@@ -67,7 +67,7 @@ class Stream {
     // Reads from the socket, creates Response objects and sends them to
     // each callback. Checks for reconnect_ on beginning of every iteration.
     void dispatch(const boost::system::error_code& ec,
-                  std::size_t bytes_transfered);
+                  std::size_t bytes_transferred);
 };
 
 }  // namespace network

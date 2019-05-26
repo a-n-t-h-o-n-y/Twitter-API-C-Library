@@ -6,6 +6,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
+#include <boost/system/error_code.hpp>
 
 #include <networklib/detail/socket_stream.hpp>
 
@@ -16,7 +17,7 @@ Status_line::Status_line(Socket_stream& socket,
                          boost::asio::streambuf& buffer) {
     boost::system::error_code ec;
     boost::asio::read_until(socket, buffer, "\r\n", ec);
-    if (ec != 0) {
+    if (ec != boost::system::errc::success) {
         throw boost::system::system_error(ec);
     }
     std::istream status_stream(&buffer);

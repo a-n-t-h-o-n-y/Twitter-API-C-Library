@@ -17,11 +17,11 @@ namespace detail {
 std::string key_value_encode(
     const std::vector<std::pair<std::string, std::string>>& parameters) {
     std::stringstream result;
-    std::string seperator{""};
+    std::string separator{""};
     for (auto& key_value : parameters) {
-        result << seperator << key_value.first << '='
+        result << separator << key_value.first << '='
                << url_encode(key_value.second);
-        seperator = "&";
+        separator = "&";
     }
     return result.str();
 }
