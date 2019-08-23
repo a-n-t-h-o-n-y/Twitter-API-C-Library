@@ -45,7 +45,7 @@ User_data::operator std::string() const {
        << "\nprofile_use_background_image: " << profile_use_background_image
        << "\nprotect: " << protect << "\nscreen_name: " << screen_name
        << "\nshow_all_inline_media: " << show_all_inline_media << "\nstatus:\n"
-       << status << "\nstatus_count: " << status_count
+       << status << "\nstatuses_count: " << statuses_count
        << "\ntime_zone: " << time_zone << "\nurl: " << url
        << "\nutc_offset: " << utc_offset << "\nverified: " << verified
        << "\nwithheld_in_countries: " << withheld_in_countries;
@@ -97,7 +97,7 @@ void User_data::construct(const boost::property_tree::ptree& tree) {
     screen_name = tree.get<std::string>("screen_name", "");
     show_all_inline_media = tree.get<bool>("show_all_inline_media", false);
     status = Tweet{tree.get_child("status", boost::property_tree::ptree())};
-    status_count = tree.get<int>("status_count", -1);
+    statuses_count = tree.get<int>("statuses_count", -1);
     time_zone = tree.get<std::string>("time_zone", "");
     url = tree.get<std::string>("url", "");
     utc_offset = tree.get<int>("utc_offset", -1);
