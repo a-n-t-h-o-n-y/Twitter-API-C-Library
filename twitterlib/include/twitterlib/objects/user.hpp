@@ -51,7 +51,7 @@ struct User_data {
     std::string screen_name;
     bool show_all_inline_media;
     Tweet status;
-    int status_count;
+    int statuses_count;
     std::string time_zone;
     std::string url;
     int utc_offset;
