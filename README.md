@@ -1,5 +1,7 @@
 # C++ Twitter API Library
+
 A work in progress library for access to Twitter's REST and Streaming APIs.
+
 ```c++
 #include <iostream>
 #include <twitterlib/twitterlib.hpp>
@@ -13,7 +15,7 @@ int main() {
     app.account = account;
 
     // REST API - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Returns JSON response from twitter.
+    // Returns JSON response from Twitter.
     std::cout << get_account_settings(app) << std::endl;
 
     // Update account's status.
@@ -37,9 +39,32 @@ int main() {
 }
 ```
 
+## Build / compile
+
+Use `cmake .` to generate the build environment.
+
+Once successful, run `make && make demos` to build the libraries and the demo apps.
+
+## Usage
+
+[Register](https://developer.twitter.com/en/apply/user.html) for a Twitter Developer Account.
+Create a new application via the [Twitter App Dashboard](https://developer.twitter.com/en/apps).
+Take a note of the consumer keys and account secrets on the "Keys and Tokens" tab for your app.
+
+Create a text file called "keys" containing your Twitter API consumer keys and secrets:
+
+```text
+consumer_key *KEY*
+consumer_token *TOKEN*
+user_token *USERTOKEN*
+token_secret *TOKENSECRET*
+```
+
+Run the demo apps.
+
 ### Library Dependencies
+
 * Boost ASIO >= 1.58
 * Boost Property Tree >= 1.58
-* OpenSSL
+* OpenSSL >= 1.1
 * zlib
-
