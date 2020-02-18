@@ -2,10 +2,33 @@
 !CMakeLists.txt
 doc/*
 !doc/Doxyfile
-test/
+tests/
 notes/
 build*/
 *.json
 *.a
 *.so
 tags
+keys
+### CMake ###
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+### CMake Patch ###
+# External projects
+*-prefix/
+CMakeDoxyfile.in
+CMakeDoxygenDefaults.cmake
+demos/get_favorites
+demos/search
+networklib/NetworkLibraryConfig.cmake
+twitterlib/TwitterLibraryConfig.cmake
