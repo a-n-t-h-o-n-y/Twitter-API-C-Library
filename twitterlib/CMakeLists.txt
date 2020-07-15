@@ -22,7 +22,6 @@ add_library(twitterlib STATIC
     src/rest_blocks.cpp
     src/rest_collections.cpp
     src/rest_application.cpp
-    src/rest_timeline.cpp
     )
 
 target_include_directories(twitterlib PUBLIC
