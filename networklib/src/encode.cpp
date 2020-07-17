@@ -28,7 +28,7 @@ std::string key_value_encode(
 
 std::string url_encode(const std::string& text) {
     std::stringstream result;
-    for (char c : text) {
+    for (unsigned char c : text) {
         if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') ||
             (c >= 'a' && c <= 'z') || c == '-' || c == '.' || c == '_' ||
             c == '~') {
