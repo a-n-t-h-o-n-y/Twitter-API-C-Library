@@ -19,7 +19,7 @@ int main() {
     std::cout << get_account_settings(app) << std::endl;
 
     // Update account's status.
-    update_status("Hello, Twitter!");
+    update_status(app, "Hello, Twitter!");
 
     // Streaming API - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // Connect to Twitter filter stream, tracks "Search Term" text.
