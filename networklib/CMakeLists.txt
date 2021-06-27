@@ -29,22 +29,17 @@ target_compile_features(networklib PUBLIC cxx_std_14)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 find_package(ZLIB REQUIRED)
 add_library(zlib INTERFACE IMPORTED)
-set_property(TARGET zlib PROPERTY
-    INTERFACE_INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIRS})
-set_property(TARGET zlib PROPERTY
-    INTERFACE_LINK_LIBRARIES ${ZLIB_LIBRARIES})
+target_include_directories(zlib INTERFACE ${ZLIB_INCLUDE_DIRS})
+target_link_libraries(zlib INTERFACE ${ZLIB_LIBRARIES})
 
 find_package(OpenSSL REQUIRED)
 add_library(openssl INTERFACE IMPORTED)
-set_property(TARGET openssl PROPERTY
-    INTERFACE_INCLUDE_DIRECTORIES ${OPENSSL_INCLUDE_DIR})
-set_property(TARGET openssl PROPERTY
-    INTERFACE_LINK_LIBRARIES ${OPENSSL_LIBRARIES})
+target_include_directories(openssl INTERFACE ${OPENSSL_INCLUDE_DIR})
+target_link_libraries(openssl INTERFACE ${OPENSSL_LIBRARIES})
 
 find_package(Threads REQUIRED)
 add_library(threads INTERFACE IMPORTED)
-set_property(TARGET threads PROPERTY
-    INTERFACE_LINK_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(threads INTERFACE ${CMAKE_THREAD_LIBS_INIT})
 
 # LINK LIBRARIES
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -5,6 +5,7 @@ doc/*
 tests/
 notes/
 build*/
+out.*/
 *.json
 *.a
 *.so
