@@ -1,25 +1,19 @@
 cmake_minimum_required(VERSION 3.2)
-project (TwitterLib LANGUAGES CXX)
+project(TwitterLib LANGUAGES CXX)
 
 # BUILD OPTIONS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-set(CMAKE_BUILD_TYPE Debug)
-# set(CMAKE_BUILD_TYPE Release)
 add_compile_options(-Wall)
 
 enable_testing()
 include(GNUInstallDirs)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # EXTERNAL LIBRARIES
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 find_package(Boost 1.58.0 REQUIRED COMPONENTS system iostreams)
 add_library(boost INTERFACE IMPORTED)
-set_property(TARGET boost PROPERTY
-    INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR})
-set_property(TARGET boost PROPERTY
-    INTERFACE_LINK_LIBRARIES ${Boost_LIBRARIES})
-
+target_include_directories(boost INTERFACE ${Boost_INCLUDE_DIR})
+target_link_libraries(boost INTERFACE ${Boost_LIBRARIES})
 
 # SUBDIRECTORIES
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -31,9 +25,9 @@ add_subdirectory(tests)
 # CLANG TIDY
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 add_custom_target(compile_commands ALL
-	COMMAND [ -f ${CMAKE_SOURCE_DIR}/build/compile_commands.json ] &&
+    COMMAND [ -f ${CMAKE_SOURCE_DIR}/build/compile_commands.json ] &&
         mv ${CMAKE_SOURCE_DIR}/build/compile_commands.json
-		${CMAKE_SOURCE_DIR}/compile_commands.json || :)
+        ${CMAKE_SOURCE_DIR}/compile_commands.json || :)
 
 # DOXYGEN
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
