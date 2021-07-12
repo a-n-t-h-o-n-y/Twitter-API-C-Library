@@ -1,4 +1,11 @@
+cmake_minimum_required(VERSION 3.14)
 project(networklib LANGUAGES CXX)
+
+# External Libraries
+find_package(Boost 1.58 REQUIRED COMPONENTS system iostreams)
+find_package(ZLIB REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(Threads REQUIRED)
 
 add_library(networklib STATIC
     src/encode.cpp
@@ -15,38 +22,38 @@ add_library(networklib STATIC
     src/stream.cpp
     src/read_keys.cpp
     src/view_ptree.cpp
-    )
+)
 
-target_include_directories(networklib PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-    PRIVATE src
-    )
+target_include_directories(networklib
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    PRIVATE
+        src
+)
 
-target_compile_features(networklib PUBLIC cxx_std_14)
+target_link_libraries(networklib
+    PUBLIC
+        Boost::boost
+        Boost::system
+        Boost::iostreams
+        ZLIB::ZLIB
+        OpenSSL::SSL
+        Threads::Threads
+)
 
-# EXTERNAL LIBRARIES
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-find_package(ZLIB REQUIRED)
-add_library(zlib INTERFACE IMPORTED)
-target_include_directories(zlib INTERFACE ${ZLIB_INCLUDE_DIRS})
-target_link_libraries(zlib INTERFACE ${ZLIB_LIBRARIES})
+target_compile_features(networklib
+    PUBLIC
+        cxx_std_17
+)
 
-find_package(OpenSSL REQUIRED)
-add_library(openssl INTERFACE IMPORTED)
-target_include_directories(openssl INTERFACE ${OPENSSL_INCLUDE_DIR})
-target_link_libraries(openssl INTERFACE ${OPENSSL_LIBRARIES})
+target_compile_options(networklib
+    PUBLIC
+        -Wall
+        -Wextra
+        -Wpedantic
+)
 
-find_package(Threads REQUIRED)
-add_library(threads INTERFACE IMPORTED)
-target_link_libraries(threads INTERFACE ${CMAKE_THREAD_LIBS_INIT})
-
-# LINK LIBRARIES
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-target_link_libraries(networklib PUBLIC boost zlib openssl threads)
-
-# INSTALLATION
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 install(TARGETS networklib EXPORT NetworkLibraryConfig
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -54,9 +61,3 @@ install(TARGETS networklib EXPORT NetworkLibraryConfig
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(EXPORT NetworkLibraryConfig DESTINATION share/NetworkLibrary/cmake)
 export(TARGETS networklib  FILE NetworkLibraryConfig.cmake)
-
-# TESTS
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# add_executable(test_networklib test/test_networklib.cpp)
-# target_link_libraries(test_networklib networklib)
-# add_test(test_networklib test_networklib)

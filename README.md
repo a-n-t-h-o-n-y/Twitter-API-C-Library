@@ -2,6 +2,10 @@
 
 A work in progress library for access to Twitter's REST and Streaming APIs.
 
+**Library is not complete!**
+
+## Example
+
 ```c++
 #include <iostream>
 #include <twitterlib/twitterlib.hpp>
@@ -39,19 +43,25 @@ int main() {
 }
 ```
 
-## Build / compile
+## Build
 
-Use `cmake .` to generate the build environment.
+CMake is the supported build generator, it generates the `twitterlib` library
+target that can be linked against.
 
-Once successful, run `make && make demos` to build the libraries and the demo apps.
+Other generated target are `twitterlib.demos` and `twitterlib.tests`.
+
+It is recommended to use this library as a git submodule in your project, for
+easier version control, though there is an installation target generated.
 
 ## Usage
 
-[Register](https://developer.twitter.com/en/apply/user.html) for a Twitter Developer Account.
-Create a new application via the [Twitter App Dashboard](https://developer.twitter.com/en/apps).
-Take a note of the consumer keys and account secrets on the "Keys and Tokens" tab for your app.
+[Register](https://developer.twitter.com/en/apply/user.html) for a Twitter
+Developer Account.  Create a new application via the [Twitter App
+Dashboard](https://developer.twitter.com/en/apps).  Take a note of the consumer
+keys and account secrets on the "Keys and Tokens" tab for your app.
 
-Create a text file called "keys" containing your Twitter API consumer keys and secrets:
+Create a text file called "keys" containing your Twitter API consumer keys and
+secrets:
 
 ```text
 consumer_key *KEY*
@@ -60,11 +70,9 @@ user_token *USERTOKEN*
 token_secret *TOKENSECRET*
 ```
 
-Run the demo apps.
+## Library Dependencies
 
-### Library Dependencies
-
-* Boost ASIO >= 1.58
-* Boost Property Tree >= 1.58
-* OpenSSL >= 1.1
-* zlib
+- Boost ASIO >= 1.58
+- Boost Property Tree >= 1.58
+- OpenSSL >= 1.1
+- zlib

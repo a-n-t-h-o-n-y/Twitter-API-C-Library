@@ -1,4 +1,7 @@
+cmake_minimum_required(VERSION 3.14)
 project(twitterlib LANGUAGES CXX)
+
+find_package(Boost 1.58 REQUIRED)
 
 add_library(twitterlib STATIC
     src/bounding_box.cpp
@@ -22,22 +25,34 @@ add_library(twitterlib STATIC
     src/rest_blocks.cpp
     src/rest_collections.cpp
     src/rest_application.cpp
-    )
+)
 
-target_include_directories(twitterlib PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-    PRIVATE src
-    )
+target_include_directories(twitterlib
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    PRIVATE
+        src
+)
 
-target_compile_features(twitterlib PUBLIC cxx_std_14)
+target_link_libraries(twitterlib
+    PUBLIC
+        networklib
+        Boost::boost
+)
 
-# LINK LIBRARIES
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-target_link_libraries(twitterlib PUBLIC networklib boost)
+target_compile_features(twitterlib
+    PUBLIC
+        cxx_std_17
+)
 
-# INSTALLATION
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+target_compile_options(networklib
+    PUBLIC
+        -Wall
+        -Wextra
+        -Wpedantic
+)
+
 install(TARGETS twitterlib EXPORT TwitterLibraryConfig
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -45,9 +60,3 @@ install(TARGETS twitterlib EXPORT TwitterLibraryConfig
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(EXPORT TwitterLibraryConfig DESTINATION share/TwitterLibrary/cmake)
 export(TARGETS twitterlib FILE TwitterLibraryConfig.cmake)
-
-# TESTS
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# add_executable(test_twitterlib test/test_twitterlib.cpp)
-# target_link_libraries(test_twitterlib twitterlib)
-# add_test(test_twitterlib test_twitterlib)
