@@ -11,7 +11,8 @@
 namespace network {
 namespace detail {
 
-std::string read_chunk(Socket_stream& socket, Streambuf& buffer) {
+auto read_chunk(Socket_stream& socket, Streambuf& buffer) -> std::string
+{
     boost::system::error_code ec;
     // Read size
     // deadline for timeout operation.
@@ -47,9 +48,9 @@ std::string read_chunk(Socket_stream& socket, Streambuf& buffer) {
     return chunk;
 }
 
-std::string read_length(Socket_stream& socket,
-                        std::size_t n,
-                        Streambuf& buffer) {
+auto read_length(Socket_stream& socket, std::size_t n, Streambuf& buffer)
+    -> std::string
+{
     boost::system::error_code ec;
     auto read_n =
         boost::asio::read(socket, buffer, boost::asio::transfer_exactly(n), ec);

@@ -14,8 +14,10 @@
 namespace network {
 namespace detail {
 
-std::string key_value_encode(
-    const std::vector<std::pair<std::string, std::string>>& parameters) {
+auto key_value_encode(
+    const std::vector<std::pair<std::string, std::string>>& parameters)
+    -> std::string
+{
     std::stringstream result;
     std::string separator{""};
     for (auto& key_value : parameters) {
@@ -26,14 +28,16 @@ std::string key_value_encode(
     return result.str();
 }
 
-std::string url_encode(const std::string& text) {
+auto url_encode(const std::string& text) -> std::string
+{
     std::stringstream result;
     for (unsigned char c : text) {
         if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') ||
             (c >= 'a' && c <= 'z') || c == '-' || c == '.' || c == '_' ||
             c == '~') {
             result << c;
-        } else {
+        }
+        else {
             result << '%';
             result << std::hex << std::uppercase << std::setfill('0')
                    << std::setw(2);
@@ -44,7 +48,8 @@ std::string url_encode(const std::string& text) {
     return result.str();
 }
 
-std::string base64_encode(const std::vector<unsigned char>& message) {
+auto base64_encode(const std::vector<unsigned char>& message) -> std::string
+{
     BIO *bio, *b64;
     BUF_MEM* bufferPtr;
 

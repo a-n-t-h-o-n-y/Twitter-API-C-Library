@@ -13,7 +13,7 @@ struct Coordinates_data {
     explicit operator std::string() const;
 
     float longitude = 0.0;
-    float latitude = 0.0;
+    float latitude  = 0.0;
     std::string type;
 
    protected:

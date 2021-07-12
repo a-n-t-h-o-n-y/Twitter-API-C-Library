@@ -9,68 +9,71 @@
 
 namespace twitter {
 
-Stream_parameters build_user_stream_parameters() {
+auto build_user_stream_parameters() -> Stream_parameters
+{
     Stream_parameters user_params;
-    user_params.host = "userstream.twitter.com";
-    user_params.URI = "/1.1/user.json";
+    user_params.host   = "userstream.twitter.com";
+    user_params.URI    = "/1.1/user.json";
     user_params.method = "GET";
     return user_params;
 }
 
-Stream_parameters build_filtered_stream_parameters() {
+auto build_filtered_stream_parameters() -> Stream_parameters
+{
     Stream_parameters filtered_params;
-    filtered_params.host = "stream.twitter.com";
-    filtered_params.URI = "/1.1/statuses/filter.json";
+    filtered_params.host   = "stream.twitter.com";
+    filtered_params.URI    = "/1.1/statuses/filter.json";
     filtered_params.method = "POST";
     return filtered_params;
 }
 
-Stream_parameters build_sample_stream_parameters() {
+auto build_sample_stream_parameters() -> Stream_parameters
+{
     Stream_parameters sample_params;
-    sample_params.host = "stream.twitter.com";
-    sample_params.URI = "/1.1/statuses/sample.json";
+    sample_params.host   = "stream.twitter.com";
+    sample_params.URI    = "/1.1/statuses/sample.json";
     sample_params.method = "GET";
     return sample_params;
 }
 
 Twitter_stream::Twitter_stream(const App* app, const Stream_parameters& params)
-    : app_{app}, params_{params} {}
+    : app_{app}, params_{params}
+{}
 
-void Twitter_stream::register_function(Callback f1, Condition f2) {
+void Twitter_stream::register_function(Callback f1, Condition f2)
+{
     stream_.register_function(f1, f2);
 }
 
-void Twitter_stream::open() {
+void Twitter_stream::open()
+{
     network::Request new_request{this->build_request()};
     stream_.set_request(new_request);
     stream_.open();
 }
 
-void Twitter_stream::close() {
-    stream_.close();
-}
+void Twitter_stream::close() { stream_.close(); }
 
 // builds request, sets stream_.request, stream_.reconnect();
-void Twitter_stream::reconnect() {
+void Twitter_stream::reconnect()
+{
     network::Request new_request{this->build_request()};
     stream_.set_request(new_request);
     stream_.reconnect();
 }
 
-Stream_parameters& Twitter_stream::parameters() {
+auto Twitter_stream::parameters() -> Stream_parameters& { return params_; }
+
+auto Twitter_stream::parameters() const -> const Stream_parameters&
+{
     return params_;
 }
 
-const Stream_parameters& Twitter_stream::parameters() const {
-    return params_;
-}
-
-void Twitter_stream::wait() {
-    network::wait();
-}
+void Twitter_stream::wait() { network::wait(); }
 
 // Builds the complete, authorized Request
-network::Request Twitter_stream::build_request() {
+auto Twitter_stream::build_request() -> network::Request
+{
     network::Request r{parameters_to_request(params_)};
     const Account& account{app_->account};
     network::authorize(r, app_->consumer_key, app_->consumer_secret,
@@ -79,12 +82,13 @@ network::Request Twitter_stream::build_request() {
 }
 
 // Only builds the shared parameters.
-network::Request Twitter_stream::parameters_to_request(
-    const Stream_parameters& params) {
+auto Twitter_stream::parameters_to_request(const Stream_parameters& params)
+    -> network::Request
+{
     network::Request r;
-    r.host = params.host;
-    r.URI = params.URI;
-    r.HTTP_method = params.method;
+    r.host         = params.host;
+    r.URI          = params.URI;
+    r.HTTP_method  = params.method;
     r.content_type = "application/json";
 
     if (!params.delimited.empty()) {
@@ -126,7 +130,8 @@ network::Request Twitter_stream::parameters_to_request(
 }
 
 void Twitter_stream::insert_user_parameters(network::Request& r,
-                                            const Stream_parameters& params) {
+                                            const Stream_parameters& params)
+{
     if (!params.with.empty()) {
         r.add_query("with", params.with);
     }

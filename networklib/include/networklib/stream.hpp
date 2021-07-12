@@ -24,7 +24,7 @@ struct Socket;
 
 class Stream {
    public:
-    using Callback = std::function<void(const Response&)>;
+    using Callback  = std::function<void(const Response&)>;
     using Condition = std::function<bool(const Response&)>;
 
     /// Create an asynchronous Stream object with an authorized Request. Does
@@ -34,8 +34,9 @@ class Stream {
 
     /// Register a callback function to the stream which will be called when the
     /// Stream is open and a Response had been received.
-    void register_function(Callback f1,
-                           Condition f2 = [](const Response&) { return true; });
+    void register_function(
+        Callback f1,
+        Condition f2 = [](const Response&) { return true; });
 
     /// Connects to the Stream endpoing and begins processing Responses.
     void open();

@@ -19,7 +19,8 @@ struct Status_line {
     std::string reason_phrase;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const Status_line& status) {
+inline auto operator<<(std::ostream& os, const Status_line& status) -> std::ostream&
+{
     return os << static_cast<std::string>(status);
 }
 

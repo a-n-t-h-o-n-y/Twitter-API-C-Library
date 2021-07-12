@@ -9,11 +9,11 @@ namespace twitter {
 struct App;
 using Twitter_id = std::int64_t;
 
-std::vector<Twitter_id> get_blocked_ids(const App& app);
+auto get_blocked_ids(const App& app) -> std::vector<Twitter_id>;
 
-std::vector<User> get_blocked_users(const App& app,
-                                    bool include_entities = false,
-                                    bool skip_status = true);
+auto get_blocked_users(const App& app,
+                       bool include_entities = false,
+                       bool skip_status      = true) -> std::vector<User>;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_REST_API_REST_BLOCK_HPP

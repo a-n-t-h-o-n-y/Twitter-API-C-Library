@@ -6,7 +6,8 @@
 
 namespace twitter {
 
-Bounding_box_data::operator std::string() const {
+Bounding_box_data::operator std::string() const
+{
     std::stringstream ss;
     for (const auto& coords : coordinates) {
         ss << "coordinates: " << coords[0] << ", " << coords[1] << '\n';
@@ -15,7 +16,8 @@ Bounding_box_data::operator std::string() const {
     return ss.str();
 }
 
-void Bounding_box_data::construct(const boost::property_tree::ptree& tree) {
+void Bounding_box_data::construct(const boost::property_tree::ptree& tree)
+{
     type = tree.get<std::string>("type", "");
     auto outer_tree =
         tree.get_child("coordinates", boost::property_tree::ptree());

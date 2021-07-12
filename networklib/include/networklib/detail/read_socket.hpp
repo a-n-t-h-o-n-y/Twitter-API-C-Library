@@ -8,11 +8,11 @@
 namespace network {
 namespace detail {
 
-std::string read_chunk(Socket_stream& socket, Streambuf& buffer);
+auto read_chunk(Socket_stream& socket, Streambuf& buffer) -> std::string;
 
-std::string read_length(Socket_stream& socket,
+auto read_length(Socket_stream& socket,
                         std::size_t n,
-                        Streambuf& buffer);
+                        Streambuf& buffer) -> std::string;
 
 }  // namespace detail
 }  // namespace network

@@ -2,7 +2,8 @@
 
 #include <twitterlib/twitterlib.hpp>
 
-int main() {
+auto main() -> int
+{
     network::Keys keys{network::read_keys("keys")};
 
     twitter::App app{keys.consumer_key, keys.consumer_secret};

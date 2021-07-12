@@ -7,7 +7,8 @@
 
 namespace network {
 
-Request::operator std::string() const {
+Request::operator std::string() const
+{
     // Encode message body
     std::string encoded_body{detail::key_value_encode(message_body)};
 
@@ -41,15 +42,18 @@ Request::operator std::string() const {
     return request.str();
 }
 
-void Request::add_query(const std::string& key, const std::string& value) {
+void Request::add_query(const std::string& key, const std::string& value)
+{
     queries.push_back(std::make_pair(key, value));
 }
 
-void Request::add_message(const std::string& key, const std::string& value) {
+void Request::add_message(const std::string& key, const std::string& value)
+{
     message_body.push_back(std::make_pair(key, value));
 }
 
-void Request::add_header(const std::string& key, const std::string& value) {
+void Request::add_header(const std::string& key, const std::string& value)
+{
     extra_headers.push_back(std::make_pair(key, value));
 }
 

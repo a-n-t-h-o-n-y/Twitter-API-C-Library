@@ -18,16 +18,17 @@
 
 namespace twitter {
 
-std::vector<Tweet> get_favorites(const App& app,
-                                 const std::string& screen_name,
-                                 int count,
-                                 bool include_entities,
-                                 std::int64_t user_id,
-                                 std::int64_t since_id,
-                                 std::int64_t max_id) {
+auto get_favorites(const App& app,
+                   const std::string& screen_name,
+                   int count,
+                   bool include_entities,
+                   std::int64_t user_id,
+                   std::int64_t since_id,
+                   std::int64_t max_id) -> std::vector<Tweet>
+{
     network::Request r;
     r.HTTP_method = "GET";
-    r.URI = "/1.1/favorites/list.json";
+    r.URI         = "/1.1/favorites/list.json";
 
     if (!screen_name.empty()) {
         r.add_query("screen_name", screen_name);

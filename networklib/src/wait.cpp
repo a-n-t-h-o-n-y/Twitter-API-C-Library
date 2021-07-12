@@ -4,8 +4,6 @@
 
 namespace network {
 
-void wait() {
-    detail::wait_();
-}
+void wait() { detail::wait_(); }
 
 }  // namespace network

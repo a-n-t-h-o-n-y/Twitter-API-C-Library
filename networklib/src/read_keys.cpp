@@ -6,7 +6,8 @@
 
 namespace network {
 
-Keys read_keys(std::string filename) {
+auto read_keys(std::string filename) -> Keys
+{
     std::ifstream keys_stream{filename};
     Keys keys;
     if (!keys_stream) {

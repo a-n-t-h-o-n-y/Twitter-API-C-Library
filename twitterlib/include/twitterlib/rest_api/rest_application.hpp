@@ -5,7 +5,7 @@
 namespace twitter {
 struct App;
 
-network::Response get_application_rate_limit_status(App& app);
+auto get_application_rate_limit_status(App& app) -> network::Response;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_REST_API_REST_APPLICATION_HPP

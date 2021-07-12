@@ -15,10 +15,10 @@ class Response {
 
     explicit operator std::string() const;
     enum Type { Unknown, Event, User };
-    std::string get(const std::string& key) const;
-    std::string json() const { return message_body_; }
-    boost::property_tree::ptree& ptree();
-    const boost::property_tree::ptree& ptree() const;
+    auto get(const std::string& key) const -> std::string;
+    auto json() const -> std::string { return message_body_; }
+    auto ptree() -> boost::property_tree::ptree&;
+    auto ptree() const -> const boost::property_tree::ptree&;
 
    private:
     Type object_type_;
@@ -29,7 +29,7 @@ class Response {
     void build_ptree() const;
 };
 
-std::ostream& operator<<(std::ostream& os, const Response& m);
+auto operator<<(std::ostream& os, const Response& m) -> std::ostream&;
 
 }  // namespace network
 #endif  // NETWORKLIB_RESPONSE_HPP

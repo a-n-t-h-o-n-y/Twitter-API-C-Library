@@ -7,7 +7,8 @@
 
 namespace twitter {
 
-Place_data::operator std::string() const {
+Place_data::operator std::string() const
+{
     std::stringstream ss;
     ss << "attributes:\n"
        << attributes << "\nbounding_box:\n"
@@ -18,18 +19,19 @@ Place_data::operator std::string() const {
     return ss.str();
 }
 
-void Place_data::construct(const boost::property_tree::ptree& tree) {
+void Place_data::construct(const boost::property_tree::ptree& tree)
+{
     attributes = Place_attributes{
         tree.get_child("attributes", boost::property_tree::ptree())};
     bounding_box = Bounding_box{
         tree.get_child("bounding_box", boost::property_tree::ptree())};
-    country = tree.get<std::string>("country", "");
+    country      = tree.get<std::string>("country", "");
     country_code = tree.get<std::string>("country_code", "");
-    full_name = tree.get<std::string>("full_name", "");
-    id = tree.get<std::string>("id", "");
-    name = tree.get<std::string>("name", "");
-    place_type = tree.get<std::string>("place_type", "");
-    url = tree.get<std::string>("url", "");
+    full_name    = tree.get<std::string>("full_name", "");
+    id           = tree.get<std::string>("id", "");
+    name         = tree.get<std::string>("name", "");
+    place_type   = tree.get<std::string>("place_type", "");
+    url          = tree.get<std::string>("url", "");
 }
 
 }  // namespace twitter

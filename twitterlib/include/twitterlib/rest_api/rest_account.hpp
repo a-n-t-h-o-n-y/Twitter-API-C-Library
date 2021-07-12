@@ -5,12 +5,12 @@
 namespace twitter {
 struct App;
 
-network::Response get_account_settings(const App& app);
+auto get_account_settings(const App& app) -> network::Response;
 
-network::Response verify_credentials(const App& app,
-                                     bool include_entities = true,
-                                     bool skip_status = false,
-                                     bool include_email = false);
+auto verify_credentials(const App& app,
+                        bool include_entities = true,
+                        bool skip_status      = false,
+                        bool include_email    = false) -> network::Response;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_REST_API_REST_ACCOUNT_HPP

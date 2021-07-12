@@ -8,7 +8,8 @@ namespace twitter {
 namespace detail {
 
 template <typename T>
-std::string to_string(const T& thing) {
+auto to_string(const T& thing) -> std::string
+{
     std::stringstream ss;
     ss << std::boolalpha << thing;
     return ss.str();

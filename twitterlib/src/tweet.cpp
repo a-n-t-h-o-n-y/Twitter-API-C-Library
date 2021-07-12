@@ -18,7 +18,8 @@
 
 namespace twitter {
 
-Tweet_data::operator std::string() const {
+Tweet_data::operator std::string() const
+{
     std::stringstream ss;
     ss << std::boolalpha;
     ss << "contributors:\n";
@@ -72,7 +73,8 @@ Tweet_data::operator std::string() const {
     return ss.str();
 }
 
-void Tweet_data::construct(const boost::property_tree::ptree& tree) {
+void Tweet_data::construct(const boost::property_tree::ptree& tree)
+{
     auto contributors_tree =
         tree.get_child("contributors", boost::property_tree::ptree());
     for (const auto& pair : contributors_tree) {
@@ -90,10 +92,10 @@ void Tweet_data::construct(const boost::property_tree::ptree& tree) {
     entities =
         Entities{tree.get_child("entities", boost::property_tree::ptree())};
     favorite_count = tree.get<int>("favorite_count", -1);
-    favorited = tree.get<bool>("favorited", false);
-    filter_level = tree.get<std::string>("filter_level", "");
-    id = tree.get<std::int64_t>("id", -1);
-    id_str = tree.get<std::string>("id_str", "");
+    favorited      = tree.get<bool>("favorited", false);
+    filter_level   = tree.get<std::string>("filter_level", "");
+    id             = tree.get<std::int64_t>("id", -1);
+    id_str         = tree.get<std::string>("id_str", "");
     in_reply_to_screen_name =
         tree.get<std::string>("in_reply_to_screen_name", "");
     in_reply_to_status_id = tree.get<std::int64_t>("in_reply_to_status_id", -1);
@@ -102,10 +104,10 @@ void Tweet_data::construct(const boost::property_tree::ptree& tree) {
     in_reply_to_user_id = tree.get<std::int64_t>("in_reply_to_user_id", -1);
     in_reply_to_user_id_str =
         tree.get<std::string>("in_reply_to_user_id_str", "");
-    lang = tree.get<std::string>("lang", "");
+    lang  = tree.get<std::string>("lang", "");
     place = Place{tree.get_child("place", boost::property_tree::ptree())};
-    possibly_sensitive = tree.get<bool>("possibly_sensitive", false);
-    quoted_status_id = tree.get<std::int64_t>("quoted_status_id", -1);
+    possibly_sensitive   = tree.get<bool>("possibly_sensitive", false);
+    quoted_status_id     = tree.get<std::int64_t>("quoted_status_id", -1);
     quoted_status_id_str = tree.get<std::string>("quoted_status_id_str", "");
     auto quoted_status_tree =
         tree.get_child("quoted_status", boost::property_tree::ptree());
@@ -118,15 +120,15 @@ void Tweet_data::construct(const boost::property_tree::ptree& tree) {
             std::make_pair(pair.first, pair.second.get_value<std::string>("")));
     }
     retweet_count = tree.get<int>("retweet_count", -1);
-    retweeted = tree.get<bool>("retweeted", false);
+    retweeted     = tree.get<bool>("retweeted", false);
     auto retweeted_status_tree =
         tree.get_child("retweeted_status", boost::property_tree::ptree());
     if (!retweeted_status_tree.empty()) {
         retweeted_status_ptr = std::make_unique<Tweet>(retweeted_status_tree);
     }
-    source = tree.get<std::string>("source", "");
-    text = tree.get<std::string>("text", "");
-    truncated = tree.get<bool>("truncated", false);
+    source         = tree.get<std::string>("source", "");
+    text           = tree.get<std::string>("text", "");
+    truncated      = tree.get<bool>("truncated", false);
     auto user_tree = tree.get_child("user", boost::property_tree::ptree());
     if (!user_tree.empty()) {
         user_ptr = std::make_unique<User>(user_tree);

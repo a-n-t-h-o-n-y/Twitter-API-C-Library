@@ -8,7 +8,7 @@ namespace network {
 class Request;
 namespace detail {
 
-std::unique_ptr<Socket_stream> make_connection(const Request& r);
+auto make_connection(const Request& r) -> std::unique_ptr<Socket_stream>;
 
 void wait_();
 

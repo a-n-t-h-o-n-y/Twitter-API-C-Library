@@ -44,7 +44,8 @@ class Request {
     std::vector<std::pair<std::string, std::string>> message_body;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const Request& request) {
+inline auto operator<<(std::ostream& os, const Request& request) -> std::ostream&
+{
     return os << static_cast<std::string>(request);
 }
 

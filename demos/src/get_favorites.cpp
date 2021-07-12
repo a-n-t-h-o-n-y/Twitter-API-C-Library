@@ -4,7 +4,8 @@
 
 #include <twitterlib/twitterlib.hpp>
 
-int main(int argc, char* argv[]) {
+auto main(int argc, char* argv[]) -> int
+{
     // Parse CL arguments
     if (argc < 2) {
         std::cout << "usage: get_favorites <twitter-handle> [quantity]"
@@ -15,7 +16,8 @@ int main(int argc, char* argv[]) {
     if (argc > 2) {
         try {
             quantity = std::stoi(argv[2]);
-        } catch (...) {
+        }
+        catch (...) {
             std::cout << "Invalid quantity argument." << std::endl;
             return 1;
         }
@@ -24,7 +26,8 @@ int main(int argc, char* argv[]) {
     network::Keys keys;
     try {
         keys = network::read_keys("keys");
-    } catch (const std::invalid_argument& e) {
+    }
+    catch (const std::invalid_argument& e) {
         std::cout << e.what() << std::endl;
         return 1;
     }
@@ -37,7 +40,8 @@ int main(int argc, char* argv[]) {
     std::vector<twitter::Tweet> twt_vec;
     try {
         twt_vec = get_favorites(app, argv[1], quantity);
-    } catch (...) {
+    }
+    catch (...) {
         std::cout << "Error with request. Twitter handle \'@" << argv[1]
                   << "\' might not exist." << std::endl;
         return 1;

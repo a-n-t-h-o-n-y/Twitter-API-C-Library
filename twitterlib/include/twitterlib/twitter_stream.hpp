@@ -39,23 +39,22 @@ struct Stream_parameters {
     std::string content_type{"application/json"};
 };
 
-Stream_parameters build_user_stream_parameters();
+auto build_user_stream_parameters() -> Stream_parameters;
 
-Stream_parameters build_filtered_stream_parameters();
+auto build_filtered_stream_parameters() -> Stream_parameters;
 
-Stream_parameters build_sample_stream_parameters();
+auto build_sample_stream_parameters() -> Stream_parameters;
 
 class Twitter_stream {
    public:
-    using Callback = std::function<void(const network::Response&)>;
+    using Callback  = std::function<void(const network::Response&)>;
     using Condition = std::function<bool(const network::Response&)>;
 
     Twitter_stream(const App* app, const Stream_parameters& params);
 
-    void register_function(Callback f1,
-                           Condition f2 = [](const network::Response&) {
-                               return true;
-                           });
+    void register_function(
+        Callback f1,
+        Condition f2 = [](const network::Response&) { return true; });
 
     void open();
 
@@ -64,8 +63,8 @@ class Twitter_stream {
     // builds request, sets stream_.request, stream_.reconnect();
     void reconnect();
 
-    Stream_parameters& parameters();
-    const Stream_parameters& parameters() const;
+    auto parameters() -> Stream_parameters&;
+    auto parameters() const -> const Stream_parameters&;
 
     static void wait();
 
@@ -74,8 +73,8 @@ class Twitter_stream {
     network::Stream stream_;
     Stream_parameters params_;
 
-    network::Request build_request();
-    network::Request parameters_to_request(const Stream_parameters& params);
+    auto build_request() -> network::Request;
+    auto parameters_to_request(const Stream_parameters& params) -> network::Request;
     void insert_user_parameters(network::Request& r,
                                 const Stream_parameters& params);
 };

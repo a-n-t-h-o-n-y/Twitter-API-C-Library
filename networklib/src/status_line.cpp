@@ -13,8 +13,8 @@
 namespace network {
 namespace detail {
 
-Status_line::Status_line(Socket_stream& socket,
-                         boost::asio::streambuf& buffer) {
+Status_line::Status_line(Socket_stream& socket, boost::asio::streambuf& buffer)
+{
     boost::system::error_code ec;
     boost::asio::read_until(socket, buffer, "\r\n", ec);
     if (ec != boost::system::errc::success) {
@@ -26,14 +26,16 @@ Status_line::Status_line(Socket_stream& socket,
     std::getline(status_stream, this->reason_phrase, '\r');
 }
 
-Status_line::operator std::string() const {
+Status_line::operator std::string() const
+{
     std::stringstream status_stream;
     status_stream << HTTP_version << ' ' << status_code << ' ' << reason_phrase
                   << "\r\n";
     return status_stream.str();
 }
 
-void digest(const Status_line& status) {
+void digest(const Status_line& status)
+{
     if (status.status_code != "200") {
         std::stringstream ss;
         ss << "HTTP error. Reason: ";

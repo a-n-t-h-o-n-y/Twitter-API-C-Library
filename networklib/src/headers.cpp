@@ -13,7 +13,8 @@
 namespace network {
 namespace detail {
 
-Headers::Headers(Socket_stream& socket, Streambuf& buffer) {
+Headers::Headers(Socket_stream& socket, Streambuf& buffer)
+{
     boost::system::error_code ec;
     boost::asio::read_until(socket, buffer, "\r\n\r\n", ec);
     if (ec && ec != boost::asio::error::eof) {
@@ -27,14 +28,15 @@ Headers::Headers(Socket_stream& socket, Streambuf& buffer) {
         if (line.size() > 2) {
             line.pop_back();
             auto pos = line.find(": ");
-            key = std::string(std::begin(line), std::begin(line) + pos);
-            value = std::string(std::begin(line) + pos + 2, std::end(line));
+            key      = std::string(std::begin(line), std::begin(line) + pos);
+            value    = std::string(std::begin(line) + pos + 2, std::end(line));
             this->headers_.push_back(std::make_pair(key, value));
         }
     }
 }
 
-Headers::operator std::string() const {
+Headers::operator std::string() const
+{
     std::stringstream header_stream;
     for (const auto& key_pair : headers_) {
         header_stream << key_pair.first << ": " << key_pair.second << "\r\n";
@@ -43,7 +45,8 @@ Headers::operator std::string() const {
     return header_stream.str();
 }
 
-std::string Headers::get(const std::string& key) const {
+auto Headers::get(const std::string& key) const -> std::string
+{
     for (const auto& key_value : headers_) {
         if (key_value.first == key) {
             return key_value.second;

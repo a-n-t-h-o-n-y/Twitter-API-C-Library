@@ -7,7 +7,7 @@ class Request;
 
 /// Creates a connection and sends a fully formed response to the endpoint.
 /// \returns HTTP response from the endpoint.
-Response send(const Request& request);
+auto send(const Request& request) -> Response;
 
 }  // namespace network
 #endif  // NETWORKLIB_SEND_HPP

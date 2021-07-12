@@ -7,7 +7,8 @@
 
 namespace network {
 
-void view_ptree(const boost::property_tree::ptree& tree, std::ostream& os) {
+void view_ptree(const boost::property_tree::ptree& tree, std::ostream& os)
+{
     boost::property_tree::json_parser::write_json(std::cout, tree);
 }
 

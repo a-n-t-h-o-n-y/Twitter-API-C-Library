@@ -9,10 +9,11 @@
 
 namespace twitter {
 
-void update_status(const App& app, const std::string& message) {
+void update_status(const App& app, const std::string& message)
+{
     network::Request r;
     r.HTTP_method = "POST";
-    r.URI = "/1.1/statuses/update.json";
+    r.URI         = "/1.1/statuses/update.json";
     r.add_message("status", message);
     detail::account_authorize(r, app);
     network::send(r);

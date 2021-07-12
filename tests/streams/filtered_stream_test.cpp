@@ -2,12 +2,14 @@
 #include <iostream>
 #include <twitterlib/twitterlib.hpp>
 
-int main() {
+auto main() -> int
+{
     // Get OAuth keys
     network::Keys keys;
     try {
         keys = network::read_keys("keys");
-    } catch (const std::invalid_argument& e) {
+    }
+    catch (const std::invalid_argument& e) {
         std::cout << e.what() << std::endl;
         return 1;
     }
@@ -25,7 +27,8 @@ int main() {
 
     try {
         app.filtered_stream.open();
-    } catch (const std::runtime_error& e) {
+    }
+    catch (const std::runtime_error& e) {
         std::cout << e.what() << std::endl;
         return 1;
     }

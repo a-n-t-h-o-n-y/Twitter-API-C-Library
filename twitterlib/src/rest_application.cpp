@@ -7,10 +7,11 @@
 
 namespace twitter {
 
-network::Response get_application_rate_limit_status(App& app) {
+auto get_application_rate_limit_status(App& app) -> network::Response
+{
     network::Request r;
     r.HTTP_method = "GET";
-    r.URI = "/1.1/application/rate_limit_status.json";
+    r.URI         = "/1.1/application/rate_limit_status.json";
     detail::app_only_authorize(r, app);
     return network::send(r);
 }

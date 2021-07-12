@@ -18,13 +18,13 @@
 #include <networklib/oauth/oauth.hpp>
 #include <networklib/response.hpp>
 
-namespace network
-{
+namespace network {
 
-Stream::Stream(const Request &request)
-    : request_{request}, sock_stream_{std::make_unique<detail::Socket>()} {}
+Stream::Stream(const Request& request)
+    : request_{request}, sock_stream_{std::make_unique<detail::Socket>()}
+{}
 
-Stream::~Stream() {} // for unique_ptr<Socket>
+Stream::~Stream() {}  // for unique_ptr<Socket>
 
 void Stream::register_function(Callback f1, Condition f2)
 {
@@ -37,14 +37,13 @@ void Stream::register_function(Callback f1, Condition f2)
 void Stream::open()
 {
     if (sock_stream_->socket_ptr != nullptr &&
-        sock_stream_->socket_ptr->lowest_layer().is_open())
-    {
+        sock_stream_->socket_ptr->lowest_layer().is_open()) {
         return;
     }
     sock_stream_->socket_ptr = detail::make_connection(request_);
     boost::asio::async_write(
         *(sock_stream_->socket_ptr), boost::asio::buffer(std::string(request_)),
-        [this](const boost::system::error_code &ec, std::size_t bytes) {
+        [this](const boost::system::error_code& ec, std::size_t bytes) {
             this->dispatch(ec, bytes);
         });
 }
@@ -52,15 +51,13 @@ void Stream::open()
 // Disconnects from the streaming API.
 void Stream::close()
 {
-    if (sock_stream_->socket_ptr == nullptr)
-    {
+    if (sock_stream_->socket_ptr == nullptr) {
         return;
     }
     boost::system::error_code ec;
     sock_stream_->socket_ptr->lowest_layer().shutdown(
         boost::asio::ip::tcp::socket::shutdown_both, ec);
-    if (ec != boost::system::errc::success)
-    {
+    if (ec != boost::system::errc::success) {
         throw boost::system::system_error{ec};
     }
     sock_stream_->socket_ptr->lowest_layer().close();
@@ -68,11 +65,10 @@ void Stream::close()
 
 // Reads from the socket, creates Response objects and sends them to each
 // callback. Checks for reconnect_ on beginning of every iteration.
-void Stream::dispatch(const boost::system::error_code &ec,
+void Stream::dispatch(const boost::system::error_code& ec,
                       std::size_t bytes_transferred)
 {
-    if (ec != boost::system::errc::success)
-    {
+    if (ec != boost::system::errc::success) {
         throw boost::system::system_error{ec};
     }
     reconnect_mtx_.lock();
@@ -84,22 +80,21 @@ void Stream::dispatch(const boost::system::error_code &ec,
 
     detail::Headers header(*sock_stream_->socket_ptr, buffer_read);
 
-    if (header.get("transfer-encoding") != "chunked")
-    {
+    if (header.get("transfer-encoding") != "chunked") {
         throw std::runtime_error("Stream transfer encoding is not chunked.");
     }
 
     std::string message_str;
     // TODO: add support for keep alive newlines
-    while (!reconnect_)
-    {
+    while (!reconnect_) {
         std::size_t pos{0};
         boost::asio::deadline_timer timer{
-            ((boost::asio::io_context &)(sock_stream_->socket_ptr)->get_executor().context()),
+            ((boost::asio::io_context&)(sock_stream_->socket_ptr)
+                 ->get_executor()
+                 .context()),
             //                ->get_io_service(),
             boost::posix_time::seconds(90)};
-        while ((pos = message_str.find("\r\n")) == std::string::npos)
-        {
+        while ((pos = message_str.find("\r\n")) == std::string::npos) {
             timer.async_wait(
                 std::bind(&Stream::timer_expired, this, std::placeholders::_1));
             message_str.append(
@@ -107,13 +102,11 @@ void Stream::dispatch(const boost::system::error_code &ec,
             timer.cancel();
         }
         auto response = message_str.substr(0, pos);
-        if (response.size() > 1)
-        {
+        if (response.size() > 1) {
             this->send_response(Response{response});
             message_str.erase(0, pos + 2);
         }
-        else
-        {
+        else {
             message_str.clear();
         }
     }
@@ -127,31 +120,25 @@ void Stream::reconnect()
     this->open();
 }
 
-void Stream::set_request(const Request &r)
-{
-    request_ = r;
-}
+void Stream::set_request(const Request& r) { request_ = r; }
 
-void Stream::timer_expired(const boost::system::error_code &ec)
+void Stream::timer_expired(const boost::system::error_code& ec)
 {
-    if (ec != boost::system::errc::success)
-    {
+    if (ec != boost::system::errc::success) {
         throw boost::system::system_error{ec};
     }
     this->reconnect();
 }
 
-void Stream::send_response(const Response &response)
+void Stream::send_response(const Response& response)
 {
     callbacks_mutex_.lock();
-    for (auto &pair : callbacks_)
-    {
-        if (pair.second(response))
-        {
+    for (auto& pair : callbacks_) {
+        if (pair.second(response)) {
             pair.first(response);
         }
     }
     callbacks_mutex_.unlock();
 }
 
-} // namespace network
+}  // namespace network

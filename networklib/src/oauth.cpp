@@ -21,7 +21,8 @@
 namespace {
 using namespace network;
 
-std::string gen_nonce() {
+auto gen_nonce() -> std::string
+{
     std::vector<unsigned char> nonce(32, ' ');
     RAND_bytes(nonce.data(), nonce.size());
     std::string nonce_string = detail::base64_encode(nonce);
@@ -33,14 +34,16 @@ std::string gen_nonce() {
     return nonce_string;
 }
 
-std::string gen_timestamp() {
+auto gen_timestamp() -> std::string
+{
     std::stringstream time_ss;
     time_ss << std::time(nullptr);
     return time_ss.str();
 }
 
-std::string hmac_sha1_signature(const std::string& key,
-                                const std::string& message) {
+auto hmac_sha1_signature(const std::string& key, const std::string& message)
+    -> std::string
+{
     std::vector<unsigned char> key_buffer(std::begin(key), std::end(key));
     std::vector<unsigned char> message_buffer(std::begin(message),
                                               std::end(message));
@@ -62,15 +65,16 @@ std::string hmac_sha1_signature(const std::string& key,
     return detail::base64_encode(result_buffer);
 }
 
-std::string gen_signature(const Request& request,
-                          const std::string& consumer_key,
-                          const std::string& consumer_secret,
-                          const std::string& access_token,
-                          const std::string& token_secret,
-                          const std::string& version,
-                          const std::string& sig_method,
-                          const std::string& nonce,
-                          const std::string& timestamp) {
+auto gen_signature(const Request& request,
+                   const std::string& consumer_key,
+                   const std::string& consumer_secret,
+                   const std::string& access_token,
+                   const std::string& token_secret,
+                   const std::string& version,
+                   const std::string& sig_method,
+                   const std::string& nonce,
+                   const std::string& timestamp) -> std::string
+{
     const std::string base_url{request.HTTP_protocol + "://" + request.host +
                                request.URI};
     std::vector<std::string> encoded_parameters;
@@ -143,7 +147,8 @@ std::string gen_signature(const Request& request,
 }
 
 // Inserts the constructed oauth header into the original request
-void integrate_oauth(Request& original, const std::string& oauth_header) {
+void integrate_oauth(Request& original, const std::string& oauth_header)
+{
     original.authorization = oauth_header;
 }
 
@@ -154,16 +159,17 @@ using network::detail::url_encode;
 namespace network {
 
 // Get bearer token from server
-std::string get_bearer_token(const std::string& consumer_key,
-                             const std::string& consumer_secret) {
+auto get_bearer_token(const std::string& consumer_key,
+                      const std::string& consumer_secret) -> std::string
+{
     std::string token_credentials = detail::url_encode(consumer_key) + ':' +
                                     detail::url_encode(consumer_secret);
     std::vector<unsigned char> token_base64(std::begin(token_credentials),
                                             std::end(token_credentials));
     token_credentials = detail::base64_encode(token_base64);
     Request bearer_request;
-    bearer_request.HTTP_method = "POST";
-    bearer_request.URI = "/oauth2/token";
+    bearer_request.HTTP_method   = "POST";
+    bearer_request.URI           = "/oauth2/token";
     bearer_request.authorization = "Basic " + token_credentials;
     bearer_request.content_type += ";charset=UTF-8";
     bearer_request.add_message("grant_type", "client_credentials");
@@ -184,11 +190,12 @@ void authorize(Request& request,
                const std::string& consumer_key,
                const std::string& consumer_secret,
                const std::string& access_token,
-               const std::string& token_secret) {
-    const std::string version = "1.0";
+               const std::string& token_secret)
+{
+    const std::string version    = "1.0";
     const std::string sig_method = "HMAC-SHA1";
-    const std::string nonce = gen_nonce();
-    const std::string timestamp = gen_timestamp();
+    const std::string nonce      = gen_nonce();
+    const std::string timestamp  = gen_timestamp();
     const std::string signature =
         gen_signature(request, consumer_key, consumer_secret, access_token,
                       token_secret, version, sig_method, nonce, timestamp);

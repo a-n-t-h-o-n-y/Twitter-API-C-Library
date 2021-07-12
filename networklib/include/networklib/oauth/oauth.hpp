@@ -13,8 +13,8 @@ void authorize(Request& request,
                const std::string& token_secret);
 
 /// Get bearer token from server
-std::string get_bearer_token(const std::string& consumer_key,
-                             const std::string& consumer_secret);
+auto get_bearer_token(const std::string& consumer_key,
+                             const std::string& consumer_secret) -> std::string;
 
 }  // namespace network
 #endif  // NETWORKLIB_OAUTH_OAUTH_HPP

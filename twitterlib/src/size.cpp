@@ -7,7 +7,8 @@
 
 namespace twitter {
 
-Size_data::operator std::string() const {
+Size_data::operator std::string() const
+{
     std::stringstream ss;
     ss << "height: " << height;
     ss << "\nwidth: " << width;
@@ -15,9 +16,10 @@ Size_data::operator std::string() const {
     return ss.str();
 }
 
-void Size_data::construct(const boost::property_tree::ptree& tree) {
+void Size_data::construct(const boost::property_tree::ptree& tree)
+{
     height = tree.get<int>("h", -1);
-    width = tree.get<int>("w", -1);
+    width  = tree.get<int>("w", -1);
     resize = tree.get<std::string>("resize", "");
 }
 

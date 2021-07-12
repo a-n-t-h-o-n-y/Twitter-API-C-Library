@@ -13,7 +13,8 @@
 
 namespace network {
 
-Response send(const Request& request) {
+auto send(const Request& request) -> Response
+{
     auto socket_ptr = detail::make_connection(request);
     // Send request
     std::string r_str{request};
@@ -23,13 +24,14 @@ Response send(const Request& request) {
     boost::asio::streambuf buffer_read;
     detail::digest(detail::Status_line(*socket_ptr, buffer_read));
 
-    auto header = detail::Headers(*socket_ptr, buffer_read);
+    auto header                = detail::Headers(*socket_ptr, buffer_read);
     std::string content_length = header.get("content-length");
     std::string response;
     if (!content_length.empty()) {
         auto length = std::stoi(content_length);
-        response = detail::read_length(*socket_ptr, length, buffer_read);
-    } else if (header.get("transfer-encoding") == "chunked") {
+        response    = detail::read_length(*socket_ptr, length, buffer_read);
+    }
+    else if (header.get("transfer-encoding") == "chunked") {
         while (true) {
             std::string chunk{detail::read_chunk(*socket_ptr, buffer_read)};
             if (chunk.empty()) {

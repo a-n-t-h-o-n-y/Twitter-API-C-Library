@@ -7,12 +7,14 @@
 namespace twitter {
 namespace detail {
 
-void account_authorize(network::Request& r, const App& app) {
+void account_authorize(network::Request& r, const App& app)
+{
     network::authorize(r, app.consumer_key, app.consumer_secret,
                        app.account.token, app.account.secret);
 }
 
-void app_only_authorize(network::Request& r, App& app) {
+void app_only_authorize(network::Request& r, App& app)
+{
     if (app.bearer_token.empty()) {
         app.bearer_token =
             network::get_bearer_token(app.consumer_key, app.consumer_secret);

@@ -3,20 +3,18 @@
 #include <string>
 #include <vector>
 
-namespace network {
-namespace detail {
+namespace network::detail {
 
 /// Encodes a list of key-value pairs into a string with values URL encoded.
-std::string key_value_encode(
-    const std::vector<std::pair<std::string, std::string>>& parameters);
+auto key_value_encode(
+    const std::vector<std::pair<std::string, std::string>>& parameters)
+    -> std::string;
 
 /// URL/Percent encodes a given string.
-std::string url_encode(const std::string& text);
+auto url_encode(const std::string& text) -> std::string;
 
 /// Base64 encoding
-std::string base64_encode(const std::vector<unsigned char>& message);
+auto base64_encode(const std::vector<unsigned char>& message) -> std::string;
 
-}  // namespace detail
-}  // namespace network
-
+}  // namespace network::detail
 #endif  // NETWORKLIB_DETAIL_ENCODE_HPP

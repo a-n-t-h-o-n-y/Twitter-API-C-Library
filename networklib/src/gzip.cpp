@@ -10,7 +10,8 @@ namespace network {
 namespace detail {
 
 /// Decodes a gzip archive, for use with encoded message bodies.
-void decode_gzip(std::string& zipped) {
+void decode_gzip(std::string& zipped)
+{
     std::string decoded;
     boost::iostreams::filtering_ostream f_os;
     f_os.push(boost::iostreams::gzip_decompressor());

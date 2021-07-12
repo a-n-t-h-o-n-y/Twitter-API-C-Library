@@ -13,13 +13,14 @@
 namespace twitter {
 
 // Cursored Results
-std::vector<Twitter_id> get_blocked_ids(const App& app) {
+auto get_blocked_ids(const App& app) -> std::vector<Twitter_id>
+{
     std::vector<Twitter_id> result;
     std::string cursor{"-1"};
     while (cursor != "0") {
         network::Request r;
         r.HTTP_method = "GET";
-        r.URI = "/1.1/blocks/ids.json";
+        r.URI         = "/1.1/blocks/ids.json";
         r.add_query("cursor", cursor);
         detail::account_authorize(r, app);
         network::Response page{network::send(r)};
@@ -32,15 +33,15 @@ std::vector<Twitter_id> get_blocked_ids(const App& app) {
 }
 
 // Cursored Results
-std::vector<User> get_blocked_users(const App& app,
-                                    bool include_entities,
-                                    bool skip_status) {
+auto get_blocked_users(const App& app, bool include_entities, bool skip_status)
+    -> std::vector<User>
+{
     std::vector<User> result;
     std::string cursor{"-1"};
     while (cursor != "0") {
         network::Request r;
         r.HTTP_method = "GET";
-        r.URI = "/1.1/blocks/list.json";
+        r.URI         = "/1.1/blocks/list.json";
         r.add_query("cursor", cursor);
         detail::account_authorize(r, app);
         network::Response page{network::send(r)};

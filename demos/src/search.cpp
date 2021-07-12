@@ -3,7 +3,8 @@
 
 #include <twitterlib/twitterlib.hpp>
 
-int main(int argc, char* argv[]) {
+auto main(int argc, char* argv[]) -> int
+{
     if (argc < 2) {
         std::cout << "usage: search <search-term>" << std::endl;
         return 1;
@@ -11,7 +12,8 @@ int main(int argc, char* argv[]) {
     network::Keys keys;
     try {
         keys = network::read_keys("keys");
-    } catch (const std::invalid_argument& e) {
+    }
+    catch (const std::invalid_argument& e) {
         std::cout << e.what() << std::endl;
         return 1;
     }
@@ -31,7 +33,8 @@ int main(int argc, char* argv[]) {
 
     try {
         app.filtered_stream.open();
-    } catch (const std::runtime_error& e) {
+    }
+    catch (const std::runtime_error& e) {
         std::cout << e.what() << std::endl;
         return 1;
     }

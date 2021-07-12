@@ -7,7 +7,8 @@
 
 namespace twitter {
 
-Place_attributes_data::operator std::string() const {
+Place_attributes_data::operator std::string() const
+{
     std::stringstream ss;
     ss << "street_address: " << street_address << "\nlocality: " << locality
        << "\nregion: " << region << "\niso3: " << iso3
@@ -17,16 +18,17 @@ Place_attributes_data::operator std::string() const {
     return ss.str();
 }
 
-void Place_attributes_data::construct(const boost::property_tree::ptree& tree) {
+void Place_attributes_data::construct(const boost::property_tree::ptree& tree)
+{
     street_address = tree.get<std::string>("street_address", "");
-    locality = tree.get<std::string>("locality", "");
-    region = tree.get<std::string>("region", "");
-    iso3 = tree.get<std::string>("iso3", "");
-    postal_code = tree.get<std::string>("postal_code", "");
-    phone = tree.get<std::string>("phone", "");
-    twitter = tree.get<std::string>("twitter", "");
-    url = tree.get<std::string>("url", "");
-    app_id = tree.get<std::string>("app:id", "");
+    locality       = tree.get<std::string>("locality", "");
+    region         = tree.get<std::string>("region", "");
+    iso3           = tree.get<std::string>("iso3", "");
+    postal_code    = tree.get<std::string>("postal_code", "");
+    phone          = tree.get<std::string>("phone", "");
+    twitter        = tree.get<std::string>("twitter", "");
+    url            = tree.get<std::string>("url", "");
+    app_id         = tree.get<std::string>("app:id", "");
 }
 
 }  // namespace twitter

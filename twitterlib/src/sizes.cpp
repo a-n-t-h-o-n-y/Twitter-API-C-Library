@@ -9,7 +9,8 @@
 
 namespace twitter {
 
-Sizes_data::operator std::string() const {
+Sizes_data::operator std::string() const
+{
     std::stringstream ss;
     ss << "thumb:\n" << thumb;
     ss << "\nlarge:\n" << large;
@@ -18,11 +19,12 @@ Sizes_data::operator std::string() const {
     return ss.str();
 }
 
-void Sizes_data::construct(const boost::property_tree::ptree& tree) {
-    thumb = Size{tree.get_child("thumb", boost::property_tree::ptree())};
-    large = Size{tree.get_child("large", boost::property_tree::ptree())};
+void Sizes_data::construct(const boost::property_tree::ptree& tree)
+{
+    thumb  = Size{tree.get_child("thumb", boost::property_tree::ptree())};
+    large  = Size{tree.get_child("large", boost::property_tree::ptree())};
     medium = Size{tree.get_child("medium", boost::property_tree::ptree())};
-    small = Size{tree.get_child("small", boost::property_tree::ptree())};
+    small  = Size{tree.get_child("small", boost::property_tree::ptree())};
 }
 
 }  // namespace twitter

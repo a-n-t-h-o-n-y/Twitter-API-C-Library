@@ -21,7 +21,8 @@
 
 namespace {
 
-boost::asio::io_service& io_service() {
+auto io_service() -> boost::asio::io_service&
+{
     static boost::asio::io_service io_s;
     return io_s;
 }
@@ -31,7 +32,8 @@ boost::asio::io_service& io_service() {
 namespace network {
 namespace detail {
 
-std::unique_ptr<Socket_stream> make_connection(const Request& r) {
+auto make_connection(const Request& r) -> std::unique_ptr<Socket_stream>
+{
     boost::asio::ssl::context ssl_context(boost::asio::ssl::context::sslv23);
     ssl_context.set_verify_mode(boost::asio::ssl::verify_peer);
     ssl_context.set_default_verify_paths();
@@ -52,9 +54,7 @@ std::unique_ptr<Socket_stream> make_connection(const Request& r) {
     return socket_ptr;
 }
 
-void wait_() {
-    io_service().run();
-}
+void wait_() { io_service().run(); }
 
 }  // namespace detail
 }  // namespace network

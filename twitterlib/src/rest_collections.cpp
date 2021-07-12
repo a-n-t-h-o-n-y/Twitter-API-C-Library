@@ -11,14 +11,15 @@
 
 namespace twitter {
 
-network::Response get_collection(const App& app,
-                                 const std::string& id,
-                                 int count,
-                                 int max_position,
-                                 int min_position) {
+auto get_collection(const App& app,
+                    const std::string& id,
+                    int count,
+                    int max_position,
+                    int min_position) -> network::Response
+{
     network::Request r;
     r.HTTP_method = "GET";
-    r.URI = "/1.1/collections/entries.json";
+    r.URI         = "/1.1/collections/entries.json";
     r.add_query("id", id);
     if (count != -1) {
         r.add_query("count", detail::to_string(count));
@@ -33,18 +34,19 @@ network::Response get_collection(const App& app,
     return network::send(r);
 }
 
-network::Response find_collections(const App& app,
-                                   const std::string& screen_name,
-                                   std::int64_t user_id,
-                                   std::int64_t tweet_id,
-                                   int count) {
+auto find_collections(const App& app,
+                      const std::string& screen_name,
+                      std::int64_t user_id,
+                      std::int64_t tweet_id,
+                      int count) -> network::Response
+{
     network::Response result;
     std::string cursor{"-1"};
     // not actually cursored, you need a way to accumulate what you return
     // while (cursor != "0") {
     network::Request r;
     r.HTTP_method = "GET";
-    r.URI = "/1.1/collections/list.json";
+    r.URI         = "/1.1/collections/list.json";
     r.add_query("cursor", cursor);
     r.add_query("screen_name", screen_name);
     detail::account_authorize(r, app);
@@ -54,11 +56,13 @@ network::Response find_collections(const App& app,
     return result;
 }
 
-network::Response get_collection_info(const App& app, const std::string& id) {
+auto get_collection_info(const App& app, const std::string& id)
+    -> network::Response
+{
     network::Response result;
     network::Request r;
     r.HTTP_method = "GET";
-    r.URI = "/1.1/collections/show.json";
+    r.URI         = "/1.1/collections/show.json";
     r.add_query("id", id);
 
     detail::account_authorize(r, app);

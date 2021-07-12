@@ -11,7 +11,7 @@ struct Keys {
     std::string token_secret;
 };
 
-Keys read_keys(std::string filename);
+auto read_keys(std::string filename) -> Keys;
 
 }  // namespace network
 #endif  // NETWORKLIB_OAUTH_READ_KEYS_HPP

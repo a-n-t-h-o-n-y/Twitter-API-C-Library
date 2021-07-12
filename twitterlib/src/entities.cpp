@@ -13,7 +13,8 @@
 
 namespace twitter {
 
-Entities_data::operator std::string() const {
+Entities_data::operator std::string() const
+{
     std::stringstream ss;
     ss << "hashtags:";
     for (const auto& ht : hashtags) {
@@ -34,7 +35,8 @@ Entities_data::operator std::string() const {
     return ss.str();
 }
 
-void Entities_data::construct(const boost::property_tree::ptree& tree) {
+void Entities_data::construct(const boost::property_tree::ptree& tree)
+{
     auto hashtags_tree =
         tree.get_child("hashtags", boost::property_tree::ptree());
     for (auto& pair : hashtags_tree) {
