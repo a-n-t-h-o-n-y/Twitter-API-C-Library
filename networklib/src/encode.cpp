@@ -4,6 +4,7 @@
 #include <ios>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -11,63 +12,59 @@
 #include <openssl/buffer.h>
 #include <openssl/evp.h>
 
-namespace network {
-namespace detail {
+namespace network::detail {
 
 auto key_value_encode(
-    const std::vector<std::pair<std::string, std::string>>& parameters)
+    std::vector<std::pair<std::string, std::string>> const& parameters)
     -> std::string
 {
-    std::stringstream result;
-    std::string separator{""};
+    auto ss        = std::ostringstream{};
+    auto separator = std::string{""};
     for (auto& key_value : parameters) {
-        result << separator << key_value.first << '='
-               << url_encode(key_value.second);
+        ss << separator << key_value.first << '='
+           << url_encode(key_value.second);
         separator = "&";
     }
-    return result.str();
+    return ss.str();
 }
 
-auto url_encode(const std::string& text) -> std::string
+auto url_encode(std::string_view text) -> std::string
 {
-    std::stringstream result;
+    auto ss = std::ostringstream{};
     for (unsigned char c : text) {
         if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') ||
             (c >= 'a' && c <= 'z') || c == '-' || c == '.' || c == '_' ||
             c == '~') {
-            result << c;
+            ss << c;
         }
         else {
-            result << '%';
-            result << std::hex << std::uppercase << std::setfill('0')
-                   << std::setw(2);
-            result << static_cast<int>(c);
-            result << std::nouppercase << std::setw(0);
+            ss << '%';
+            ss << std::hex << std::uppercase << std::setfill('0')
+               << std::setw(2);
+            ss << static_cast<int>(c);
+            ss << std::nouppercase << std::setw(0);
         }
     }
-    return result.str();
+    return ss.str();
 }
 
-auto base64_encode(const std::vector<unsigned char>& message) -> std::string
+auto base64_encode(std::vector<unsigned char> const& message) -> std::string
 {
-    BIO *bio, *b64;
-    BUF_MEM* bufferPtr;
-
-    b64 = BIO_new(BIO_f_base64());
-    bio = BIO_new(BIO_s_mem());
-    bio = BIO_push(b64, bio);
+    BIO* b64 = BIO_new(BIO_f_base64());
+    BIO* bio = BIO_new(BIO_s_mem());
+    bio      = BIO_push(b64, bio);
 
     BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
     BIO_write(bio, message.data(), message.size());
     BIO_flush(bio);
-    BIO_get_mem_ptr(bio, &bufferPtr);
+    auto buffer_ptr = (BUF_MEM*)nullptr;
+    BIO_get_mem_ptr(bio, &buffer_ptr);
     BIO_set_close(bio, BIO_NOCLOSE);
     BIO_free_all(bio);
 
-    std::string result(bufferPtr->data, bufferPtr->length);
-    BUF_MEM_free(bufferPtr);
+    auto const result = std::string(buffer_ptr->data, buffer_ptr->length);
+    BUF_MEM_free(buffer_ptr);
     return result;
 }
 
-}  // namespace detail
-}  // namespace network
+}  // namespace network::detail

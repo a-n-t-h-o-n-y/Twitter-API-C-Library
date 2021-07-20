@@ -4,19 +4,20 @@
 #include <string>
 #include <vector>
 
+#include <networklib/oauth/credentials.hpp>
 #include <twitterlib/objects/tweet.hpp>
 
 namespace twitter {
-struct App;
 
 /// Use -1 or empty string for a value you do not wish to specify.
-auto get_favorites(const App& app,
-                   const std::string& screen_name,
-                   int count             = -1,
-                   bool include_entities = false,
-                   std::int64_t user_id  = -1,
-                   std::int64_t since_id = -1,
-                   std::int64_t max_id   = -1) -> std::vector<Tweet>;
+[[nodiscard]] auto get_favorites(network::Credentials const& keys,
+                                 std::string const& screen_name,
+                                 int count             = -1,
+                                 bool include_entities = false,
+                                 std::int64_t user_id  = -1,
+                                 std::int64_t since_id = -1,
+                                 std::int64_t max_id   = -1)
+    -> std::vector<Tweet>;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_REST_API_REST_FAVORITES_HPP

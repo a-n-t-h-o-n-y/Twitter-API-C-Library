@@ -1,20 +1,20 @@
 #ifndef NETWORKLIB_OAUTH_OAUTH_HPP
 #define NETWORKLIB_OAUTH_OAUTH_HPP
 #include <string>
+#include <string_view>
+
+#include <networklib/oauth/credentials.hpp>
 
 namespace network {
-class Request;
+struct Request;
 
 /// Add App and Account OAuth 1.0a header to HTTP request.
-void authorize(Request& request,
-               const std::string& consumer_key,
-               const std::string& consumer_secret,
-               const std::string& access_token,
-               const std::string& token_secret);
+void authorize(Request& request, Credentials const& keys);
 
 /// Get bearer token from server
-auto get_bearer_token(const std::string& consumer_key,
-                             const std::string& consumer_secret) -> std::string;
+[[nodiscard]] auto get_bearer_token(std::string_view consumer_key,
+                                    std::string_view consumer_secret)
+    -> std::string;
 
 }  // namespace network
 #endif  // NETWORKLIB_OAUTH_OAUTH_HPP

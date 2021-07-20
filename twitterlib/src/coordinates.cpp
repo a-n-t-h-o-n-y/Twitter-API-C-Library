@@ -9,15 +9,15 @@ namespace twitter {
 
 Coordinates_data::operator std::string() const
 {
-    std::stringstream ss;
+    auto ss = std::ostringstream{};
     ss << "longitude: " << longitude << "\nlatitude: " << latitude
        << "\ntype: " << type;
     return ss.str();
 }
 
-void Coordinates_data::construct(const boost::property_tree::ptree& tree)
+void Coordinates_data::construct(boost::property_tree::ptree const& tree)
 {
-    auto coordinates_tree =
+    auto const coordinates_tree =
         tree.get_child("coordinates", boost::property_tree::ptree());
     if (!coordinates_tree.empty()) {
         longitude = coordinates_tree.front().second.get_value<float>(-1.0);

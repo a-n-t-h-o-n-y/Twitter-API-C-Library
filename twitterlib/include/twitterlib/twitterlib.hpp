@@ -2,8 +2,6 @@
 #define TWITTERLIB_TWITTERLIB_HPP
 
 #include <networklib/networklib.hpp>
-#include <twitterlib/account.hpp>
-#include <twitterlib/app.hpp>
 #include <twitterlib/objects/bounding_box.hpp>
 #include <twitterlib/objects/coordinates.hpp>
 #include <twitterlib/objects/entities.hpp>
@@ -23,5 +21,6 @@
 #include <twitterlib/rest_api/rest_collections.hpp>
 #include <twitterlib/rest_api/rest_favorites.hpp>
 #include <twitterlib/rest_api/rest_statuses.hpp>
+#include <twitterlib/twitter_streams.hpp>
 
 #endif  // TWITTERLIB_TWITTERLIB_HPP

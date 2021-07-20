@@ -6,23 +6,24 @@
 auto main() -> int
 {
     // Get OAuth keys
-    network::Keys keys;
-    try {
-        keys = network::read_keys("keys");
-    }
-    catch (const std::invalid_argument& e) {
-        std::cout << e.what() << std::endl;
-        return 1;
-    }
-
-    // Set up App
-    twitter::App app{keys.consumer_key, keys.consumer_secret};
-    twitter::Account account{keys.user_token, keys.token_secret};
-    app.account = account;
+    auto const keys = [] {
+        try {
+            return network::read_credentials("keys");
+        }
+        catch (std::invalid_argument const& e) {
+            std::cerr << e.what() << '\n';
+            std::exit(1);
+        }
+    }();
 
     // get_application_rate_limit_status
-    network::Response status{twitter::get_application_rate_limit_status(app)};
-    network::view_ptree(status.ptree());
+    // get bearer token before app only auth call.
+    auto const bt =
+        network::get_bearer_token(keys.consumer_key, keys.consumer_secret);
+    auto const status =
+        network::to_ptree(twitter::get_application_rate_limit_status(bt));
+
+    network::view_ptree(status, std::cout);
 
     return 0;
 }

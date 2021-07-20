@@ -7,23 +7,19 @@
 auto main() -> int
 {
     // Get OAuth keys
-    network::Keys keys;
-    try {
-        keys = network::read_keys("keys");
-    }
-    catch (const std::invalid_argument& e) {
-        std::cout << e.what() << std::endl;
-        return 1;
-    }
-
-    // Set up App
-    twitter::App app{keys.consumer_key, keys.consumer_secret};
-    twitter::Account account{keys.user_token, keys.token_secret};
-    app.account = account;
+    auto const keys = [] {
+        try {
+            return network::read_credentials("keys");
+        }
+        catch (std::invalid_argument const& e) {
+            std::cerr << e.what() << '\n';
+            std::exit(1);
+        }
+    }();
 
     // get_favorites
-    std::vector<twitter::Tweet> bo_favs{
-        twitter::get_favorites(app, "BarackObama")};
+    auto const bo_favs = twitter::get_favorites(keys, "BarackObama");
+
     // for (const twitter::Tweet& twt : bo_favs) {
     //     std::cout << twt.text << std::endl;
     // }

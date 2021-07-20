@@ -2,10 +2,11 @@
 #define TWITTERLIB_REST_API_REST_STATUSES_HPP
 #include <string>
 
-namespace twitter {
-struct App;
+#include <networklib/oauth/credentials.hpp>
 
-void update_status(const App& app, const std::string& message);
+namespace twitter {
+
+void update_status(network::Credentials const& app, std::string const& message);
 
 }  // namespace twitter
 #endif  // TWITTERLIB_REST_API_REST_STATUSES_HPP

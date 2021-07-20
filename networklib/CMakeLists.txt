@@ -11,16 +11,19 @@ add_library(networklib STATIC
     src/encode.cpp
     src/headers.cpp
     src/response.cpp
-    src/make_connection.cpp
-    src/send.cpp
+    src/https_read.cpp
+    src/read_credentials.cpp
+    src/https_write.cpp
     src/gzip.cpp
     src/oauth.cpp
+    src/read_buffer.cpp
     src/read_socket.cpp
+    src/socket.cpp
     src/wait.cpp
     src/request.cpp
     src/status_line.cpp
     src/stream.cpp
-    src/read_keys.cpp
+    src/read_credentials.cpp
     src/view_ptree.cpp
 )
 

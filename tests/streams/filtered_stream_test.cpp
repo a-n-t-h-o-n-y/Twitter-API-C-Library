@@ -1,38 +1,42 @@
+#include <cstdlib>
 #include <exception>
 #include <iostream>
+
 #include <twitterlib/twitterlib.hpp>
 
 auto main() -> int
 {
     // Get OAuth keys
-    network::Keys keys;
+    auto const keys = [] {
+        try {
+            return network::read_credentials("keys");
+        }
+        catch (std::invalid_argument const& e) {
+            std::cerr << e.what() << '\n';
+            std::exit(1);
+        }
+    }();
+
+    auto const parameters = [] {
+        auto p = twitter::Stream_parameters{};
+        p.track.push_back("water");
+        return p;
+    }();
+
+    auto const show_tweet = [](const auto& response) {
+        std::cout << twitter::Tweet{response}.text << "\n\n" << std::flush;
+    };
+
     try {
-        keys = network::read_keys("keys");
+        using network::Stream;
+        auto const request = build_filtered_stream_request(keys, parameters);
+        auto const stream  = Stream::launch(request, show_tweet);
+        network::wait();
     }
-    catch (const std::invalid_argument& e) {
-        std::cout << e.what() << std::endl;
+    catch (std::runtime_error const& e) {
+        std::cerr << e.what() << '\n';
         return 1;
     }
-
-    // Set up App
-    twitter::App app{keys.consumer_key, keys.consumer_secret};
-    twitter::Account account{keys.user_token, keys.token_secret};
-    app.account = account;
-
-    app.filtered_stream.parameters().track.push_back("water");
-    app.filtered_stream.register_function([](const auto& response) {
-        twitter::Tweet twt{response};
-        std::cout << twt.text << '\n' << std::endl;
-    });
-
-    try {
-        app.filtered_stream.open();
-    }
-    catch (const std::runtime_error& e) {
-        std::cout << e.what() << std::endl;
-        return 1;
-    }
-    twitter::Twitter_stream::wait();
 
     return 0;
 }

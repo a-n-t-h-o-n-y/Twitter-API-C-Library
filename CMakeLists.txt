@@ -3,11 +3,19 @@ project(TwitterLib LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
-# Dependencies
-find_package(Boost 1.58.0 REQUIRED COMPONENTS system iostreams)
-add_library(boost INTERFACE IMPORTED)
-target_include_directories(boost INTERFACE ${Boost_INCLUDE_DIR})
-target_link_libraries(boost INTERFACE ${Boost_LIBRARIES})
+option(LTO "Turn Link Time Optimization ON/OFF" ON)
+
+# Link-Time Optimization
+include(CheckIPOSupported)
+check_ipo_supported(RESULT has_lto OUTPUT error)
+if(has_lto AND LTO)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+    message("LTO Enabled Globally")
+elseif(NOT has_lto)
+    message(WARNING "LTO is not supported: ${error}")
+else()
+    message("LTO Not Enabled")
+endif()
 
 # Subdirectories
 add_subdirectory(networklib)
@@ -22,3 +30,4 @@ add_custom_target(twitterlib.all
         twitterlib.tests
         twitterlib.demos
 )
+

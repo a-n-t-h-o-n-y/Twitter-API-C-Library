@@ -9,15 +9,17 @@
 
 namespace twitter {
 
-struct Coordinates_data {
-    explicit operator std::string() const;
-
-    float longitude = 0.0;
-    float latitude  = 0.0;
+class Coordinates_data {
+   public:
+    float longitude = 0.;
+    float latitude  = 0.;
     std::string type;
 
+   public:
+    [[nodiscard]] explicit operator std::string() const;
+
    protected:
-    void construct(const boost::property_tree::ptree& tree);
+    void construct(boost::property_tree::ptree const& tree);
 };
 
 using Coordinates = Objects_template<Coordinates_data>;

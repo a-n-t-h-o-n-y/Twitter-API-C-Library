@@ -6,26 +6,22 @@
 auto main() -> int
 {
     // Get OAuth keys
-    network::Keys keys;
-    try {
-        keys = network::read_keys("keys");
-    }
-    catch (const std::invalid_argument& e) {
-        std::cout << e.what() << std::endl;
-        return 1;
-    }
-
-    // Set up App
-    twitter::App app{keys.consumer_key, keys.consumer_secret};
-    twitter::Account account{keys.user_token, keys.token_secret};
-    app.account = account;
+    auto const keys = [] {
+        try {
+            return network::read_credentials("keys");
+        }
+        catch (std::invalid_argument const& e) {
+            std::cerr << e.what() << '\n';
+            std::exit(1);
+        }
+    }();
 
     // get_account_settings
-    network::Response settings{twitter::get_account_settings(app)};
+    auto const settings = twitter::get_account_settings(keys);
     // std::cout << settings << std::endl;
 
     // verify_credentials
-    network::Response creds{twitter::verify_credentials(app)};
+    auto const creds = twitter::verify_credentials(keys);
     // std::cout << creds << std::endl;
 
     return 0;

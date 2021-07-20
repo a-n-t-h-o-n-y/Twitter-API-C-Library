@@ -8,14 +8,16 @@
 
 namespace twitter {
 
-struct Bounding_box_data {
-    explicit operator std::string() const;
-
+class Bounding_box_data {
+   public:
     std::string type;
     std::vector<std::array<float, 2>> coordinates;
 
+   public:
+    [[nodiscard]] explicit operator std::string() const;
+
    protected:
-    void construct(const boost::property_tree::ptree& tree);
+    void construct(boost::property_tree::ptree const& tree);
 };
 
 using Bounding_box = Objects_template<Bounding_box_data>;

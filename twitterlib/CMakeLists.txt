@@ -9,7 +9,7 @@ add_library(twitterlib STATIC
     src/entities.cpp
     src/hashtag.cpp
     src/media.cpp
-    src/twitter_stream.cpp
+    src/twitter_streams.cpp
     src/place.cpp
     src/place_attributes.cpp
     src/size.cpp
@@ -18,7 +18,6 @@ add_library(twitterlib STATIC
     src/url.cpp
     src/user.cpp
     src/user_mention.cpp
-    src/authorize.cpp
     src/rest_account.cpp
     src/rest_favorites.cpp
     src/rest_statuses.cpp

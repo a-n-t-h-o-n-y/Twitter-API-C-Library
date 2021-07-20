@@ -1,19 +1,23 @@
 #include <twitterlib/rest_api/rest_application.hpp>
 
+#include <string>
+
+#include <networklib/https_read.hpp>
+#include <networklib/https_write.hpp>
 #include <networklib/request.hpp>
 #include <networklib/response.hpp>
-#include <networklib/send.hpp>
-#include <twitterlib/detail/authorize.hpp>
 
 namespace twitter {
 
-auto get_application_rate_limit_status(App& app) -> network::Response
+auto get_application_rate_limit_status(std::string const& bearer_token)
+    -> network::Response
 {
-    network::Request r;
-    r.HTTP_method = "GET";
-    r.URI         = "/1.1/application/rate_limit_status.json";
-    detail::app_only_authorize(r, app);
-    return network::send(r);
+    auto r          = network::Request{};
+    r.HTTP_method   = "GET";
+    r.URI           = "/1.1/application/rate_limit_status.json";
+    r.authorization = "Bearer " + bearer_token;
+
+    return https_read(https_write(r));
 }
 
 }  // namespace twitter

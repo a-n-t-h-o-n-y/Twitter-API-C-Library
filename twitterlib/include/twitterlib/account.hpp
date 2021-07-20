@@ -5,10 +5,10 @@
 namespace twitter {
 
 /// Holds Twitter account credentials.
-struct Account {
-    std::string token;
-    std::string secret;
-};
+// struct Account {
+//     std::string token;
+//     std::string secret;
+// };
 
 }  // namespace twitter
 #endif  // TWITTERLIB_ACCOUNT_HPP

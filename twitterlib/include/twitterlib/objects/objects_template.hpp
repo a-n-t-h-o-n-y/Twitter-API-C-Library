@@ -15,18 +15,21 @@ template <typename T>
 class Objects_template : public T {
    public:
     Objects_template() = default;
+
     explicit Objects_template(const std::string& json)
     {
         T::construct(string_to_ptree(json));
     }
+
     explicit Objects_template(const boost::property_tree::ptree& tree)
     {
         T::construct(tree);
     }
-    explicit Objects_template(const network::Response& r)
-    {
-        T::construct(string_to_ptree(r.json()));
-    }
+
+    // explicit Objects_template(const network::Response& r)
+    // {
+    //     T::construct(string_to_ptree(r.json()));
+    // }
 
     explicit operator std::string() const { return T::operator std::string(); }
 

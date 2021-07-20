@@ -2,21 +2,26 @@
 
 #include <string>
 
+#include <networklib/https_read.hpp>
+#include <networklib/https_write.hpp>
+#include <networklib/oauth/credentials.hpp>
+#include <networklib/oauth/oauth.hpp>
 #include <networklib/request.hpp>
-#include <networklib/send.hpp>
-#include <twitterlib/app.hpp>
-#include <twitterlib/detail/authorize.hpp>
+#include <networklib/response.hpp>
 
 namespace twitter {
 
-void update_status(const App& app, const std::string& message)
+void update_status(network::Credentials const& keys, std::string const& message)
 {
-    network::Request r;
+    auto r        = network::Request{};
     r.HTTP_method = "POST";
     r.URI         = "/1.1/statuses/update.json";
-    r.add_message("status", message);
-    detail::account_authorize(r, app);
-    network::send(r);
+    r.messages.push_back({"status", message});
+
+    network::authorize(r, keys);
+
+    // TODO read response and throw if error?
+    (void)https_read(https_write(r));
 }
 
 }  // namespace twitter

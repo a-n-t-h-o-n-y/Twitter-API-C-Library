@@ -4,33 +4,46 @@
 
 auto main() -> int
 {
-    network::Keys keys{network::read_keys("keys")};
+    using namespace twitter;
 
-    twitter::App app{keys.consumer_key, keys.consumer_secret};
-    twitter::Account account{keys.user_token, keys.token_secret};
+    auto const keys = network::read_credentials("keys");
 
-    app.account = account;
+    // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-    // REST API - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // REST API
     // Returns JSON response from twitter.
-    std::cout << get_account_settings(app) << std::endl;
+    std::cout << get_account_settings(keys) << std::endl;
 
     // Update account's status.
-    update_status(app, "Hello, Twitter!");
+    update_status(keys, "Hello, Twitter!");
 
-    // Streaming API - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Connect to Twitter filter stream, tracks "Search Term" text.
-    app.filtered_stream.parameters().track.push_back("Search Term");
+    // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-    // Function that will be called on each response from the stream.
-    app.filtered_stream.register_function([](const auto& response) {
-        std::cout << twitter::Tweet(response).text << std::endl;
-    });
-    // Open the stream
-    app.filtered_stream.open();
+    // Streaming API - Connect to Twitter filter stream, tracks "water" text.
+    using network::Stream;
 
-    // Blocking call to allow async stream to be processed indefinitely.
-    twitter::Twitter_stream::wait();
+    // Track Tweets relating to water.
+    auto const parameters = [] {
+        auto p = Stream_parameters{};
+        p.track.push_back("water");
+        p.track.push_back("ocean");
+        p.track.push_back("rain");
+        p.track.push_back("💧");
+        p.track.push_back("🌊");
+        p.track.push_back("☔");
+        return p;
+    }();
+
+    // Invoked each time the search stream receives data.
+    auto const show_tweet = [](const auto& response) {
+        std::cout << Tweet{response}.text << "\n\n" << std::flush;
+    };
+
+    auto const request = build_filtered_stream_request(keys, parameters);
+    auto const stream  = Stream::launch(request, show_tweet);
+
+    // Blocking call to allow async strea to be processed indefinitely.
+    network::wait();
 
     return 0;
 }

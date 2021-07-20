@@ -4,46 +4,42 @@
 #include <string>
 
 #include <boost/asio.hpp>
+#include <boost/asio/completion_condition.hpp>
 #include <boost/asio/ssl.hpp>
 
+#include <networklib/detail/read_buffer.hpp>
 #include <networklib/detail/socket_stream.hpp>
 
-namespace network {
-namespace detail {
+namespace network::detail {
 
 auto read_chunk(Socket_stream& socket, Streambuf& buffer) -> std::string
 {
-    boost::system::error_code ec;
-    // Read size
-    // deadline for timeout operation.
-    boost::asio::read_until(socket, buffer, "\r\n", ec);
-    if (ec && ec != boost::asio::error::eof) {
-        throw boost::system::system_error(ec);
-    }
-    std::istream stream(&buffer);
-    std::string chunk_size_str;
+    boost::asio::read_until(socket, buffer, "\r\n");
+
+    auto stream         = std::istream{&buffer};
+    auto chunk_size_str = std::string{};
     stream >> chunk_size_str;
-    if (chunk_size_str.empty()) {
+    if (chunk_size_str.empty())
         return " ";
+
+    auto const chunk_size = std::stoul(chunk_size_str, nullptr, 16);
+    {
+        auto trash = std::string(2, ' ');
+        stream.read(trash.data(), 2);  // remove "/r/n"
     }
-    auto chunk_size = std::stoul(chunk_size_str, nullptr, 16);
-    std::string trash(2, ' ');
-    stream.read(&trash[0], 2);  // remove "/r/n"
 
     // Read chunk
-    auto read_n = boost::asio::read(
-        socket, buffer, boost::asio::transfer_exactly(chunk_size), ec);
-    if (ec && ec != boost::asio::error::eof) {
-        throw boost::system::system_error(ec);
-    }
-    std::string chunk(read_n, ' ');
-    stream.read(&chunk[0], read_n);
+    auto n = boost::asio::read(socket, buffer,
+                               boost::asio::transfer_exactly(chunk_size));
+
+    auto chunk = std::string(n, ' ');
+    stream.read(chunk.data(), n);
 
     // Remove last "\r\n"
-    boost::asio::read(socket, buffer, boost::asio::transfer_exactly(2), ec);
-    stream.read(&trash[0], 2);  // remove "/r/n"
-    if (ec && ec != boost::asio::error::eof) {
-        throw boost::system::system_error(ec);
+    boost::asio::read(socket, buffer, boost::asio::transfer_exactly(2));
+    {
+        auto trash = std::string(2, ' ');
+        stream.read(trash.data(), 2);  // remove "/r/n"
     }
     return chunk;
 }
@@ -51,17 +47,9 @@ auto read_chunk(Socket_stream& socket, Streambuf& buffer) -> std::string
 auto read_length(Socket_stream& socket, std::size_t n, Streambuf& buffer)
     -> std::string
 {
-    boost::system::error_code ec;
-    auto read_n =
-        boost::asio::read(socket, buffer, boost::asio::transfer_exactly(n), ec);
-    if (ec && ec != boost::asio::error::eof) {
-        throw boost::system::system_error(ec);
-    }
-    std::istream stream(&buffer);
-    std::string message(read_n, ' ');
-    stream.read(&message[0], read_n);
-    return message;
+    auto const read_n =
+        boost::asio::read(socket, buffer, boost::asio::transfer_exactly(n));
+    return read_buffer(buffer, read_n);
 }
 
-}  // namespace detail
-}  // namespace network
+}  // namespace network::detail

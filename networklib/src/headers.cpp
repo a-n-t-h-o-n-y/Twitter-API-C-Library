@@ -2,7 +2,9 @@
 
 #include <istream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
 
 #include <boost/asio.hpp>
@@ -10,50 +12,61 @@
 
 #include <networklib/detail/socket_stream.hpp>
 
-namespace network {
-namespace detail {
+namespace network::detail {
 
-Headers::Headers(Socket_stream& socket, Streambuf& buffer)
+auto get(Headers const& headers, std::string const& key) -> std::string
 {
-    boost::system::error_code ec;
-    boost::asio::read_until(socket, buffer, "\r\n\r\n", ec);
-    if (ec && ec != boost::asio::error::eof) {
-        throw boost::system::system_error(ec);
-    }
-    std::string line;
-    std::string key;
-    std::string value;
-    std::istream header_stream(&buffer);
-    while (std::getline(header_stream, line, '\n')) {
-        if (line.size() > 2) {
-            line.pop_back();
-            auto pos = line.find(": ");
-            key      = std::string(std::begin(line), std::begin(line) + pos);
-            value    = std::string(std::begin(line) + pos + 2, std::end(line));
-            this->headers_.push_back(std::make_pair(key, value));
-        }
-    }
-}
-
-Headers::operator std::string() const
-{
-    std::stringstream header_stream;
-    for (const auto& key_pair : headers_) {
-        header_stream << key_pair.first << ": " << key_pair.second << "\r\n";
-    }
-    header_stream << "\r\n";
-    return header_stream.str();
-}
-
-auto Headers::get(const std::string& key) const -> std::string
-{
-    for (const auto& key_value : headers_) {
-        if (key_value.first == key) {
-            return key_value.second;
-        }
+    for (auto const& [k, v] : headers) {
+        if (k == key)
+            return v;
     }
     return "";
 }
 
-}  // namespace detail
-}  // namespace network
+auto read_header_field_bytes(Socket& socket, Streambuf& buffer) -> std::string
+{
+    auto const n = boost::asio::read_until(socket.get(), buffer, "\r\n\r\n");
+    auto result  = std::string(n, '\n');
+    {
+        auto is = std::istream{&buffer};
+        is.read(result.data(), n);
+    }
+    result.pop_back();  // '\n'
+    result.pop_back();  // '\r'
+    result.pop_back();  // '\n'
+    result.pop_back();  // '\r'
+    return result;
+}
+
+auto parse_headers(std::string_view bytes) -> Headers
+{
+    auto result = Headers{};
+    auto iss    = std::istringstream{std::string{bytes}};
+    auto line   = std::string{};
+    while (std::getline(iss >> std::ws, line, '\n')) {
+        auto const pos = line.find(":");
+        if (pos == std::string::npos)
+            throw std::runtime_error{"parse_headers: Invalid; can't find ':'."};
+        auto key   = std::string(std::cbegin(line), std::cbegin(line) + pos);
+        auto value = std::string(std::cbegin(line) + pos + 2, std::cend(line));
+        result.push_back({std::move(key), std::move(value)});
+    }
+    return result;
+}
+
+auto to_string(Headers const& x) -> std::string
+{
+    auto oss = std::ostringstream{};
+    for (auto const& [key, value] : x)
+        oss << key << ": " << value << "\r\n";
+    oss << "\r\n";
+    return oss.str();
+}
+
+auto operator<<(std::ostream& os, Headers const& x) -> std::ostream&
+{
+    os << to_string(x);
+    return os;
+}
+
+}  // namespace network::detail

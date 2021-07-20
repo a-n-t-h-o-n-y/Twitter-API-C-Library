@@ -4,13 +4,11 @@
 #include <boost/asio/ssl.hpp>
 #include <boost/asio/streambuf.hpp>
 
-namespace network {
-namespace detail {
+namespace network::detail {
 
 using Socket_stream = boost::asio::ssl::stream<boost::asio::ip::tcp::socket>;
 
 using Streambuf = boost::asio::streambuf;
 
-}  // namespace detail
-}  // namespace network
+}  // namespace network::detail
 #endif  // NETWORKLIB_DETAIL_SOCKET_STREAM_HPP

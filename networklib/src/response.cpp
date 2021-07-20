@@ -1,60 +1,25 @@
 #include <networklib/response.hpp>
 
-#include <memory>
-#include <ostream>
 #include <sstream>
 #include <string>
 
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include <networklib/view_ptree.hpp>
-
 namespace network {
 
-Response::Response(std::string message_body) : message_body_{message_body}
+auto to_ptree(Response const& json) -> boost::property_tree::ptree
 {
-    deduce_type();
+    auto tree = boost::property_tree::ptree{};
+    auto ss   = std::istringstream{json};
+    boost::property_tree::read_json(ss, tree);
+    return tree;
 }
 
-Response::operator std::string() const { return message_body_; }
-
-void Response::deduce_type() { object_type_ = Type::Unknown; }
-void Response::build_ptree() const
+auto get(boost::property_tree::ptree const& tree, std::string const& key)
+    -> std::string
 {
-    json_tree_ptr_ = std::make_unique<boost::property_tree::ptree>();
-    std::stringstream ss{message_body_};
-    boost::property_tree::read_json(ss, *json_tree_ptr_);
-}
-
-auto Response::ptree() const -> const boost::property_tree::ptree&
-{
-    if (json_tree_ptr_ == nullptr) {
-        this->build_ptree();
-    }
-    return *json_tree_ptr_;
-}
-
-auto Response::ptree() -> boost::property_tree::ptree&
-{
-    if (json_tree_ptr_ == nullptr) {
-        this->build_ptree();
-    }
-    return *json_tree_ptr_;
-}
-
-auto Response::get(const std::string& key) const -> std::string
-{
-    if (json_tree_ptr_ == nullptr) {
-        this->build_ptree();
-    }
-    return json_tree_ptr_->get<std::string>(key, "");
-}
-
-auto operator<<(std::ostream& os, const Response& m) -> std::ostream&
-{
-    network::view_ptree(m.ptree(), os);
-    return os;
+    return tree.get<std::string>(key, "");
 }
 
 }  // namespace network

@@ -4,17 +4,15 @@
 #include <sstream>
 #include <string>
 
-namespace twitter {
-namespace detail {
+namespace twitter::detail {
 
 template <typename T>
-auto to_string(const T& thing) -> std::string
+auto to_string(T const& x) -> std::string
 {
-    std::stringstream ss;
-    ss << std::boolalpha << thing;
+    auto ss = std::ostringstream{};
+    ss << std::boolalpha << x;
     return ss.str();
 }
 
-}  // namespace detail
-}  // namespace twitter
+}  // namespace twitter::detail
 #endif  // TWITTERLIB_DETAIL_TO_STRING_HPP

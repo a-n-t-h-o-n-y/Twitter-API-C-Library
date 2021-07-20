@@ -16,16 +16,18 @@
 
 namespace twitter {
 
-struct Entities_data {
-    explicit operator std::string() const;
-
+class Entities_data {
+   public:
     std::vector<Hashtag> hashtags;
     std::vector<Media> media;
     std::vector<URL> urls;
     std::vector<User_mention> user_mentions;
 
+   public:
+    explicit operator std::string() const;
+
    protected:
-    void construct(const boost::property_tree::ptree& tree);
+    void construct(boost::property_tree::ptree const& tree);
 };
 
 using Entities = Objects_template<Entities_data>;
