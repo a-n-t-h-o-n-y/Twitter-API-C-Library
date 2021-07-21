@@ -4,8 +4,6 @@
 #include <string>
 #include <utility>
 
-#include <iostream>  //temp
-
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/system/error_code.hpp>
@@ -14,7 +12,6 @@
 #include <networklib/detail/headers.hpp>
 #include <networklib/detail/read_socket.hpp>
 #include <networklib/detail/status_line.hpp>
-#include <networklib/oauth/oauth.hpp>
 #include <networklib/response.hpp>
 #include <networklib/socket.hpp>
 
@@ -65,7 +62,7 @@ void Stream::Stream_impl::process_chunks(boost::system::error_code ec)
     while (alive_) {
         auto pos = std::string::npos;
         while (pos == std::string::npos) {
-            message_str.append(detail::read_chunk(socket_.get(), read_buffer));
+            message_str.append(detail::read_chunk(socket_, read_buffer));
             pos = message_str.find("\r\n");
         }
 

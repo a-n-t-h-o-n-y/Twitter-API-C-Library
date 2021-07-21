@@ -9,10 +9,10 @@ auto main(int argc, char* argv[]) -> int
 {
     // Parse CL arguments
     if (argc < 2) {
-        std::cerr << "usage: get_favorites <twitter-handle> [quantity]\n";
+        std::cerr << "Usage: get_favorites <twitter-handle> [quantity]\n";
         return 1;
     }
-    int quantity{-1};
+    auto quantity = -1;
     if (argc > 2) {
         try {
             quantity = std::stoi(argv[2]);
@@ -22,10 +22,11 @@ auto main(int argc, char* argv[]) -> int
             return 1;
         }
     }
+
     // Get OAuth keys
     auto const keys = [] {
         try {
-            return network::read_credentials("keys");
+            return oauth::read_credentials("keys");
         }
         catch (std::invalid_argument const& e) {
             std::cerr << e.what() << '\n';
@@ -33,18 +34,19 @@ auto main(int argc, char* argv[]) -> int
         }
     }();
 
-    std::vector<twitter::Tweet> twt_vec;
+    auto tweets = std::vector<twitter::Tweet>{};
     try {
-        twt_vec = twitter::get_favorites(keys, argv[1], quantity);
+        tweets = twitter::get_favorites(keys, argv[1], quantity);
     }
     catch (...) {
         std::cerr << "Error with request. Twitter handle \'@" << argv[1]
                   << "\' might not exist.\n";
         return 1;
     }
-    for (const twitter::Tweet& twt : twt_vec) {
-        std::cout << '@' << twt.user_ptr->screen_name << '\n';
-        std::cout << twt.text << '\n' << std::endl;
+    for (auto const& tweet : tweets) {
+        if (tweet.user_ptr != nullptr)
+            std::cout << '@' << tweet.user_ptr->screen_name << '\n';
+        std::cout << tweet.text << '\n' << std::endl;
     }
 
     return 0;

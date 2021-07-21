@@ -1,43 +1,56 @@
 # C++ Twitter API Library
 
-A work in progress library for access to Twitter's REST and Streaming APIs.
+A C++17 library for access to Twitter's Standard v1.1 REST and Streaming APIs.
 
-**Library is not complete!**
+This library is **not** production ready! It was built in order to learn about
+networking and Web APIs.
 
 ## Example
 
-```c++
+```cpp
 #include <iostream>
 #include <twitterlib/twitterlib.hpp>
 
-int main() {
-    network::Keys keys{network::read_keys("keys")};
+int main()
+{
+    using namespace twitter;
 
-    twitter::App app{keys.consumer_key, keys.consumer_secret};
-    twitter::Account account{keys.user_token, keys.token_secret};
+    auto const keys = oauth::read_credentials("keys");
 
-    app.account = account;
+    // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-    // REST API - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Returns JSON response from Twitter.
-    std::cout << get_account_settings(app) << std::endl;
+    // REST API
+    // Returns JSON response from twitter.
+    std::cout << get_account_settings(keys) << std::endl;
 
     // Update account's status.
-    update_status(app, "Hello, Twitter!");
+    update_status(keys, "Hello, Twitter!");
 
-    // Streaming API - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // Connect to Twitter filter stream, tracks "Search Term" text.
-    app.filtered_stream.parameters().track.push_back("Search Term");
+    // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    // Streaming API - Connect to Twitter filter stream, tracks "water" text.
 
-    // Function that will be called on each response from the stream.
-    app.filtered_stream.register_function([](const auto& response) {
-        std::cout << twitter::Tweet(response).text << std::endl;
-    });
-    // Open the stream
-    app.filtered_stream.open();
+    // Track Tweets relating to water.
+    auto const parameters = [] {
+        auto p = Stream_parameters{};
+        p.track.push_back("water");
+        p.track.push_back("ocean");
+        p.track.push_back("rain");
+        p.track.push_back("💧");
+        p.track.push_back("🌊");
+        p.track.push_back("☔");
+        return p;
+    }();
+
+    // Invoked each time the search stream receives data.
+    auto const show_tweet = [](auto const& response) {
+        std::cout << Tweet{response}.text << "\n\n" << std::flush;
+    };
+
+    auto const request = build_filtered_stream_request(keys, parameters);
+    auto const stream  = network::Stream::launch(request, show_tweet);
 
     // Blocking call to allow async stream to be processed indefinitely.
-    twitter::Twitter_stream::wait();
+    network::wait();
 
     return 0;
 }

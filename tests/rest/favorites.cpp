@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <exception>
 #include <iostream>
 #include <vector>
@@ -9,7 +10,7 @@ auto main() -> int
     // Get OAuth keys
     auto const keys = [] {
         try {
-            return network::read_credentials("keys");
+            return oauth::read_credentials("keys");
         }
         catch (std::invalid_argument const& e) {
             std::cerr << e.what() << '\n';
@@ -17,12 +18,14 @@ auto main() -> int
         }
     }();
 
-    // get_favorites
-    auto const bo_favs = twitter::get_favorites(keys, "BarackObama");
+    auto const brk = "\n\n────────────────────────────────────────────────\n\n";
 
-    // for (const twitter::Tweet& twt : bo_favs) {
-    //     std::cout << twt.text << std::endl;
-    // }
+    // get_favorites
+    auto const favs = twitter::get_favorites(keys, "thesauruscom");
+
+    for (auto const& twt : favs)
+        std::cout << twt.text << brk;
+    std::cout << std::flush;
 
     return 0;
 }

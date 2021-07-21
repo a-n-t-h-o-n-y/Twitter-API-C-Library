@@ -37,6 +37,7 @@ target_include_directories(twitterlib
 target_link_libraries(twitterlib
     PUBLIC
         networklib
+        oauth
         Boost::boost
 )
 

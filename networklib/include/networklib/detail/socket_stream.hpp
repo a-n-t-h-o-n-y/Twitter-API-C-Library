@@ -1,5 +1,6 @@
 #ifndef NETWORKLIB_DETAIL_SOCKET_STREAM_HPP
 #define NETWORKLIB_DETAIL_SOCKET_STREAM_HPP
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 #include <boost/asio/streambuf.hpp>

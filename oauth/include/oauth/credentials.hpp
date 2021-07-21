@@ -1,8 +1,8 @@
-#ifndef NETWORKLIB_OAUTH_CREDENTIALS_HPP
-#define NETWORKLIB_OAUTH_CREDENTIALS_HPP
+#ifndef OAUTH_CREDENTIALS_HPP
+#define OAUTH_CREDENTIALS_HPP
 #include <string>
 
-namespace network {
+namespace oauth {
 
 /// OAuth Keys and Tokens
 struct Credentials {
@@ -12,5 +12,5 @@ struct Credentials {
     std::string token_secret;
 };
 
-}  // namespace network
-#endif  // NETWORKLIB_OAUTH_CREDENTIALS_HPP
+}  // namespace oauth
+#endif  // OAUTH_CREDENTIALS_HPP

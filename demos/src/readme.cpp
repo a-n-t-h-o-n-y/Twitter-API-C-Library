@@ -6,7 +6,7 @@ auto main() -> int
 {
     using namespace twitter;
 
-    auto const keys = network::read_credentials("keys");
+    auto const keys = oauth::read_credentials("keys");
 
     // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
@@ -18,9 +18,7 @@ auto main() -> int
     update_status(keys, "Hello, Twitter!");
 
     // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-
     // Streaming API - Connect to Twitter filter stream, tracks "water" text.
-    using network::Stream;
 
     // Track Tweets relating to water.
     auto const parameters = [] {
@@ -35,14 +33,14 @@ auto main() -> int
     }();
 
     // Invoked each time the search stream receives data.
-    auto const show_tweet = [](const auto& response) {
+    auto const show_tweet = [](auto const& response) {
         std::cout << Tweet{response}.text << "\n\n" << std::flush;
     };
 
     auto const request = build_filtered_stream_request(keys, parameters);
-    auto const stream  = Stream::launch(request, show_tweet);
+    auto const stream  = network::Stream::launch(request, show_tweet);
 
-    // Blocking call to allow async strea to be processed indefinitely.
+    // Blocking call to allow async stream to be processed indefinitely.
     network::wait();
 
     return 0;

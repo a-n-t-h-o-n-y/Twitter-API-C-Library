@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <exception>
 #include <iostream>
 
@@ -8,7 +9,7 @@ auto main() -> int
     // Get OAuth keys
     auto const keys = [] {
         try {
-            return network::read_credentials("keys");
+            return oauth::read_credentials("keys");
         }
         catch (std::invalid_argument const& e) {
             std::cerr << e.what() << '\n';
@@ -19,17 +20,21 @@ auto main() -> int
     // get_collection
     auto const collection_data =
         twitter::get_collection(keys, "custom-539487832448843776");
+    network::view_ptree(network::to_ptree(collection_data), std::cout);
 
-    // network::view_ptree(collection_data.ptree());
+    auto const brk = "\n\n────────────────────────────────────────────────\n\n";
+    std::cout << brk;
 
+    // find_collections
     auto const collection_ids = twitter::find_collections(keys, "BarackObama");
+    network::view_ptree(network::to_ptree(collection_ids), std::cout);
 
-    // network::view_ptree(collection_ids.ptree());
+    std::cout << brk;
 
+    // get_collection_info
     auto const collection_info =
         twitter::get_collection_info(keys, "custom-539487832448843776");
-
-    // network::view_ptree(collection_info.ptree());
+    network::view_ptree(network::to_ptree(collection_info), std::cout);
 
     return 0;
 }

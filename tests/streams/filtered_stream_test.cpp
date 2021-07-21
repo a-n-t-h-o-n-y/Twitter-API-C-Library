@@ -9,7 +9,7 @@ auto main() -> int
     // Get OAuth keys
     auto const keys = [] {
         try {
-            return network::read_credentials("keys");
+            return oauth::read_credentials("keys");
         }
         catch (std::invalid_argument const& e) {
             std::cerr << e.what() << '\n';
@@ -23,7 +23,7 @@ auto main() -> int
         return p;
     }();
 
-    auto const show_tweet = [](const auto& response) {
+    auto const show_tweet = [](auto const& response) {
         std::cout << twitter::Tweet{response}.text << "\n\n" << std::flush;
     };
 

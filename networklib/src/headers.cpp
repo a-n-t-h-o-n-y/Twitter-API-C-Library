@@ -43,7 +43,7 @@ auto parse_headers(std::string_view bytes) -> Headers
     auto result = Headers{};
     auto iss    = std::istringstream{std::string{bytes}};
     auto line   = std::string{};
-    while (std::getline(iss >> std::ws, line, '\n')) {
+    while (std::getline(iss >> std::ws, line, '\r')) {
         auto const pos = line.find(":");
         if (pos == std::string::npos)
             throw std::runtime_error{"parse_headers: Invalid; can't find ':'."};

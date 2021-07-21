@@ -1,4 +1,4 @@
-#include <networklib/oauth/read_credentials.hpp>
+#include <oauth/read_credentials.hpp>
 
 #include <exception>
 #include <fstream>
@@ -6,13 +6,13 @@
 #include <stdexcept>
 #include <string>
 
-#include <networklib/oauth/credentials.hpp>
+#include <oauth/credentials.hpp>
 
-namespace network {
+namespace oauth {
 
-auto read_credentials(std::istream& stream) -> Credentials
+auto read_credentials(std::istream& stream) -> oauth::Credentials
 {
-    auto keys = Credentials{};
+    auto keys = oauth::Credentials{};
     auto pit  = std::string{};
     stream >> pit;
     stream >> keys.consumer_key;
@@ -31,7 +31,7 @@ auto read_credentials(std::istream& stream) -> Credentials
     return keys;
 }
 
-auto read_credentials(std::string const& filename) -> Credentials
+auto read_credentials(std::string const& filename) -> oauth::Credentials
 {
     auto f_stream = std::ifstream{filename};
     if (!f_stream)
@@ -40,4 +40,4 @@ auto read_credentials(std::string const& filename) -> Credentials
     return read_credentials(f_stream);
 }
 
-}  // namespace network
+}  // namespace oauth

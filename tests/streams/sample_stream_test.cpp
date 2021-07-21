@@ -9,7 +9,7 @@ auto main() -> int
     // Get OAuth keys
     auto const keys = [] {
         try {
-            return network::read_credentials("keys");
+            return oauth::read_credentials("keys");
         }
         catch (std::invalid_argument const& e) {
             std::cerr << e.what() << '\n';

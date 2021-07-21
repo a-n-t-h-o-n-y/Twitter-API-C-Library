@@ -12,10 +12,8 @@ add_library(networklib STATIC
     src/headers.cpp
     src/response.cpp
     src/https_read.cpp
-    src/read_credentials.cpp
     src/https_write.cpp
     src/gzip.cpp
-    src/oauth.cpp
     src/read_buffer.cpp
     src/read_socket.cpp
     src/socket.cpp
@@ -23,7 +21,6 @@ add_library(networklib STATIC
     src/request.cpp
     src/status_line.cpp
     src/stream.cpp
-    src/read_credentials.cpp
     src/view_ptree.cpp
 )
 

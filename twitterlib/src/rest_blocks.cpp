@@ -1,21 +1,20 @@
-#include <twitterlib/rest_api/rest_blocks.hpp>
+#include <twitterlib/rest/blocks.hpp>
 
 #include <string>
 #include <vector>
 
 #include <networklib/https_read.hpp>
 #include <networklib/https_write.hpp>
-#include <networklib/oauth/credentials.hpp>
-#include <networklib/oauth/oauth.hpp>
 #include <networklib/request.hpp>
 #include <networklib/response.hpp>
+#include <oauth/authorize.hpp>
+#include <oauth/credentials.hpp>
 #include <twitterlib/objects/user.hpp>
 
 namespace twitter {
 
 // Cursored Results
-auto get_blocked_ids(network::Credentials const& keys)
-    -> std::vector<Twitter_id>
+auto get_blocked_ids(oauth::Credentials const& keys) -> std::vector<Twitter_id>
 {
     using namespace network;
     auto result = std::vector<Twitter_id>{};
@@ -38,7 +37,7 @@ auto get_blocked_ids(network::Credentials const& keys)
 }
 
 // Cursored Results
-auto get_blocked_users(network::Credentials const& keys,
+auto get_blocked_users(oauth::Credentials const& keys,
                        bool /*include_entities*/,
                        bool /*skip_status*/) -> std::vector<User>
 {

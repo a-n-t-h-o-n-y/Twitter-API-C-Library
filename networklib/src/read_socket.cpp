@@ -9,12 +9,13 @@
 
 #include <networklib/detail/read_buffer.hpp>
 #include <networklib/detail/socket_stream.hpp>
+#include <networklib/socket.hpp>
 
 namespace network::detail {
 
-auto read_chunk(Socket_stream& socket, Streambuf& buffer) -> std::string
+auto read_chunk(Socket& socket, Streambuf& buffer) -> std::string
 {
-    boost::asio::read_until(socket, buffer, "\r\n");
+    boost::asio::read_until(socket.get(), buffer, "\r\n");
 
     auto stream         = std::istream{&buffer};
     auto chunk_size_str = std::string{};
@@ -29,14 +30,14 @@ auto read_chunk(Socket_stream& socket, Streambuf& buffer) -> std::string
     }
 
     // Read chunk
-    auto n = boost::asio::read(socket, buffer,
+    auto n = boost::asio::read(socket.get(), buffer,
                                boost::asio::transfer_exactly(chunk_size));
 
     auto chunk = std::string(n, ' ');
     stream.read(chunk.data(), n);
 
     // Remove last "\r\n"
-    boost::asio::read(socket, buffer, boost::asio::transfer_exactly(2));
+    boost::asio::read(socket.get(), buffer, boost::asio::transfer_exactly(2));
     {
         auto trash = std::string(2, ' ');
         stream.read(trash.data(), 2);  // remove "/r/n"
@@ -44,11 +45,11 @@ auto read_chunk(Socket_stream& socket, Streambuf& buffer) -> std::string
     return chunk;
 }
 
-auto read_length(Socket_stream& socket, std::size_t n, Streambuf& buffer)
+auto read_length(Socket& socket, Streambuf& buffer, std::size_t n)
     -> std::string
 {
-    auto const read_n =
-        boost::asio::read(socket, buffer, boost::asio::transfer_exactly(n));
+    auto const read_n = boost::asio::read(socket.get(), buffer,
+                                          boost::asio::transfer_exactly(n));
     return read_buffer(buffer, read_n);
 }
 

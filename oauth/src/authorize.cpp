@@ -1,13 +1,13 @@
-#include <networklib/oauth/oauth.hpp>
+#include <oauth/authorize.hpp>
 
 #include <algorithm>
 #include <cctype>
 #include <ctime>
 #include <iterator>
 #include <sstream>
-#include <stdexcept>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 #include <openssl/hmac.h>
@@ -16,19 +16,17 @@
 #include <boost/algorithm/string.hpp>
 
 #include <networklib/detail/encode.hpp>
-#include <networklib/https_read.hpp>
-#include <networklib/https_write.hpp>
 #include <networklib/request.hpp>
-#include <networklib/response.hpp>
+
+using network::detail::url_encode;
 
 namespace {
-using namespace network;
 
 [[nodiscard]] auto gen_nonce() -> std::string
 {
     auto nonce = std::vector<unsigned char>(32, ' ');
     RAND_bytes(nonce.data(), nonce.size());
-    auto nonce_string = detail::base64_encode(nonce);
+    auto nonce_string = network::detail::base64_encode(nonce);
     // remove all non-alphanumerics
     nonce_string.erase(
         std::remove_if(std::begin(nonce_string), std::end(nonce_string),
@@ -67,11 +65,11 @@ using namespace network;
     // Resultant Signature
     HMAC_Final(context, result_buffer.data(), &length);
 
-    return detail::base64_encode(result_buffer);
+    return network::detail::base64_encode(result_buffer);
 }
 
-[[nodiscard]] auto gen_signature(Request const& request,
-                                 Credentials keys,
+[[nodiscard]] auto gen_signature(network::Request const& request,
+                                 oauth::Credentials keys,
                                  std::string_view version,
                                  std::string_view sig_method,
                                  std::string_view nonce,
@@ -84,42 +82,36 @@ using namespace network;
     auto encoded_parameters = std::vector<std::string>{};
     // QueryString Parameters
     for (auto const& [key, value] : request.queries) {
-        encoded_parameters.push_back(detail::url_encode(key) + '=' +
-                                     detail::url_encode(value));
+        encoded_parameters.push_back(url_encode(key) + '=' + url_encode(value));
     }
 
     // OAuth Parameters
-    encoded_parameters.push_back(
-        detail::url_encode("oauth_consumer_key")
-            .append(1, '=')
-            .append(detail::url_encode(keys.consumer_key)));
-
-    encoded_parameters.push_back(detail::url_encode("oauth_nonce")
+    encoded_parameters.push_back(url_encode("oauth_consumer_key")
                                      .append(1, '=')
-                                     .append(detail::url_encode(nonce)));
-
-    encoded_parameters.push_back(detail::url_encode("oauth_signature_method")
-                                     .append(1, '=')
-                                     .append(detail::url_encode(sig_method)));
-
-    encoded_parameters.push_back(detail::url_encode("oauth_timestamp")
-                                     .append(1, '=')
-                                     .append(detail::url_encode(timestamp)));
+                                     .append(url_encode(keys.consumer_key)));
 
     encoded_parameters.push_back(
-        detail::url_encode("oauth_token")
-            .append(1, '=')
-            .append(detail::url_encode(keys.user_token)));
+        url_encode("oauth_nonce").append(1, '=').append(url_encode(nonce)));
 
-    encoded_parameters.push_back(detail::url_encode("oauth_version")
+    encoded_parameters.push_back(url_encode("oauth_signature_method")
                                      .append(1, '=')
-                                     .append(detail::url_encode(version)));
+                                     .append(url_encode(sig_method)));
+
+    encoded_parameters.push_back(url_encode("oauth_timestamp")
+                                     .append(1, '=')
+                                     .append(url_encode(timestamp)));
+
+    encoded_parameters.push_back(url_encode("oauth_token")
+                                     .append(1, '=')
+                                     .append(url_encode(keys.user_token)));
+
+    encoded_parameters.push_back(
+        url_encode("oauth_version").append(1, '=').append(url_encode(version)));
 
     // Message Body Parameters
     for (auto const& [key, value] : request.messages) {
         encoded_parameters.push_back(
-            detail::url_encode(key).append(1, '=').append(
-                detail::url_encode(value)));
+            url_encode(key).append(1, '=').append(url_encode(value)));
     }
 
     // Build parameters string.
@@ -134,12 +126,12 @@ using namespace network;
     auto sig_base_string =
         boost::to_upper_copy(request.HTTP_method)
             .append(1, '&')
-            .append(detail::url_encode(base_url).append(1, '&').append(
-                detail::url_encode(parameters_string)));
+            .append(url_encode(base_url).append(1, '&').append(
+                url_encode(parameters_string)));
 
-    auto signing_key = detail::url_encode(keys.consumer_secret)
+    auto signing_key = url_encode(keys.consumer_secret)
                            .append(1, '&')
-                           .append(detail::url_encode(keys.token_secret));
+                           .append(url_encode(keys.token_secret));
 
     return hmac_sha1_signature(std::move(signing_key),
                                std::move(sig_base_string));
@@ -147,12 +139,10 @@ using namespace network;
 
 }  // namespace
 
-using network::detail::url_encode;
-
-namespace network {
+namespace oauth {
 
 /// Add App OAuth 1.0a header to HTTP request.
-void authorize(Request& request, Credentials const& keys)
+void authorize(network::Request& request, Credentials const& keys)
 {
     constexpr auto version    = "1.0";
     constexpr auto sig_method = "HMAC-SHA1";
@@ -181,33 +171,4 @@ void authorize(Request& request, Credentials const& keys)
     request.authorization = oauth.str();
 }
 
-auto get_bearer_token(std::string_view consumer_key,
-                      std::string_view consumer_secret) -> std::string
-{
-    auto token_credentials = detail::url_encode(consumer_key)
-                                 .append(1, ':')
-                                 .append(detail::url_encode(consumer_secret));
-    auto const token_base64 = std::vector<unsigned char>(
-        std::cbegin(token_credentials), std::cend(token_credentials));
-    token_credentials = detail::base64_encode(token_base64);
-
-    auto bearer_request          = Request{};
-    bearer_request.HTTP_method   = "POST";
-    bearer_request.URI           = "/oauth2/token";
-    bearer_request.authorization = "Basic " + token_credentials;
-    bearer_request.content_type += ";charset=UTF-8";
-    bearer_request.messages.push_back({"grant_type", "client_credentials"});
-    bearer_request.queries.push_back({"include_entities", "true"});
-    bearer_request.headers.push_back({"Accept-Encoding", "gzip"});
-
-    auto const message    = to_ptree(https_read(https_write(bearer_request)));
-    auto const token_type = get(message, "token_type");
-    if (token_type != "bearer")
-        throw std::runtime_error("Invalid bearer token type");
-
-    // app.set_bearer_token(get(message, "access_token"));
-
-    return get(message, "access_token");
-}
-
-}  // namespace network
+}  // namespace oauth

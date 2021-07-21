@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <exception>
 #include <iostream>
 
@@ -6,12 +7,12 @@
 auto main(int argc, char* argv[]) -> int
 {
     if (argc < 2) {
-        std::cout << "usage: search <search-term>" << std::endl;
+        std::cerr << "Usage: search <search-term> ...\n";
         return 1;
     }
     auto const keys = [] {
         try {
-            return network::read_credentials("keys");
+            return oauth::read_credentials("keys");
         }
         catch (std::invalid_argument const& e) {
             std::cerr << e.what() << '\n';
@@ -19,37 +20,31 @@ auto main(int argc, char* argv[]) -> int
         }
     }();
 
-    // TODO new api
-    // app.filtered_stream.parameters().track.push_back(argv[1]);
-    // app.filtered_stream.register_function([](const auto& response) {
-    //     twitter::Tweet twt{response};
-    //     std::cout << twt.user_ptr->name;
-    //     std::cout << " (@" << twt.user_ptr->screen_name << ")" << std::endl;
-    //     std::cout << twt.created_at << std::endl;
-    //     std::cout << twt.text << '\n' << std::endl;
-    // });
+    auto const parameters = [&] {
+        auto p = twitter::Stream_parameters{};
+        for (auto i = 1; i < argc; ++i)
+            p.track.push_back(argv[i]);
+        return p;
+    }();
 
-    // should be:
-    // auto parameters = build_filtered_stream_parameters();
-    // parameters.app_credentials = {key, secret};
-    // parameters.account_credentials = {key, secret};
-    // bearer token?
-    // parameters.track.push_back(argv[1]);
-    // auto callbacks = Callbacks{{[](const auto& response) {
-    //     auto twt = twitter::Tweet{response};
-    //     std::cout << twt.user_ptr->name;
-    //     std::cout << " (@" << twt.user_ptr->screen_name << ")" << std::endl;
-    //     std::cout << twt.created_at << std::endl;
-    //     std::cout << twt.text << '\n' << std::endl;}
-    // }};
+    auto const show_tweet = [](auto const& response) {
+        auto const tweet = twitter::Tweet{response};
+        if (tweet.user_ptr != nullptr) {
+            std::cout << tweet.user_ptr->name;
+            std::cout << " (@" << tweet.user_ptr->screen_name << ")\n";
+        }
+        std::cout << tweet.created_at << '\n';
+        std::cout << tweet.text << "\n\n" << std::flush;
+    };
+
+    auto const request = build_filtered_stream_request(keys, parameters);
+
     try {
-        // auto const stream = launch_filtered_stream(parameters, callbacks);
-        // ^^ Creates and connects to filtered stream
-        // app.filtered_stream.open();
-        // twitter::Twitter_stream::wait();
+        auto const stream = network::Stream::launch(request, show_tweet);
+        network::wait();
     }
-    catch (const std::runtime_error& e) {
-        std::cout << e.what() << std::endl;
+    catch (std::runtime_error const& e) {
+        std::cerr << e.what() << '\n';
         return 1;
     }
 

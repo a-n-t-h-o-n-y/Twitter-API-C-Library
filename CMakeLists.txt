@@ -19,6 +19,7 @@ endif()
 
 # Subdirectories
 add_subdirectory(networklib)
+add_subdirectory(oauth)
 add_subdirectory(twitterlib)
 add_subdirectory(demos)
 add_subdirectory(tests)
@@ -26,8 +27,8 @@ add_subdirectory(tests)
 add_custom_target(twitterlib.all
     DEPENDS
         networklib
+        oauth
         twitterlib
         twitterlib.tests
         twitterlib.demos
 )
-

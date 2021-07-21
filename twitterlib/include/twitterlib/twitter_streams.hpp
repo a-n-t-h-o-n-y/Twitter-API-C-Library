@@ -6,8 +6,8 @@
 #include <utility>
 #include <vector>
 
-#include <networklib/oauth/credentials.hpp>
 #include <networklib/request.hpp>
+#include <oauth/credentials.hpp>
 #include <twitterlib/objects/coordinates.hpp>
 
 namespace twitter {
@@ -29,12 +29,12 @@ struct Stream_parameters {
 
 /// Build a Request for a Twitter Filtered Stream; for use with network::Stream.
 [[nodiscard]] auto build_filtered_stream_request(
-    network::Credentials const& keys,
+    oauth::Credentials const& keys,
     Stream_parameters parameters = {}) -> network::Request;
 
 /// Build a Request for a Twitter Sample Stream; for use with network::Stream.
 [[nodiscard]] auto build_sample_stream_request(
-    network::Credentials const& keys,
+    oauth::Credentials const& keys,
     Stream_parameters parameters = {}) -> network::Request;
 
 }  // namespace twitter

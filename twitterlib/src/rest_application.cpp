@@ -1,4 +1,4 @@
-#include <twitterlib/rest_api/rest_application.hpp>
+#include <twitterlib/rest/application.hpp>
 
 #include <string>
 

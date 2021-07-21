@@ -1,4 +1,4 @@
-#include <twitterlib/rest_api/rest_favorites.hpp>
+#include <twitterlib/rest/favorites.hpp>
 
 #include <cstdint>
 #include <sstream>
@@ -10,17 +10,17 @@
 
 #include <networklib/https_read.hpp>
 #include <networklib/https_write.hpp>
-#include <networklib/oauth/credentials.hpp>
-#include <networklib/oauth/oauth.hpp>
 #include <networklib/request.hpp>
 #include <networklib/response.hpp>
+#include <oauth/authorize.hpp>
+#include <oauth/credentials.hpp>
 #include <twitterlib/detail/to_string.hpp>
 #include <twitterlib/objects/tweet.hpp>
 #include <twitterlib/objects/user.hpp>
 
 namespace twitter {
 
-auto get_favorites(network::Credentials const& keys,
+auto get_favorites(oauth::Credentials const& keys,
                    std::string const& screen_name,
                    int count,
                    bool include_entities,

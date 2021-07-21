@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <exception>
 #include <iostream>
 
@@ -8,7 +9,7 @@ auto main() -> int
     // Get OAuth keys
     auto const keys = [] {
         try {
-            return network::read_credentials("keys");
+            return oauth::read_credentials("keys");
         }
         catch (std::invalid_argument const& e) {
             std::cerr << e.what() << '\n';
@@ -18,11 +19,14 @@ auto main() -> int
 
     // get_account_settings
     auto const settings = twitter::get_account_settings(keys);
-    // std::cout << settings << std::endl;
+    network::view_ptree(network::to_ptree(settings), std::cout);
+
+    auto const brk = "\n\n────────────────────────────────────────────────\n\n";
+    std::cout << brk;
 
     // verify_credentials
     auto const creds = twitter::verify_credentials(keys);
-    // std::cout << creds << std::endl;
+    network::view_ptree(network::to_ptree(creds), std::cout);
 
     return 0;
 }

@@ -1,8 +1,5 @@
 #include <networklib/https_read.hpp>
 
-#include <cstdlib>   //temp
-#include <iostream>  //temp
-
 #include <networklib/detail/gzip.hpp>
 #include <networklib/detail/headers.hpp>
 #include <networklib/detail/read_buffer.hpp>
@@ -12,13 +9,6 @@
 #include <networklib/socket.hpp>
 
 namespace network {
-
-// TODO
-// 5; put it all together to read entire string and parse into objects.
-//    splitting the byte string at the first \r\n and \r\n\r\n for status and
-//    headers and the rest Response.
-// 6; read_socket.cpp functions should take a Socket as parameter, maybe other
-//    function too.
 
 auto https_read(Socket socket) -> Response
 {
@@ -35,12 +25,12 @@ auto https_read(Socket socket) -> Response
 
     if (!content_length.empty()) {
         auto const length = std::stoi(content_length) - response.size();
-        response.append(detail::read_length(socket.get(), length, buffer));
+        response.append(detail::read_length(socket, buffer, length));
     }
     else if (get(headers, "transfer-encoding") == "chunked") {
         auto chunk = std::string{};
         do {
-            chunk = detail::read_chunk(socket.get(), buffer);
+            chunk = detail::read_chunk(socket, buffer);
             if (chunk != " ")
                 response.append(std::move(chunk));
         } while (!chunk.empty());

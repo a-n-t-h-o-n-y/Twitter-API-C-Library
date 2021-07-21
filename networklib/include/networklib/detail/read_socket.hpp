@@ -11,15 +11,13 @@ namespace network::detail {
 /// Read a single chunk from \p socket, using \p buffer.
 /** \p buffer is a parameter because boost::read_until is used and it can leave
  *  data in the buffer. */
-[[nodiscard]] auto read_chunk(Socket_stream& socket, Streambuf& buffer)
-    -> std::string;
+[[nodiscard]] auto read_chunk(Socket& socket, Streambuf& buffer) -> std::string;
 
 /// Read \p n bytes from \p socket, using \p buffer.
 /** Do not mix with read_chunk using the same buffer, it does not check for
  *  leftover bytes in the buffer before reading. */
-[[nodiscard]] auto read_length(Socket_stream& socket,
-                               std::size_t n,
-                               Streambuf& buffer) -> std::string;
+[[nodiscard]] auto read_length(Socket& socket, Streambuf& buffer, std::size_t n)
+    -> std::string;
 
 }  // namespace network::detail
 #endif  // NETWORKLIB_DETAIL_READ_SOCKET_HPP

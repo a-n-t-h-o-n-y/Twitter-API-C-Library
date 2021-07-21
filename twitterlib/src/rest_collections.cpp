@@ -1,18 +1,18 @@
-#include <twitterlib/rest_api/rest_collections.hpp>
+#include <twitterlib/rest/collections.hpp>
 
 #include <string>
 
 #include <networklib/https_read.hpp>
 #include <networklib/https_write.hpp>
-#include <networklib/oauth/credentials.hpp>
-#include <networklib/oauth/oauth.hpp>
 #include <networklib/request.hpp>
 #include <networklib/response.hpp>
+#include <oauth/authorize.hpp>
+#include <oauth/credentials.hpp>
 #include <twitterlib/detail/to_string.hpp>
 
 namespace twitter {
 
-auto get_collection(network::Credentials const& keys,
+auto get_collection(oauth::Credentials const& keys,
                     std::string const& id,
                     int count,
                     int max_position,
@@ -32,12 +32,12 @@ auto get_collection(network::Credentials const& keys,
     if (min_position != -1)
         r.queries.push_back({"min_position", detail::to_string(min_position)});
 
-    network::authorize(r, keys);
+    authorize(r, keys);
 
     return https_read(https_write(r));
 }
 
-auto find_collections(network::Credentials const& keys,
+auto find_collections(oauth::Credentials const& keys,
                       std::string const& screen_name,
                       std::int64_t /* user_id */,
                       std::int64_t /* tweet_id */,
@@ -62,15 +62,15 @@ auto find_collections(network::Credentials const& keys,
     return result;
 }
 
-auto get_collection_info(network::Credentials const& keys,
-                         std::string const& id) -> network::Response
+auto get_collection_info(oauth::Credentials const& keys, std::string const& id)
+    -> network::Response
 {
     auto r        = network::Request{};
     r.HTTP_method = "GET";
     r.URI         = "/1.1/collections/show.json";
     r.queries.push_back({"id", id});
 
-    network::authorize(r, keys);
+    authorize(r, keys);
     return https_read(https_write(r));
 }
 

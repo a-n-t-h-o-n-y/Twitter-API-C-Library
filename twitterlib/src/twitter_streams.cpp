@@ -6,10 +6,10 @@
 #include <utility>
 #include <vector>
 
-#include <networklib/oauth/oauth.hpp>
 #include <networklib/request.hpp>
 #include <networklib/response.hpp>
 #include <networklib/wait.hpp>
+#include <oauth/authorize.hpp>
 #include <twitterlib/objects/coordinates.hpp>
 
 namespace {
@@ -101,23 +101,23 @@ auto parameters_to_request(Stream_request_data const& params)
 
 namespace twitter {
 
-auto build_filtered_stream_request(network::Credentials const& keys,
+auto build_filtered_stream_request(oauth::Credentials const& keys,
                                    Stream_parameters parameters)
     -> network::Request
 {
     auto request = parameters_to_request(
         build_filtered_stream_parameters(std::move(parameters)));
-    network::authorize(request, keys);
+    authorize(request, keys);
     return request;
 }
 
-auto build_sample_stream_request(network::Credentials const& keys,
+auto build_sample_stream_request(oauth::Credentials const& keys,
                                  Stream_parameters parameters)
     -> network::Request
 {
     auto request = parameters_to_request(
         build_sample_stream_parameters(std::move(parameters)));
-    network::authorize(request, keys);
+    authorize(request, keys);
     return request;
 }
 

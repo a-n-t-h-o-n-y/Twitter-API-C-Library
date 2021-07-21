@@ -1,11 +1,11 @@
-#ifndef NETWORKLIB_OAUTH_READ_KEYS_HPP
-#define NETWORKLIB_OAUTH_READ_KEYS_HPP
+#ifndef OAUTH_READ_CREDENTIALS_HPP
+#define OAUTH_READ_CREDENTIALS_HPP
 #include <istream>
 #include <string>
 
-#include <networklib/oauth/credentials.hpp>
+#include <oauth/credentials.hpp>
 
-namespace network {
+namespace oauth {
 
 /// Read in OAuth Keys and Tokens from a file.
 /** Throws std::runtime_error if \p stream can't be read, or has bad contents.
@@ -27,5 +27,5 @@ namespace network {
  */
 [[nodiscard]] auto read_credentials(std::string const& filename) -> Credentials;
 
-}  // namespace network
-#endif  // NETWORKLIB_OAUTH_READ_KEYS_HPP
+}  // namespace oauth
+#endif  // OAUTH_READ_CREDENTIALS_HPP
