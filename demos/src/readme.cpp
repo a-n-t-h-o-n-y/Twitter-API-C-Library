@@ -34,7 +34,8 @@ auto main() -> int
 
     // Invoked each time the search stream receives data.
     auto const show_tweet = [](auto const& response) {
-        std::cout << Tweet{response}.text << "\n\n" << std::flush;
+        std::cout << parse_tweet(network::to_ptree(response)).text << "\n\n"
+                  << std::flush;
     };
 
     auto const request = build_filtered_stream_request(keys, parameters);

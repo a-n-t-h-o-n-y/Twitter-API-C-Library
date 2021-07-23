@@ -10,9 +10,7 @@
 #include <twitterlib/objects/entities.hpp>
 #include <twitterlib/objects/hashtag.hpp>
 #include <twitterlib/objects/media.hpp>
-#include <twitterlib/objects/objects_template.hpp>
 #include <twitterlib/objects/place.hpp>
-#include <twitterlib/objects/place_attributes.hpp>
 #include <twitterlib/objects/size.hpp>
 #include <twitterlib/objects/sizes.hpp>
 #include <twitterlib/objects/tweet.hpp>

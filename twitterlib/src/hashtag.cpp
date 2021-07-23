@@ -1,29 +1,28 @@
 #include <twitterlib/objects/hashtag.hpp>
 
-#include <sstream>
 #include <string>
 
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
+
+#include <twitterlib/objects/indices.hpp>
+#include <twitterlib/objects/utility.hpp>
 
 namespace twitter {
 
-Hashtag_data::operator std::string() const
+auto to_string(Hashtag const& hashtag) -> std::string
 {
-    std::stringstream ss;
-    ss << "text: " << text << "\nindices: " << indices[0] << ", " << indices[1];
-    return ss.str();
+    auto x = std::string{};
+    x.append("indices: ").append(to_string(hashtag.indices));
+    x.append("\ntext: ").append(hashtag.text);
+    return x;
 }
 
-void Hashtag_data::construct(const boost::property_tree::ptree& tree)
+auto parse_hashtag(boost::property_tree::ptree const& tree) -> Hashtag
 {
-    text = tree.get<std::string>("text", "");
-    auto indices_tree =
-        tree.get_child("indices", boost::property_tree::ptree());
-    int count{0};
-    for (auto& pair : indices_tree) {
-        indices[count++] = pair.second.get_value<int>(-1);
-    }
+    auto x    = Hashtag{};
+    x.indices = parse_indices(tree.get_child("indices", {}));
+    x.text    = tree.get<std::string>("text", {});
+    return x;
 }
 
 }  // namespace twitter

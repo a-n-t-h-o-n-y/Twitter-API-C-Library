@@ -1,37 +1,34 @@
 #include <twitterlib/objects/bounding_box.hpp>
 
-#include <array>
-#include <sstream>
 #include <string>
+
+#include <twitterlib/objects/utility.hpp>
 
 namespace twitter {
 
-Bounding_box_data::operator std::string() const
+auto to_string(Bounding_box const& bounding_box) -> std::string
 {
-    auto ss = std::ostringstream{};
-    for (auto const& coords : coordinates)
-        ss << "coordinates: " << coords[0] << ", " << coords[1] << '\n';
-
-    ss << "type: " << type;
-    return ss.str();
+    auto x = std::string{};
+    x.append("coordinates:\n");
+    for (auto const& coordinate : bounding_box.coordinates)
+        x.append(to_string(coordinate)).append(1, '\n');
+    x.append("type: ").append(bounding_box.type);
+    return x;
 }
 
-void Bounding_box_data::construct(boost::property_tree::ptree const& tree)
+auto parse_bounding_box(boost::property_tree::ptree const& tree) -> Bounding_box
 {
-    type = tree.get<std::string>("type", "");
-    auto const outer_tree =
-        tree.get_child("coordinates", boost::property_tree::ptree());
+    auto x = Bounding_box{};
 
-    if (outer_tree.empty())
-        return;
+    auto const bb = tree.get_child_optional("coordinates");
+    if (!bb.has_value())
+        return x;
 
-    auto const bounding_tree = outer_tree.front().second;
-    for (auto const& tree : bounding_tree) {
-        coordinates.push_back({0., 0.});
-        auto count = 0;
-        for (const auto& coord : tree.second)
-            coordinates.back()[count++] = coord.second.get_value<float>(-1.0);
-    }
+    auto const bounding_tree = bb->front().second;
+    for (auto const& tree : bounding_tree)
+        x.coordinates.push_back(parse_earth_coordinates(tree.second));
+    x.type = tree.get<std::string>("type", {});
+    return x;
 }
 
 }  // namespace twitter

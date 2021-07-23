@@ -1,7 +1,6 @@
 #ifndef TWITTERLIB_TWITTER_STREAM_HPP
 #define TWITTERLIB_TWITTER_STREAM_HPP
 #include <cstdint>
-#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
@@ -20,7 +19,7 @@ struct Stream_parameters {
     std::string delimited;
     bool stall_warnings{false};
     std::vector<std::string> track;
-    std::optional<std::pair<Coordinates, Coordinates>> locations;
+    std::vector<std::pair<Earth_coordinates, Earth_coordinates>> locations;
     std::string language;
     std::vector<Twitter_id> follow;
     std::string filter_level;

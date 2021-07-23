@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
 #include <networklib/https_read.hpp>
@@ -58,7 +57,7 @@ auto get_favorites(oauth::Credentials const& keys,
     tree        = tree.get_child("");
     auto result = std::vector<Tweet>{};
     for (auto const& pair : tree)
-        result.emplace_back(pair.second);
+        result.push_back(parse_tweet(pair.second));
 
     return result;
 }

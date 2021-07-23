@@ -28,11 +28,9 @@ auto main(int argc, char* argv[]) -> int
     }();
 
     auto const show_tweet = [](auto const& response) {
-        auto const tweet = twitter::Tweet{response};
-        if (tweet.user_ptr != nullptr) {
-            std::cout << tweet.user_ptr->name;
-            std::cout << " (@" << tweet.user_ptr->screen_name << ")\n";
-        }
+        auto const tweet = twitter::parse_tweet(network::to_ptree(response));
+        std::cout << tweet.user.name;
+        std::cout << " (@" << tweet.user.screen_name << ")\n";
         std::cout << tweet.created_at << '\n';
         std::cout << tweet.text << "\n\n" << std::flush;
     };

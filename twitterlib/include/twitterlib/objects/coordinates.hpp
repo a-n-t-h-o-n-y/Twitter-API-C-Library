@@ -1,28 +1,34 @@
 #ifndef TWITTERLIB_OBJECTS_COORDINATES_HPP
 #define TWITTERLIB_OBJECTS_COORDINATES_HPP
-#include <array>
 #include <string>
 
 #include <boost/property_tree/ptree_fwd.hpp>
 
-#include <twitterlib/objects/objects_template.hpp>
-
 namespace twitter {
 
-class Coordinates_data {
-   public:
-    float longitude = 0.;
-    float latitude  = 0.;
-    std::string type;
-
-   public:
-    [[nodiscard]] explicit operator std::string() const;
-
-   protected:
-    void construct(boost::property_tree::ptree const& tree);
+struct Earth_coordinates {
+    float longitude = 0.f;
+    float latitude  = 0.f;
 };
 
-using Coordinates = Objects_template<Coordinates_data>;
+/// Generates a string display of all data in \p ec.
+[[nodiscard]] auto to_string(Earth_coordinates const& ec) -> std::string;
+
+/// Create an Earth_coordinates struct from a property tree.
+[[nodiscard]] auto parse_earth_coordinates(
+    boost::property_tree::ptree const& tree) -> Earth_coordinates;
+
+struct Coordinates {
+    Earth_coordinates coordinates;
+    std::string type;
+};
+
+/// Generates a string display of all data in \p coordinates.
+[[nodiscard]] auto to_string(Coordinates const& coordinates) -> std::string;
+
+/// Create a Coordinates struct from a property tree.
+[[nodiscard]] auto parse_coordinates(boost::property_tree::ptree const& tree)
+    -> Coordinates;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_COORDINATES_HPP

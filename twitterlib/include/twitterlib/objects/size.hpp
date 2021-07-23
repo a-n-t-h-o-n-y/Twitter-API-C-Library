@@ -2,24 +2,21 @@
 #define TWITTERLIB_OBJECTS_SIZE_HPP
 #include <string>
 
-#include <boost/property_tree/ptree.hpp>
-
-#include <twitterlib/objects/objects_template.hpp>
+#include <boost/property_tree/ptree_fwd.hpp>
 
 namespace twitter {
 
-struct Size_data {
-    explicit operator std::string() const;
-
-    int height;
-    int width;
+struct Size {
+    int w;
+    int h;
     std::string resize;
-
-   protected:
-    void construct(const boost::property_tree::ptree& tree);
 };
 
-using Size = Objects_template<Size_data>;
+/// Generates a string display of all data in \p size.
+[[nodiscard]] auto to_string(Size const& size) -> std::string;
+
+/// Create a Size object from a property tree.
+[[nodiscard]] auto parse_size(boost::property_tree::ptree const& tree) -> Size;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_SIZE_HPP

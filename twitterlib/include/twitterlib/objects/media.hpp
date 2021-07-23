@@ -1,38 +1,35 @@
 #ifndef TWITTERLIB_OBJECTS_MEDIA_HPP
 #define TWITTERLIB_OBJECTS_MEDIA_HPP
-#include <array>
 #include <cstdint>
-#include <ostream>
+#include <optional>
 #include <string>
 
-#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ptree_fwd.hpp>
 
-#include <twitterlib/objects/objects_template.hpp>
+#include <twitterlib/objects/indices.hpp>
 #include <twitterlib/objects/sizes.hpp>
 
 namespace twitter {
 
-struct Media_data {
-    explicit operator std::string() const;
-
+struct Media {
     std::string display_url;
     std::string expanded_url;
     std::int64_t id;
-    std::string id_str;
-    std::array<int, 2> indices;
+    Indices indices;
     std::string media_url;
     std::string media_url_https;
     Sizes sizes;
-    std::int64_t source_status_id;
-    std::string source_status_id_str;
+    std::optional<std::int64_t> source_status_id;
     std::string type;
     std::string url;
-
-   protected:
-    void construct(const boost::property_tree::ptree& tree);
 };
 
-using Media = Objects_template<Media_data>;
+/// Generates a string display of all data in \p media.
+[[nodiscard]] auto to_string(Media const& media) -> std::string;
+
+/// Create a Media object from a property tree.
+[[nodiscard]] auto parse_media(boost::property_tree::ptree const& tree)
+    -> Media;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_MEDIA_HPP

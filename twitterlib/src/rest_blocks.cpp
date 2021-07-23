@@ -9,6 +9,7 @@
 #include <networklib/response.hpp>
 #include <oauth/authorize.hpp>
 #include <oauth/credentials.hpp>
+#include <twitterlib/objects/tweet.hpp>
 #include <twitterlib/objects/user.hpp>
 
 namespace twitter {
@@ -55,7 +56,7 @@ auto get_blocked_users(oauth::Credentials const& keys,
 
         auto const page = to_ptree(https_read(https_write(r)));
         for (auto const& user : page.get_child("users"))
-            result.emplace_back(user.second);
+            result.push_back(parse_user(user.second));
 
         cursor = get(page, "next_cursor");
     }

@@ -5,29 +5,26 @@
 #include <boost/property_tree/ptree_fwd.hpp>
 
 #include <twitterlib/objects/bounding_box.hpp>
-#include <twitterlib/objects/objects_template.hpp>
-#include <twitterlib/objects/place_attributes.hpp>
 
 namespace twitter {
 
-struct Place_data {
-    explicit operator std::string() const;
-
-    Place_attributes attributes;
-    Bounding_box bounding_box;
-    std::string country;
-    std::string country_code;
-    std::string full_name;
+struct Place {
     std::string id;
-    std::string name;
-    std::string place_type;
     std::string url;
-
-   protected:
-    void construct(const boost::property_tree::ptree& tree);
+    std::string place_type;
+    std::string name;
+    std::string full_name;
+    std::string country_code;
+    std::string country;
+    Bounding_box bounding_box;
 };
 
-using Place = Objects_template<Place_data>;
+/// Generates a string display of all data in \p place.
+[[nodiscard]] auto to_string(Place const& place) -> std::string;
+
+/// Create a Place from a property tree.
+[[nodiscard]] auto parse_place(boost::property_tree::ptree const& tree)
+    -> Place;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_PLACE_HPP

@@ -44,8 +44,7 @@ auto main(int argc, char* argv[]) -> int
         return 1;
     }
     for (auto const& tweet : tweets) {
-        if (tweet.user_ptr != nullptr)
-            std::cout << '@' << tweet.user_ptr->screen_name << '\n';
+        std::cout << '@' << tweet.user.screen_name << '\n';
         std::cout << tweet.text << '\n' << std::endl;
     }
 

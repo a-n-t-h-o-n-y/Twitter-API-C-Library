@@ -1,6 +1,5 @@
 #include <twitterlib/objects/sizes.hpp>
 
-#include <sstream>
 #include <string>
 
 #include <boost/property_tree/ptree.hpp>
@@ -9,22 +8,24 @@
 
 namespace twitter {
 
-Sizes_data::operator std::string() const
+auto to_string(Sizes const& sizes) -> std::string
 {
-    std::stringstream ss;
-    ss << "thumb:\n" << thumb;
-    ss << "\nlarge:\n" << large;
-    ss << "\nmedium:\n" << medium;
-    ss << "\nsmall:\n" << small;
-    return ss.str();
+    auto x = std::string{};
+    x.append("thumb:\n").append(to_string(sizes.thumb));
+    x.append("\nlarge:\n").append(to_string(sizes.large));
+    x.append("\nmedium:\n").append(to_string(sizes.medium));
+    x.append("\nsmall:\n").append(to_string(sizes.small));
+    return x;
 }
 
-void Sizes_data::construct(const boost::property_tree::ptree& tree)
+auto parse_sizes(boost::property_tree::ptree const& tree) -> Sizes
 {
-    thumb  = Size{tree.get_child("thumb", boost::property_tree::ptree())};
-    large  = Size{tree.get_child("large", boost::property_tree::ptree())};
-    medium = Size{tree.get_child("medium", boost::property_tree::ptree())};
-    small  = Size{tree.get_child("small", boost::property_tree::ptree())};
+    auto x   = Sizes{};
+    x.thumb  = parse_size(tree.get_child("thumb", {}));
+    x.large  = parse_size(tree.get_child("large", {}));
+    x.medium = parse_size(tree.get_child("medium", {}));
+    x.small  = parse_size(tree.get_child("small", {}));
+    return x;
 }
 
 }  // namespace twitter

@@ -1,37 +1,37 @@
 #include <twitterlib/objects/place.hpp>
 
-#include <sstream>
 #include <string>
 
 #include <boost/property_tree/ptree.hpp>
 
 namespace twitter {
 
-Place_data::operator std::string() const
+auto to_string(Place const& place) -> std::string
 {
-    std::stringstream ss;
-    ss << "attributes:\n"
-       << attributes << "\nbounding_box:\n"
-       << bounding_box << "\ncountry: " << country
-       << "\ncoutry_code: " << country_code << "\nfull_name: " << full_name
-       << "\nid: " << id << "\nname: " << name << "\nplace_type: " << place_type
-       << "\nurl: " << url;
-    return ss.str();
+    auto x = std::string{};
+    x.append("id: ").append(place.id);
+    x.append("\nurl: ").append(place.url);
+    x.append("\nplace_type: ").append(place.place_type);
+    x.append("\nname: ").append(place.name);
+    x.append("\nfull_name: ").append(place.full_name);
+    x.append("\ncountry_code: ").append(place.country_code);
+    x.append("\ncountry: ").append(place.country);
+    x.append("\nbounding_box:\n").append(to_string(place.bounding_box));
+    return x;
 }
 
-void Place_data::construct(const boost::property_tree::ptree& tree)
+auto parse_place(boost::property_tree::ptree const& tree) -> Place
 {
-    attributes = Place_attributes{
-        tree.get_child("attributes", boost::property_tree::ptree())};
-    bounding_box = Bounding_box{
-        tree.get_child("bounding_box", boost::property_tree::ptree())};
-    country      = tree.get<std::string>("country", "");
-    country_code = tree.get<std::string>("country_code", "");
-    full_name    = tree.get<std::string>("full_name", "");
-    id           = tree.get<std::string>("id", "");
-    name         = tree.get<std::string>("name", "");
-    place_type   = tree.get<std::string>("place_type", "");
-    url          = tree.get<std::string>("url", "");
+    auto x         = Place{};
+    x.id           = tree.get<std::string>("id", {});
+    x.url          = tree.get<std::string>("url", {});
+    x.place_type   = tree.get<std::string>("place_type", {});
+    x.name         = tree.get<std::string>("name", {});
+    x.full_name    = tree.get<std::string>("full_name", {});
+    x.country_code = tree.get<std::string>("country_code", {});
+    x.country      = tree.get<std::string>("country", {});
+    x.bounding_box = parse_bounding_box(tree.get_child("bounding_box", {}));
+    return x;
 }
 
 }  // namespace twitter

@@ -11,11 +11,12 @@ add_library(twitterlib STATIC
     src/media.cpp
     src/twitter_streams.cpp
     src/place.cpp
-    src/place_attributes.cpp
     src/size.cpp
     src/sizes.cpp
     src/tweet.cpp
     src/url.cpp
+    src/symbol.cpp
+    src/indices.cpp
     src/user.cpp
     src/user_mention.cpp
     src/rest_account.cpp

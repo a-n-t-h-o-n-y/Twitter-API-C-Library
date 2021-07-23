@@ -1,7 +1,6 @@
 #include <twitterlib/twitter_streams.hpp>
 
 #include <cstdint>
-#include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -11,6 +10,7 @@
 #include <networklib/wait.hpp>
 #include <oauth/authorize.hpp>
 #include <twitterlib/objects/coordinates.hpp>
+#include <twitterlib/objects/utility.hpp>
 
 namespace {
 using namespace twitter;
@@ -66,32 +66,36 @@ auto parameters_to_request(Stream_request_data const& params)
         {"stall_warnings", stream_params.stall_warnings ? "true" : "false"});
 
     if (!stream_params.track.empty()) {
-        auto ss    = std::ostringstream{};
-        auto comma = std::string{};
+        auto params = std::string{};
+        auto comma  = std::string{};
         for (auto const& str : stream_params.track) {
-            ss << comma << str;
+            params.append(comma).append(str);
             comma = ",";
         }
-        r.queries.push_back({"track", ss.str()});
+        r.queries.push_back({"track", std::move(params)});
     }
 
-    if (stream_params.locations.has_value()) {
-        auto ss = std::ostringstream{};
-        ss << stream_params.locations->first.longitude << ',';
-        ss << stream_params.locations->first.latitude << ',';
-        ss << stream_params.locations->second.longitude << ',';
-        ss << stream_params.locations->second.latitude;
-        r.queries.push_back({"locations", ss.str()});
+    {
+        auto list = std::string{};
+        for (auto const& location : stream_params.locations) {
+            list.append(to_string(location.first.longitude)).append(1, ',');
+            list.append(to_string(location.first.latitude)).append(1, ',');
+            list.append(to_string(location.second.longitude)).append(1, ',');
+            list.append(to_string(location.second.latitude)).append(1, ',');
+        }
+        if (!list.empty())
+            list.pop_back();
+        r.queries.push_back({"locations", list});
     }
 
     if (!stream_params.follow.empty()) {
-        auto ss    = std::ostringstream{};
-        auto comma = std::string{};
+        auto params = std::string{};
+        auto comma  = std::string{};
         for (auto const& id : stream_params.follow) {
-            ss << comma << id;
+            params.append(comma).append(to_string(id));
             comma = ",";
         }
-        r.queries.push_back({"follow", ss.str()});
+        r.queries.push_back({"follow", std::move(params)});
     }
 
     return r;

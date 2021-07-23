@@ -1,28 +1,26 @@
 #ifndef TWITTERLIB_OBJECTS_SIZES_HPP
 #define TWITTERLIB_OBJECTS_SIZES_HPP
-#include <ostream>
 #include <string>
 
-#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ptree_fwd.hpp>
 
-#include <twitterlib/objects/objects_template.hpp>
 #include <twitterlib/objects/size.hpp>
 
 namespace twitter {
 
-struct Sizes_data {
-    explicit operator std::string() const;
-
+struct Sizes {
     Size thumb;
     Size large;
     Size medium;
     Size small;
-
-   protected:
-    void construct(const boost::property_tree::ptree& tree);
 };
 
-using Sizes = Objects_template<Sizes_data>;
+/// Generates a string display of all data in \p sizes.
+[[nodiscard]] auto to_string(Sizes const& sizes) -> std::string;
+
+/// Create a Sizes object from a property tree.
+[[nodiscard]] auto parse_sizes(boost::property_tree::ptree const& tree)
+    -> Sizes;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_SIZES_HPP

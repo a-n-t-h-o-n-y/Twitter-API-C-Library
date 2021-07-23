@@ -1,26 +1,29 @@
 #include <twitterlib/objects/size.hpp>
 
-#include <sstream>
 #include <string>
 
 #include <boost/property_tree/ptree.hpp>
 
+#include <twitterlib/objects/utility.hpp>
+
 namespace twitter {
 
-Size_data::operator std::string() const
+auto to_string(Size const& size) -> std::string
 {
-    std::stringstream ss;
-    ss << "height: " << height;
-    ss << "\nwidth: " << width;
-    ss << "\nresize: " << resize;
-    return ss.str();
+    auto x = std::string{};
+    x.append("w: ").append(to_string(size.w));
+    x.append("\nh: ").append(to_string(size.h));
+    x.append("\nresize: ").append(size.resize);
+    return x;
 }
 
-void Size_data::construct(const boost::property_tree::ptree& tree)
+auto parse_size(boost::property_tree::ptree const& tree) -> Size
 {
-    height = tree.get<int>("h", -1);
-    width  = tree.get<int>("w", -1);
-    resize = tree.get<std::string>("resize", "");
+    auto x   = Size{};
+    x.w      = tree.get<int>("w", -1);
+    x.h      = tree.get<int>("h", -1);
+    x.resize = tree.get<std::string>("resize", {});
+    return x;
 }
 
 }  // namespace twitter

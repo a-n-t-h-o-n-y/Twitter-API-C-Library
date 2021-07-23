@@ -1,32 +1,32 @@
 #include <twitterlib/objects/url.hpp>
 
-#include <sstream>
 #include <string>
 
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
+
+#include <twitterlib/objects/indices.hpp>
+#include <twitterlib/objects/utility.hpp>
 
 namespace twitter {
 
-URL_data::operator std::string() const
+auto to_string(URL const& url) -> std::string
 {
-    std::stringstream ss;
-    ss << "display_url: " << display_url << "\nexpanded_url: " << expanded_url
-       << "\nurl: " << url << "\nindices: " << indices[0] << ", " << indices[1];
-    return ss.str();
+    auto x = std::string{};
+    x.append("display_url: ").append(url.display_url);
+    x.append("\nexpanded_url: ").append(url.expanded_url);
+    x.append("\nindices: ").append(to_string(url.indices));
+    x.append("\nurl: ").append(url.url);
+    return x;
 }
 
-void URL_data::construct(const boost::property_tree::ptree& tree)
+auto parse_url(boost::property_tree::ptree const& tree) -> URL
 {
-    display_url  = tree.get<std::string>("display_url", "");
-    expanded_url = tree.get<std::string>("expanded_url", "");
-    url          = tree.get<std::string>("url", "");
-    auto indices_tree =
-        tree.get_child("indices", boost::property_tree::ptree());
-    int count{0};
-    for (auto& pair : indices_tree) {
-        indices[count++] = pair.second.get_value<int>(-1);
-    }
+    auto x         = URL{};
+    x.display_url  = tree.get<std::string>("display_url", {});
+    x.expanded_url = tree.get<std::string>("expanded_url", {});
+    x.indices      = parse_indices(tree.get_child("indices", {}));
+    x.url          = tree.get<std::string>("url", {});
+    return x;
 }
 
 }  // namespace twitter

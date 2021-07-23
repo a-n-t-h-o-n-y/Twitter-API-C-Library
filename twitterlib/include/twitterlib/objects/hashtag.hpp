@@ -1,25 +1,24 @@
 #ifndef TWITTERLIB_OBJECTS_HASHTAG_HPP
 #define TWITTERLIB_OBJECTS_HASHTAG_HPP
-#include <array>
 #include <string>
 
-#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ptree_fwd.hpp>
 
-#include <twitterlib/objects/objects_template.hpp>
+#include <twitterlib/objects/indices.hpp>
 
 namespace twitter {
 
-struct Hashtag_data {
-    explicit operator std::string() const;
-
+struct Hashtag {
+    Indices indices;
     std::string text;
-    std::array<int, 2> indices;
-
-   protected:
-    void construct(const boost::property_tree::ptree& tree);
 };
 
-using Hashtag = Objects_template<Hashtag_data>;
+/// Generates a string display of all data in \p hashtag.
+[[nodiscard]] auto to_string(Hashtag const& hashtag) -> std::string;
+
+/// Create a Hashtag object from a property tree.
+[[nodiscard]] auto parse_hashtag(boost::property_tree::ptree const& tree)
+    -> Hashtag;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_HASHTAG_HPP

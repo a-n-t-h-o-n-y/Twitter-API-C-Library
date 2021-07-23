@@ -21,10 +21,10 @@ auto main() -> int
     auto const brk = "\n\n────────────────────────────────────────────────\n\n";
 
     // get_favorites
-    auto const favs = twitter::get_favorites(keys, "thesauruscom");
+    auto const favorites = twitter::get_favorites(keys, "thesauruscom");
 
-    for (auto const& twt : favs)
-        std::cout << twt.text << brk;
+    for (auto const& tweet : favorites)
+        std::cout << to_string(tweet) << brk;
     std::cout << std::flush;
 
     return 0;

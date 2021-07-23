@@ -1,49 +1,51 @@
 #include <twitterlib/objects/media.hpp>
 
 #include <cstdint>
-#include <sstream>
+#include <optional>
 #include <string>
 
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
+#include <twitterlib/objects/indices.hpp>
 #include <twitterlib/objects/sizes.hpp>
+#include <twitterlib/objects/utility.hpp>
 
 namespace twitter {
 
-Media_data::operator std::string() const
+auto to_string(Media const& media) -> std::string
 {
-    std::stringstream ss;
-    ss << "display_url: " << display_url << "\nexpanded_url: " << expanded_url
-       << "\nid: " << id << "\nid_str: " << id_str
-       << "\nindices: " << indices[0] << ", " << indices[1]
-       << "\nmedia_url: " << media_url
-       << "\nmedia_url_https: " << media_url_https << "\nsizes:\n"
-       << sizes << "\nsource_status_id: " << source_status_id
-       << "\nsource_status_id_str: " << source_status_id_str
-       << "\ntype: " << type << "\nurl: " << url;
-    return ss.str();
+    auto x = std::string{};
+    x.append("display_url: ").append(media.display_url);
+    x.append("\nexpanded_url: ").append(media.expanded_url);
+    x.append("\nid: ").append(to_string(media.id));
+    x.append("\nindices: ").append(to_string(media.indices));
+    x.append("\nmedia_url: ").append(media.media_url);
+    x.append("\nmedia_url_https: ").append(media.media_url_https);
+    x.append("\nSizes:\n").append(to_string(media.sizes));
+    if (media.source_status_id.has_value()) {
+        x.append("\nsource_status_id: ")
+            .append(to_string(media.source_status_id.value()));
+    }
+    x.append("\ntype: ").append(media.type);
+    x.append("\nurl: ").append(media.url);
+    return x;
 }
 
-void Media_data::construct(const boost::property_tree::ptree& tree)
+auto parse_media(boost::property_tree::ptree const& tree) -> Media
 {
-    display_url  = tree.get<std::string>("display_url", "");
-    expanded_url = tree.get<std::string>("expanded_url", "");
-    id           = tree.get<std::int64_t>("id", -1);
-    id_str       = tree.get<std::string>("id_str", "");
-    auto indices_tree =
-        tree.get_child("indices", boost::property_tree::ptree());
-    int count{0};
-    for (auto& pair : indices_tree) {
-        indices[count++] = pair.second.get_value<int>(-1);
-    }
-    media_url       = tree.get<std::string>("media_url", "");
-    media_url_https = tree.get<std::string>("media_url_https", "");
-    sizes = Sizes{tree.get_child("sizes", boost::property_tree::ptree())};
-    source_status_id     = tree.get<std::int64_t>("source_status_id", -1);
-    source_status_id_str = tree.get<std::string>("source_status_id_str", "");
-    type                 = tree.get<std::string>("type", "");
-    url                  = tree.get<std::string>("url", "");
+    auto x            = Media{};
+    x.display_url     = tree.get<std::string>("display_url", {});
+    x.expanded_url    = tree.get<std::string>("expanded_url", {});
+    x.id              = tree.get<std::int64_t>("id", -1);
+    x.indices         = parse_indices(tree.get_child("indices", {}));
+    x.media_url       = tree.get<std::string>("media_url", {});
+    x.media_url_https = tree.get<std::string>("media_url_https", {});
+    x.sizes           = parse_sizes(tree.get_child("sizes", {}));
+    x.source_status_id =
+        to_std(tree.get_optional<std::int64_t>("source_status_id"));
+    x.type = tree.get<std::string>("type", {});
+    x.url  = tree.get<std::string>("url", {});
+    return x;
 }
 
 }  // namespace twitter

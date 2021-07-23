@@ -1,27 +1,25 @@
 #ifndef TWITTERLIB_OBJECTS_URL_HPP
 #define TWITTERLIB_OBJECTS_URL_HPP
-#include <array>
 #include <string>
 
-#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ptree_fwd.hpp>
 
-#include <twitterlib/objects/objects_template.hpp>
+#include <twitterlib/objects/indices.hpp>
 
 namespace twitter {
 
-struct URL_data {
-    explicit operator std::string() const;
-
+struct URL {
     std::string display_url;
     std::string expanded_url;
+    Indices indices;
     std::string url;
-    std::array<int, 2> indices;
-
-   protected:
-    void construct(const boost::property_tree::ptree& tree);
 };
 
-using URL = Objects_template<URL_data>;
+/// Generates a string display of all data in \p url.
+[[nodiscard]] auto to_string(URL const& url) -> std::string;
+
+/// Create a URL object from a property tree.
+[[nodiscard]] auto parse_url(boost::property_tree::ptree const& tree) -> URL;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_URL_HPP
