@@ -19,6 +19,7 @@ add_library(twitterlib STATIC
     src/indices.cpp
     src/user.cpp
     src/user_mention.cpp
+    src/utility.cpp
     src/rest_account.cpp
     src/rest_favorites.cpp
     src/rest_statuses.cpp

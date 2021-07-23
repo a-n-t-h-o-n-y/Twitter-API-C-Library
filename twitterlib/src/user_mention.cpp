@@ -15,8 +15,8 @@ auto to_string(User_mention const& user_mention) -> std::string
     auto x = std::string{};
     x.append("id: ").append(to_string(user_mention.id));
     x.append("\nindicies: ").append(to_string(user_mention.indices));
-    x.append("\nname").append(user_mention.name);
-    x.append("\nscreen_name").append(user_mention.screen_name);
+    x.append("\nname: ").append(user_mention.name);
+    x.append("\nscreen_name: ").append(user_mention.screen_name);
     return x;
 }
 

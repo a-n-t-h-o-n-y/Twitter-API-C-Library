@@ -40,7 +40,8 @@ template <typename T>
 }
 
 inline constexpr auto line =
-    "\n────────────────────────────────────────────────";
+    "\n────────────────────────────────────────────────────────────────────────"
+    "────────";
 
 template <typename T>
 [[nodiscard]] auto as_vector(boost::property_tree::ptree const& array)
@@ -62,6 +63,10 @@ template <typename T, typename Fn>
         result.push_back(parse(item.second));
     return result;
 }
+
+/// Adds 4 spaces after each newline, and at beginning of string.
+/** Returns a copy. */
+[[nodiscard]] auto add_indention_level(std::string const& x) -> std::string;
 
 }  // namespace twitter
 #endif  // TWITTERLIB_OBJECTS_UTILITY_HPP

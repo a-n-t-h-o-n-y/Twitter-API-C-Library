@@ -37,9 +37,9 @@ auto to_string(User const& user) -> std::string
     x.append("\ndefault_profile_image: ")
         .append(to_string(user.default_profile_image));
 
-    x.append("\nwithheld_in_countries: [\n");
+    x.append("\nwithheld_in_countries: [");
     for (auto const& country : user.withheld_in_countries)
-        x.append(country).append(",\n");
+        x.append(1, '\n').append(add_indention_level(country)).append(1, ',');
     x.append("]");
 
     x.append("\nwithheld_scope: ").append(user.withheld_scope);

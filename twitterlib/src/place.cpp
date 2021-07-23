@@ -4,6 +4,8 @@
 
 #include <boost/property_tree/ptree.hpp>
 
+#include <twitterlib/objects/utility.hpp>
+
 namespace twitter {
 
 auto to_string(Place const& place) -> std::string
@@ -16,7 +18,8 @@ auto to_string(Place const& place) -> std::string
     x.append("\nfull_name: ").append(place.full_name);
     x.append("\ncountry_code: ").append(place.country_code);
     x.append("\ncountry: ").append(place.country);
-    x.append("\nbounding_box:\n").append(to_string(place.bounding_box));
+    x.append("\nbounding_box:\n")
+        .append(add_indention_level(to_string(place.bounding_box)));
     return x;
 }
 

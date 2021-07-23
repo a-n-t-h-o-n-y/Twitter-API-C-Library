@@ -35,16 +35,14 @@ auto to_string(Tweet const& tweet) -> std::string
         x.append("\nin_reply_to_screen_name: ");
         x.append(tweet.in_reply_to_screen_name.value());
     }
-    x.append(line);
-    x.append("\nuser:\n").append(to_string(tweet.user));
-    x.append(line);
+    x.append("\nuser:\n").append(add_indention_level(to_string(tweet.user)));
     if (tweet.coordinates.has_value()) {
         x.append("\ncoordinates:\n");
-        x.append(to_string(tweet.coordinates.value()));
+        x.append(add_indention_level(to_string(tweet.coordinates.value())));
     }
     if (tweet.place.has_value()) {
         x.append("\nplace:\n");
-        x.append(to_string(tweet.place.value()));
+        x.append(add_indention_level(to_string(tweet.place.value())));
     }
     if (tweet.quoted_status_id.has_value()) {
         x.append("\nquoted_status_id: ");
@@ -52,21 +50,18 @@ auto to_string(Tweet const& tweet) -> std::string
     }
     x.append("\nis_quote_status: ").append(to_string(tweet.is_quote_status));
     if (tweet.quoted_status != nullptr) {
-        x.append(line);
         x.append("\nquoted_status: ");
-        x.append(to_string(*tweet.quoted_status));
-        x.append(line);
+        x.append(add_indention_level(to_string(*tweet.quoted_status)));
     }
     if (tweet.retweeted_status != nullptr) {
-        x.append(line);
         x.append("\nretweeted_status: ");
-        x.append(to_string(*tweet.retweeted_status));
-        x.append(line);
+        x.append(add_indention_level(to_string(*tweet.retweeted_status)));
     }
     x.append("\nretweet_count: ").append(to_string(tweet.retweet_count));
     x.append("\nfavorite_count: ").append(to_string(tweet.favorite_count));
 
-    x.append("\nentities:\n").append(to_string(tweet.entities));
+    x.append("\nentities:\n")
+        .append(add_indention_level(to_string(tweet.entities)));
 
     if (tweet.favorited.has_value())
         x.append("\nfavorited: ").append(to_string(tweet.favorited.value()));
@@ -86,9 +81,9 @@ auto to_string(Tweet const& tweet) -> std::string
     x.append("\nwithheld_copyright: ")
         .append(to_string(tweet.withheld_copyright));
 
-    x.append("\nwithheld_in_countries: [\n");
+    x.append("\nwithheld_in_countries: [");
     for (auto const& country : tweet.withheld_in_countries)
-        x.append(country).append(",\n");
+        x.append(1, '\n').append(add_indention_level(country)).append(1, ',');
     x.append("]");
 
     x.append("\nwithheld_scope: ").append(tweet.withheld_scope);
@@ -115,13 +110,21 @@ auto parse_tweet(boost::property_tree::ptree const& tree) -> Tweet
 
     {
         auto const coords = tree.get_child_optional("coordinates");
-        if (coords.has_value())
+        if (coords.has_value()) {
             x.coordinates = parse_coordinates(coords.value());
+            // Above optional can still produces empty Coordinates
+            if (x.coordinates->type.empty())
+                x.coordinates = std::nullopt;
+        }
     }
     {
         auto const place = tree.get_child_optional("place");
-        if (place.has_value())
+        if (place.has_value()) {
             x.place = parse_place(place.value());
+            // Above optional can still produces empty Place.
+            if (x.place->id.empty())
+                x.place = std::nullopt;
+        }
     }
     x.quoted_status_id =
         to_std(tree.get_optional<std::int64_t>("quoted_status_id"));

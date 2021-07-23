@@ -18,25 +18,25 @@ auto to_string(Entities const& entities) -> std::string
     auto x = std::string{};
     x.append("hashtags:\n");
     for (auto const& hashtag : entities.hashtags)
-        x.append(to_string(hashtag)).append(1, '\n');
+        x.append(add_indention_level(to_string(hashtag)).append(1, '\n'));
 
-    // TODO
     x.append("media:\n");
     for (auto const& m : entities.media)
-        x.append(to_string(m)).append(1, '\n');
+        x.append(add_indention_level(to_string(m)).append(1, '\n'));
 
     x.append("urls:\n");
     for (auto const& url : entities.urls)
-        x.append(to_string(url)).append(1, '\n');
+        x.append(add_indention_level(to_string(url)).append(1, '\n'));
 
     x.append("user_mentions:\n");
     for (auto const& mention : entities.user_mentions)
-        x.append(to_string(mention)).append(1, '\n');
+        x.append(add_indention_level(to_string(mention)).append(1, '\n'));
 
     x.append("symbols:\n");
     for (auto const& symbol : entities.symbols)
-        x.append(to_string(symbol)).append(1, '\n');
+        x.append(add_indention_level(to_string(symbol)).append(1, '\n'));
 
+    x.pop_back();  // '\n'
     return x;
 }
 

@@ -19,7 +19,7 @@ auto main() -> int
 
     auto const show_tweet = [](auto const& response) {
         auto const tweet = twitter::parse_tweet(network::to_ptree(response));
-        std::cout << to_string(tweet) << "\n\n" << std::flush;
+        std::cout << to_string(tweet) << twitter::line << "\n" << std::flush;
     };
 
     try {

@@ -21,7 +21,7 @@ auto to_string(Media const& media) -> std::string
     x.append("\nindices: ").append(to_string(media.indices));
     x.append("\nmedia_url: ").append(media.media_url);
     x.append("\nmedia_url_https: ").append(media.media_url_https);
-    x.append("\nSizes:\n").append(to_string(media.sizes));
+    x.append("\nSizes:\n").append(add_indention_level(to_string(media.sizes)));
     if (media.source_status_id.has_value()) {
         x.append("\nsource_status_id: ")
             .append(to_string(media.source_status_id.value()));

@@ -5,16 +5,18 @@
 #include <boost/property_tree/ptree.hpp>
 
 #include <twitterlib/objects/size.hpp>
+#include <twitterlib/objects/utility.hpp>
 
 namespace twitter {
 
 auto to_string(Sizes const& sizes) -> std::string
 {
     auto x = std::string{};
-    x.append("thumb:\n").append(to_string(sizes.thumb));
-    x.append("\nlarge:\n").append(to_string(sizes.large));
-    x.append("\nmedium:\n").append(to_string(sizes.medium));
-    x.append("\nsmall:\n").append(to_string(sizes.small));
+    x.append("thumb:\n").append(add_indention_level(to_string(sizes.thumb)));
+    x.append("\nlarge:\n").append(add_indention_level(to_string(sizes.large)));
+    x.append("\nmedium:\n")
+        .append(add_indention_level(to_string(sizes.medium)));
+    x.append("\nsmall:\n").append(add_indention_level(to_string(sizes.small)));
     return x;
 }
 

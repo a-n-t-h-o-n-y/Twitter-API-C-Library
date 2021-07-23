@@ -11,7 +11,7 @@ auto to_string(Bounding_box const& bounding_box) -> std::string
     auto x = std::string{};
     x.append("coordinates:\n");
     for (auto const& coordinate : bounding_box.coordinates)
-        x.append(to_string(coordinate)).append(1, '\n');
+        x.append(add_indention_level(to_string(coordinate)).append(1, '\n'));
     x.append("type: ").append(bounding_box.type);
     return x;
 }
