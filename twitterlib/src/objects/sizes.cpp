@@ -4,8 +4,8 @@
 
 #include <boost/property_tree/ptree.hpp>
 
+#include <twitterlib/detail/utility.hpp>
 #include <twitterlib/objects/size.hpp>
-#include <twitterlib/objects/utility.hpp>
 
 namespace twitter {
 

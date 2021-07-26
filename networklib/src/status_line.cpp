@@ -13,14 +13,16 @@
 
 namespace network::detail {
 
-void check_status(Status_line const& status)
+void check_status(Status_line const& x)
 {
-    if (status.status_code != "200") {
+    auto const is_valid = x.status_code == "200" || x.status_code == "201" ||
+                          x.status_code == "202";
+    if (!is_valid) {
         auto ss = std::ostringstream{};
         ss << "HTTP error. Reason: ";
-        ss << status.reason_phrase;
+        ss << x.reason_phrase;
         ss << ". Status Code: ";
-        ss << status.status_code;
+        ss << x.status_code;
         throw std::runtime_error(ss.str());
     }
 }

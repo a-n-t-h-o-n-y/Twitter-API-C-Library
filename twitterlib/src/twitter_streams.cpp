@@ -9,8 +9,8 @@
 #include <networklib/response.hpp>
 #include <networklib/wait.hpp>
 #include <oauth/authorize.hpp>
+#include <twitterlib/detail/utility.hpp>
 #include <twitterlib/objects/coordinates.hpp>
-#include <twitterlib/objects/utility.hpp>
 
 namespace {
 using namespace twitter;

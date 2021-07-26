@@ -12,7 +12,7 @@ auto main() -> int
 
     // REST API
     // Returns JSON response from twitter.
-    std::cout << get_account_settings(keys) << std::endl;
+    std::cout << get_account_settings_JSON(keys) << std::endl;
 
     // Update account's status.
     update_status(keys, "Hello, Twitter!");

@@ -7,11 +7,11 @@
 #include <boost/optional.hpp>
 #include <boost/property_tree/ptree.hpp>
 
+#include <twitterlib/detail/utility.hpp>
 #include <twitterlib/objects/coordinates.hpp>
 #include <twitterlib/objects/entities.hpp>
 #include <twitterlib/objects/place.hpp>
 #include <twitterlib/objects/user.hpp>
-#include <twitterlib/objects/utility.hpp>
 
 namespace twitter {
 

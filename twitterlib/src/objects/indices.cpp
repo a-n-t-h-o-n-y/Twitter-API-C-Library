@@ -2,7 +2,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-#include <twitterlib/objects/utility.hpp>
+#include <twitterlib/detail/utility.hpp>
 
 namespace twitter {
 

@@ -1,4 +1,4 @@
-#include <twitterlib/objects/utility.hpp>
+#include <twitterlib/detail/utility.hpp>
 
 #include <string>
 

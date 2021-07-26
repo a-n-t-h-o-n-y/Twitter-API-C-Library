@@ -8,7 +8,7 @@
 #include <networklib/response.hpp>
 #include <oauth/authorize.hpp>
 #include <oauth/credentials.hpp>
-#include <twitterlib/detail/to_string.hpp>
+#include <twitterlib/detail/utility.hpp>
 
 namespace twitter {
 
@@ -24,13 +24,13 @@ auto get_collection(oauth::Credentials const& keys,
     r.queries.push_back({"id", id});
 
     if (count != -1)
-        r.queries.push_back({"count", detail::to_string(count)});
+        r.queries.push_back({"count", to_string(count)});
 
     if (max_position != -1)
-        r.queries.push_back({"max_position", detail::to_string(max_position)});
+        r.queries.push_back({"max_position", to_string(max_position)});
 
     if (min_position != -1)
-        r.queries.push_back({"min_position", detail::to_string(min_position)});
+        r.queries.push_back({"min_position", to_string(min_position)});
 
     authorize(r, keys);
 

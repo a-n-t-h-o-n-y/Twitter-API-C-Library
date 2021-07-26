@@ -1,11 +1,13 @@
-#ifndef TWITTERLIB_OBJECTS_UTILITY_HPP
-#define TWITTERLIB_OBJECTS_UTILITY_HPP
+#ifndef TWITTERLIB_DETAIL_UTILITY_HPP
+#define TWITTERLIB_DETAIL_UTILITY_HPP
 #include <cstdint>
 #include <optional>
 #include <string>
 #include <vector>
 
 #include <boost/property_tree/ptree.hpp>
+
+#include <twitterlib/detail/types.hpp>
 
 namespace twitter {
 
@@ -28,6 +30,21 @@ namespace twitter {
 [[nodiscard]] inline auto to_string(float x) -> std::string
 {
     return std::to_string(x);
+}
+
+[[nodiscard]] inline auto to_string(Sleep_time x) -> std::string
+{
+    return (x == Sleep_time::Enabled) ? "true" : "false";
+}
+
+[[nodiscard]] inline auto to_string(Hour x) -> std::string
+{
+    return std::to_string(x.time_of_day);
+}
+
+[[nodiscard]] inline auto to_string(Hex_color x) -> std::string
+{
+    return x.color;
 }
 
 template <typename T>
@@ -69,4 +86,4 @@ template <typename T, typename Fn>
 [[nodiscard]] auto add_indention_level(std::string const& x) -> std::string;
 
 }  // namespace twitter
-#endif  // TWITTERLIB_OBJECTS_UTILITY_HPP
+#endif  // TWITTERLIB_DETAIL_UTILITY_HPP

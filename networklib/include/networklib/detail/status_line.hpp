@@ -15,8 +15,8 @@ struct Status_line {
     std::string reason_phrase;
 };
 
-/// Throws std::runtime_error exception if HTTP resonse is not 200.
-void check_status(Status_line const& status);
+/// Throws std::runtime_error exception if HTTP resonse is not 200, 201, or 202.
+void check_status(Status_line const& x);
 
 /// Read all HTTP status line bytes from \p socket using \p buffer.
 /** buffer is needed as parameter because this uses boost::read_until, which

@@ -22,14 +22,13 @@ auto main() -> int
         twitter::get_collection(keys, "custom-539487832448843776");
     network::view_ptree(network::to_ptree(collection_data), std::cout);
 
-    auto const brk = "\n\n────────────────────────────────────────────────\n\n";
-    std::cout << brk;
+    std::cout << twitter::line << "\n\n";
 
     // find_collections
     auto const collection_ids = twitter::find_collections(keys, "BarackObama");
     network::view_ptree(network::to_ptree(collection_ids), std::cout);
 
-    std::cout << brk;
+    std::cout << twitter::line << "\n\n";
 
     // get_collection_info
     auto const collection_info =

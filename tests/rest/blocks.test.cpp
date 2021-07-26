@@ -23,8 +23,7 @@ auto main() -> int
     for (auto const id : ids)
         std::cout << id << '\n';
 
-    auto const brk = "\n\n────────────────────────────────────────────────\n\n";
-    std::cout << brk;
+    std::cout << twitter::line << "\n\n";
 
     // get_blocked_users
     auto const users = twitter::get_blocked_users(keys);

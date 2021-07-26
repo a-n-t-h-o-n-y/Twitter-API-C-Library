@@ -4,12 +4,12 @@
 
 #include <boost/property_tree/ptree.hpp>
 
+#include <twitterlib/detail/utility.hpp>
 #include <twitterlib/objects/hashtag.hpp>
 #include <twitterlib/objects/media.hpp>
 #include <twitterlib/objects/symbol.hpp>
 #include <twitterlib/objects/url.hpp>
 #include <twitterlib/objects/user_mention.hpp>
-#include <twitterlib/objects/utility.hpp>
 
 namespace twitter {
 

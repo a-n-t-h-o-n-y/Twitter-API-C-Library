@@ -21,7 +21,7 @@ int main()
 
     // REST API
     // Returns JSON response from twitter.
-    std::cout << get_account_settings(keys) << std::endl;
+    std::cout << get_account_settings_json(keys) << std::endl;
 
     // Update account's status.
     update_status(keys, "Hello, Twitter!");
