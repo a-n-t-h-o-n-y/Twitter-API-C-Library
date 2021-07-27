@@ -36,13 +36,13 @@ auto get_bearer_token(std::string_view consumer_key,
 
     auto const message =
         network::to_ptree(https_read(https_write(bearer_request)));
-    auto const token_type = network::get(message, "token_type");
+    auto const token_type = message.get<std::string>("token_type", "");
     if (token_type != "bearer")
         throw std::runtime_error("Invalid bearer token type");
 
     // app.set_bearer_token(get(message, "access_token"));
 
-    return network::get(message, "access_token");
+    return message.get<std::string>("access_token", "");
 }
 
 }  // namespace oauth

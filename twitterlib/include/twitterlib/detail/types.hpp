@@ -27,9 +27,7 @@ class Hour {
 /// Hex color value, can be either 3 or 6 characters long.
 class Hex_color {
    public:
-    explicit Hex_color(std::string const& hex_value)
-        : color{validate(hex_value)}
-    {}
+    Hex_color(std::string const& hex_value) : color{validate(hex_value)} {}
 
    public:
     std::string color;
@@ -41,6 +39,22 @@ class Hex_color {
         if (c.size() == 3 || c.size() == 6)
             return c;
         throw std::invalid_argument{"Hex_color must be 3 or 5 chars long."};
+    }
+};
+
+class Count {
+   public:
+    Count(int x) : count{validate(x)} {}
+
+   public:
+    int count;
+
+   private:
+    [[nodiscard]] static auto validate(int x) -> int
+    {
+        if (x <= 200 && x > 0)
+            return x;
+        throw std::invalid_argument{"Count must be in the range (0, 200]"};
     }
 };
 

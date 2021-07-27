@@ -19,7 +19,7 @@ auto main() -> int
     }();
 
     // get_favorites
-    auto const favorites = twitter::get_favorites(keys, "thesauruscom");
+    auto const favorites = twitter::get_favorites(keys, {"thesauruscom"});
 
     for (auto const& tweet : favorites)
         std::cout << to_string(tweet) << twitter::line << '\n';

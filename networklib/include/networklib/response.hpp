@@ -12,9 +12,5 @@ using Response = std::string;
 [[nodiscard]] auto to_ptree(Response const& json)
     -> boost::property_tree::ptree;
 
-/// Returns the value associated with \p key from \p tree.
-[[nodiscard]] auto get(boost::property_tree::ptree const& tree,
-                       std::string const& key) -> std::string;
-
 }  // namespace network
 #endif  // NETWORKLIB_RESPONSE_HPP

@@ -17,10 +17,4 @@ auto to_ptree(Response const& json) -> boost::property_tree::ptree
     return tree;
 }
 
-auto get(boost::property_tree::ptree const& tree, std::string const& key)
-    -> std::string
-{
-    return tree.get<std::string>(key, "");
-}
-
 }  // namespace network

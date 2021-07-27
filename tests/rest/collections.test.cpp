@@ -18,22 +18,23 @@ auto main() -> int
     }();
 
     // get_collection
-    auto const collection_data =
-        twitter::get_collection(keys, "custom-539487832448843776");
-    network::view_ptree(network::to_ptree(collection_data), std::cout);
+    // auto const collection_data =
+    //     twitter::get_collection(keys, "custom-539487832448843776");
+    // network::view_ptree(network::to_ptree(collection_data), std::cout);
 
-    std::cout << twitter::line << "\n\n";
+    // std::cout << twitter::line << "\n\n";
 
     // find_collections
-    auto const collection_ids = twitter::find_collections(keys, "BarackObama");
-    network::view_ptree(network::to_ptree(collection_ids), std::cout);
+    auto const collection_ids =
+        twitter::find_collections(keys, {"BarackObama"});
+    // network::view_ptree(network::to_ptree(collection_ids), std::cout);
 
-    std::cout << twitter::line << "\n\n";
+    // std::cout << twitter::line << "\n\n";
 
-    // get_collection_info
-    auto const collection_info =
-        twitter::get_collection_info(keys, "custom-539487832448843776");
-    network::view_ptree(network::to_ptree(collection_info), std::cout);
+    // // get_collection_info
+    // auto const collection_info =
+    //     twitter::get_collection_info(keys, "custom-539487832448843776");
+    // network::view_ptree(network::to_ptree(collection_info), std::cout);
 
     return 0;
 }

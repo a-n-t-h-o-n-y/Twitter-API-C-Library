@@ -9,19 +9,19 @@ find_package(Threads REQUIRED)
 
 add_library(networklib STATIC
     src/encode.cpp
+    src/gzip.cpp
     src/headers.cpp
-    src/response.cpp
     src/https_read.cpp
     src/https_write.cpp
-    src/gzip.cpp
     src/read_buffer.cpp
     src/read_socket.cpp
-    src/socket.cpp
-    src/wait.cpp
     src/request.cpp
+    src/response.cpp
+    src/socket.cpp
     src/status_line.cpp
     src/stream.cpp
     src/view_ptree.cpp
+    src/wait.cpp
 )
 
 target_include_directories(networklib

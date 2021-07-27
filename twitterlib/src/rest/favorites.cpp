@@ -1,6 +1,7 @@
 #include <twitterlib/rest/favorites.hpp>
 
 #include <cstdint>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -13,6 +14,7 @@
 #include <networklib/response.hpp>
 #include <oauth/authorize.hpp>
 #include <oauth/credentials.hpp>
+#include <twitterlib/detail/types.hpp>
 #include <twitterlib/detail/utility.hpp>
 #include <twitterlib/objects/tweet.hpp>
 #include <twitterlib/objects/user.hpp>
@@ -20,12 +22,7 @@
 namespace twitter {
 
 auto get_favorites(oauth::Credentials const& keys,
-                   std::string const& screen_name,
-                   int count,
-                   bool include_entities,
-                   std::int64_t user_id,
-                   std::int64_t since_id,
-                   std::int64_t max_id) -> std::vector<Tweet>
+                   Get_favorites_parameters const& p) -> std::vector<Tweet>
 {
     using namespace network;
 
@@ -33,22 +30,25 @@ auto get_favorites(oauth::Credentials const& keys,
     r.HTTP_method = "GET";
     r.URI         = "/1.1/favorites/list.json";
 
-    if (!screen_name.empty())
-        r.queries.push_back({"screen_name", screen_name});
+    if (p.screen_name.has_value())
+        r.queries.push_back({"screen_name", p.screen_name.value()});
 
-    if (count != -1)
-        r.queries.push_back({"count", to_string(count)});
+    if (p.user_id.has_value())
+        r.queries.push_back({"user_id", to_string(p.user_id.value())});
 
-    r.queries.push_back({"include_entities", to_string(include_entities)});
+    if (p.count.has_value())
+        r.queries.push_back({"count", to_string(p.count.value())});
 
-    if (user_id != -1)
-        r.queries.push_back({"user_id", to_string(user_id)});
+    if (p.since_id.has_value())
+        r.queries.push_back({"since_id", to_string(p.since_id.value())});
 
-    if (since_id != -1)
-        r.queries.push_back({"since_id", to_string(since_id)});
+    if (p.max_id.has_value())
+        r.queries.push_back({"max_id", to_string(p.max_id.value())});
 
-    if (max_id != -1)
-        r.queries.push_back({"max_id", to_string(max_id)});
+    if (p.include_entities.has_value()) {
+        r.queries.push_back(
+            {"include_entities", to_string(p.include_entities.value())});
+    }
 
     // Parse Tweet Array
     authorize(r, keys);

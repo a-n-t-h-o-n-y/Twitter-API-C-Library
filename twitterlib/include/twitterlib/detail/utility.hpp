@@ -47,6 +47,36 @@ namespace twitter {
     return x.color;
 }
 
+[[nodiscard]] inline auto to_string(Count x) -> std::string
+{
+    return std::to_string(x.count);
+}
+
+/// Comma separated list of items as string.
+template <typename T>
+[[nodiscard]] auto to_string(std::vector<T> const& items) -> std::string
+{
+    auto result = std::string{};
+    auto comma  = "";
+    for (auto const& item : items) {
+        result.append(comma).append(to_string(item));
+        comma = ",";
+    }
+    return result;
+}
+
+[[nodiscard]] inline auto to_string(std::vector<std::string> const& items)
+    -> std::string
+{
+    auto result = std::string{};
+    auto comma  = "";
+    for (auto const& item : items) {
+        result.append(comma).append(item);
+        comma = ",";
+    }
+    return result;
+}
+
 template <typename T>
 [[nodiscard]] auto to_std(boost::optional<T> const& x) -> std::optional<T>
 {

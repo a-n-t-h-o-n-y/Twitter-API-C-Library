@@ -17,29 +17,35 @@ auto main() -> int
         }
     }();
 
-    {  // get_account_settings_JSON
-        auto const x = twitter::get_account_settings_JSON(keys);
+    {  // get_account_settings
+        auto const x = twitter::get_account_settings(keys);
         network::view_ptree(network::to_ptree(x), std::cout);
     }
 
     std::cout << twitter::line << "\n\n";
 
     {  // verify_credentials_JSON
-        auto const x = twitter::verify_credentials_JSON(keys, true, true, true);
+        auto const x = twitter::verify_credentials_JSON(keys);
         network::view_ptree(network::to_ptree(x), std::cout);
     }
 
     std::cout << twitter::line << "\n\n";
 
     {  // verify_credentials
-        auto const x = twitter::verify_credentials(keys);
+        auto const x = twitter::verify_credentials(keys, [] {
+            auto p             = twitter::Verify_credentials_parameters{};
+            p.include_entities = true;
+            p.skip_status      = true;
+            p.include_email    = false;
+            return p;
+        }());
         std::cout << to_string(x) << '\n';
     }
 
     std::cout << twitter::line << "\n\n";
 
-    {  // get_profile_banner_JSON
-        auto const x = twitter::get_profile_banner_JSON(keys, "anthonymleedom");
+    {  // get_profile_banner
+        auto const x = twitter::get_profile_banner(keys, {"thesauruscom"});
         network::view_ptree(network::to_ptree(x), std::cout);
     }
 
@@ -50,8 +56,8 @@ auto main() -> int
     //     twitter::remove_profile_banner(keys);
     // }
 
-    // {  // update_account_settings
-    //     twitter::update_account_settings(keys);
+    // {  // update_account
+    //     twitter::update_account(keys);
     // }
 
     // {  // create_saved_search
@@ -60,16 +66,16 @@ auto main() -> int
     // }
 
     // std::int64_t id = 0;
-    // {  // get_saved_searches_JSON
-    //     auto const x     = twitter::get_saved_searches_JSON(keys);
+    // {  // get_saved_searches
+    //     auto const x     = twitter::get_saved_searches(keys);
     //     auto const ptree = network::to_ptree(x);
     //     for (auto const& tree : ptree)
     //         id = tree.second.get<std::int64_t>("id");
     //     network::view_ptree(ptree, std::cout);
     // }
 
-    // {  // get_saved_search_info_JSON
-    //     auto const x = twitter::get_saved_search_info_JSON(keys, id);
+    // {  // get_saved_search_info
+    //     auto const x = twitter::get_saved_search_info(keys, id);
     //     network::view_ptree(network::to_ptree(x), std::cout);
     // }
 

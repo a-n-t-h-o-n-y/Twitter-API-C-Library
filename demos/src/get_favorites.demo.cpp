@@ -36,7 +36,8 @@ auto main(int argc, char* argv[]) -> int
 
     auto tweets = std::vector<twitter::Tweet>{};
     try {
-        tweets = twitter::get_favorites(keys, argv[1], quantity);
+        tweets =
+            twitter::get_favorites(keys, {argv[1], std::nullopt, quantity});
     }
     catch (...) {
         std::cerr << "Error with request. Twitter handle \'@" << argv[1]

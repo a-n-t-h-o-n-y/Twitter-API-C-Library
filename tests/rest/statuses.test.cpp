@@ -18,7 +18,7 @@ auto main() -> int
     }();
 
     // update_status
-    twitter::update_status(keys, "Update Status Test");
+    twitter::update_status(keys, {"Update Status Test"});
 
     return 0;
 }
