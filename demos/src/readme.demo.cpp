@@ -8,9 +8,9 @@ auto main() -> int
 
     auto const keys = oauth::read_credentials("keys");
 
+    // REST API
     // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
-    // REST API
     // Returns JSON response from twitter.
     std::cout << get_account_settings(keys) << std::endl;
 
@@ -25,8 +25,8 @@ auto main() -> int
         return p;
     }());
 
-    // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     // Streaming API - Connect to Twitter filter stream, tracks "water" text.
+    // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
     // Track Tweets relating to water.
     auto const parameters = [] {
