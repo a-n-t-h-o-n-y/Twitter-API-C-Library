@@ -34,7 +34,7 @@ int main()
         return p;
     }());
 
-    // Streaming API - Connect to Twitter filter stream, tracks "water" text.
+    // Streaming API
     // -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
     // Track Tweets relating to water.
