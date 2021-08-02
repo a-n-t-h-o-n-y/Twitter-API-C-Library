@@ -10,35 +10,6 @@
 
 namespace network {
 
-/// Move only pointer like access to detail::Socket_stream.
-class Socket_old {
-   public:
-    Socket_old() = delete;
-
-    explicit Socket_old(std::unique_ptr<detail::Socket_stream> contents)
-        : socket_ptr_{std::move(contents)}
-    {}
-
-   public:
-    /// Return reference to underlying detail::Socket_stream.
-    [[nodiscard]] auto get() -> detail::Socket_stream& { return *socket_ptr_; }
-
-    /// Return const reference to underlying detail::Socket_stream.
-    [[nodiscard]] auto get() const -> detail::Socket_stream const&
-    {
-        return *socket_ptr_;
-    }
-
-    /// Pointer like access to underlying detail::Socket_stream object.
-    [[nodiscard]] auto operator->() const -> detail::Socket_stream*
-    {
-        return socket_ptr_.get();
-    }
-
-   private:
-    std::unique_ptr<detail::Socket_stream> socket_ptr_ = nullptr;
-};
-
 /// Wrapper interface over an SSL TCP Socket.
 /** Can only be constructed with a valid connection. If an operation on this
  *  socket object fails an invalidates the object, it should be thrown out.
